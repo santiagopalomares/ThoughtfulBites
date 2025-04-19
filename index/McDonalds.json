@@ -1,0 +1,144 @@
+{
+  "Big Mac": {
+    "food_type": "hamburger",
+    "ingredients": [
+      "100% beef patty",
+      "Big Mac bun",
+      "pasteurized process American cheese",
+      "Big Mac sauce",
+      "lettuce",
+      "pickles",
+      "onions"
+    ]
+  },
+  "Quarter Pounder with Cheese": {
+    "food_type": "hamburger",
+    "ingredients": [
+      "quarter pound 100% beef patty",
+      "sesame seed bun",
+      "pasteurized process American cheese",
+      "ketchup",
+      "mustard",
+      "pickles",
+      "slivered onions"
+    ]
+  },
+  "McChicken": {
+    "food_type": "chicken sandwich",
+    "ingredients": [
+      "McChicken patty",
+      "regular bun",
+      "mayonnaise dressing",
+      "shredded lettuce"
+    ]
+  },
+  "Filet-O-Fish": {
+    "food_type": "fish sandwich",
+    "ingredients": [
+      "fish filet patty",
+      "regular bun",
+      "tartar sauce",
+      "pasteurized process American cheese"
+    ]
+  },
+  "Chicken McNuggets": {
+    "food_type": "chicken nuggets",
+    "ingredients": ["chicken", "breading", "vegetable oil", "seasoning"]
+  },
+  "French Fries": {
+    "food_type": "side",
+    "ingredients": ["potatoes", "vegetable oil", "salt"]
+  },
+  "McFlurry": {
+    "food_type": "dessert",
+    "ingredients": ["soft serve", "Oreos", "milk", "sugar"]
+  },
+  "Premium McWrap Chicken & Bacon (Crispy)": {
+    "food_type": "wrap",
+    "ingredients": [
+      "flour tortilla",
+      "crispy chicken filet",
+      "shredded cheddar/jack cheese",
+      "tomato slice",
+      "cucumber",
+      "thick cut applewood smoked bacon",
+      "creamy garlic sauce",
+      "romaine and green leaf lettuce",
+      "baby spinach",
+      "baby kale"
+    ]
+  },
+  "Premium McWrap Chicken & Bacon (Grilled)": {
+    "food_type": "wrap",
+    "ingredients": [
+      "flour tortilla",
+      "grilled chicken filet",
+      "shredded cheddar/jack cheese",
+      "tomato slice",
+      "cucumber",
+      "thick cut applewood smoked bacon",
+      "creamy garlic sauce",
+      "romaine and green leaf lettuce",
+      "baby spinach",
+      "baby kale"
+    ]
+  },
+  "Premium McWrap Chicken & Ranch (Crispy)": {
+    "food_type": "wrap",
+    "ingredients": [
+      "flour tortilla",
+      "crispy chicken filet",
+      "shredded cheddar/jack cheese",
+      "tomato slice",
+      "cucumber",
+      "buttermilk ranch sauce",
+      "seasoned rice vinegar",
+      "romaine and green leaf lettuce",
+      "baby spinach",
+      "baby kale"
+    ]
+  },
+  "Premium McWrap Chicken & Ranch (Grilled)": {
+    "food_type": "wrap",
+    "ingredients": [
+      "flour tortilla",
+      "grilled chicken filet",
+      "shredded cheddar/jack cheese",
+      "tomato slice",
+      "cucumber",
+      "buttermilk ranch sauce",
+      "seasoned rice vinegar",
+      "romaine and green leaf lettuce",
+      "baby spinach",
+      "baby kale"
+    ]
+  },
+  "Premium McWrap Chicken Sweet Chili (Crispy)": {
+    "food_type": "wrap",
+    "ingredients": [
+      "flour tortilla",
+      "crispy chicken filet",
+      "tomato slice",
+      "cucumber",
+      "sweet chili sauce",
+      "creamy garlic sauce",
+      "romaine and green leaf lettuce",
+      "baby spinach",
+      "baby kale"
+    ]
+  },
+  "Premium McWrap Chicken Sweet Chili (Grilled)": {
+    "food_type": "wrap",
+    "ingredients": [
+      "flour tortilla",
+      "grilled chicken filet",
+      "tomato slice",
+      "cucumber",
+      "sweet chili sauce",
+      "creamy garlic sauce",
+      "romaine and green leaf lettuce",
+      "baby spinach",
+      "baby kale"
+    ]
+  }
+}
