@@ -1,0 +1,35 @@
+.signup-container,
+.entries-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login-redirect {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 18px;
+}
+
+.step-1 {
+  font-size: 50px;
+  padding-top: 50px;
+}
+
+.entries-container {
+  gap: 20px;
+}
+
+input {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 14px;
+  width: 250px;
+  height: 30px;
+  border-radius: 7px;
+  border: 1;
+  text-indent: 5px;
+}
