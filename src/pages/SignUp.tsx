@@ -1,58 +1,60 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import "./SignUp.css";
 import logo from "../assets/Logo.png";
 import { Link } from "react-router-dom";
+import { useMultistepForm } from "../components/useMultistepForm";
+import { UserInformation } from "./signup-pages/UserInformation";
+
+type FormData = {
+  email: string;
+  password: string;
+};
+
+const INITIAL_DATA: FormData = {
+  email: "",
+  password: "",
+};
 
 export default function SignUp() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [data, setData] = useState(INITIAL_DATA);
 
-  const handleSignUp = () => {
-    console.log("Email: ", email, "Password: ", password);
-  };
+  function updateFields(fields: Partial<FormData>) {
+    setData((prev) => {
+      return { ...prev, ...fields };
+    });
+  }
+
+  const { step, isFirstStep, back, next, isLastStep } = useMultistepForm([
+    <UserInformation {...data} updateFields={updateFields} />,
+    <h1 className="step-heading">Step 2: Dietary Restrictions</h1>,
+  ]);
+
+  function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!isLastStep) return next();
+    alert(`SUCCESS: Account created for ${data.email}`); // TODO: Add User to database
+  }
 
   return (
     <div className="signup-container">
       <div className="header">
-        <img src={logo} alt="Logo" className="logo" />
-        <span className="site-name">ThoughtfulBites</span>
+        <Link to="/" className="link-no-underline">
+          <img src={logo} alt="Logo" className="logo" />
+          <span className="site-name">ThoughtfulBites</span>
+        </Link>
       </div>
-      <div className="entries-container">
-        <h1 className="step-1">Step 1: Sign Up</h1>
-        <input
-          type="text"
-          className="email-entry"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          className="password-entry"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          className="confirm-password-entry"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
-        <div className="login-redirect">
-          <p className="account-text">Already have an account?</p>
-          <Link to="/login">Log In</Link>
+      <form onSubmit={onSubmit}>
+        {step}
+        <div className="navigation">
+          <div className="pagination-dots"></div>
+          {!isFirstStep && (
+            <button type="button" onClick={back}>
+              Back
+            </button>
+          )}
+          <button type="submit">{isLastStep ? "Finish" : "Next"}</button>
         </div>
-      </div>
-      <div className="navigation">
-        <div className="pagination-dots"></div>
-        <button onClick={handleSignUp}>Next</button>
-      </div>
+      </form>
     </div>
   );
 }

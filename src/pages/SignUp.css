@@ -1,26 +1,21 @@
 .signup-container,
-.entries-container {
+form {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
-.login-redirect {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  gap: 10px;
-  font-size: 18px;
+.link-no-underline {
+  text-decoration: none;
 }
 
-.step-1 {
+.step-heading {
   font-size: 50px;
   padding-top: 50px;
 }
 
-.entries-container {
+form {
   gap: 20px;
 }
 
