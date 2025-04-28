@@ -1,3 +1,8 @@
+.signup-background {
+  background-color: #667754;
+  height: 100vh;
+}
+
 .signup-container,
 form {
   display: flex;
@@ -6,17 +11,23 @@ form {
   flex-direction: column;
 }
 
+.signup-container {
+  padding-top: 10px;
+}
+
 .link-no-underline {
   text-decoration: none;
+}
+
+.site-name {
+  color: white !important;
+  font-weight: 400 !important;
 }
 
 .step-heading {
   font-size: 50px;
   padding-top: 50px;
-}
-
-form {
-  gap: 20px;
+  color: white;
 }
 
 input {
@@ -25,6 +36,29 @@ input {
   width: 250px;
   height: 30px;
   border-radius: 7px;
-  border: 1;
+  border: 0;
   text-indent: 5px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.error-message {
+  color: #ffa1a1;
+}
+
+.nextButton {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 24px;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 70vw;
+}
+
+.right-arrow {
+  height: 50px;
+  width: 50px;
+  padding-left: 10px;
 }

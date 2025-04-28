@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import "../signup-pages/UserInformation.css";
 import { useState } from "react";
+import Show from "../../assets/Show.png";
+import Hide from "../../assets/Hide.png";
 
 type UserData = {
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
 type UserInformationProps = UserData & {
@@ -14,14 +17,19 @@ type UserInformationProps = UserData & {
 export function UserInformation({
   email,
   password,
+  confirmPassword,
   updateFields,
 }: UserInformationProps) {
-  const [confirmPassword, setConfirmPassword] = useState("");
-  function checkPasswordMatch(confirmPassword: string) {
-    if (confirmPassword !== password) {
-      console.log("ERROR: Mismatch passwords");
-    }
-  }
+  const [showPassword, setshowPassword] = useState(true);
+  const [showConfirmPassword, setshowConfirmPassword] = useState(true);
+
+  const togglePasswordVisibility = () => {
+    setshowPassword((prev) => !prev);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setshowConfirmPassword((prev) => !prev);
+  };
 
   return (
     <>
@@ -35,25 +43,51 @@ export function UserInformation({
         required
         autoFocus
       />
-      <input
-        type="text"
-        className="password-entry"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => updateFields({ password: e.target.value })}
-        required
-      />
-      <input
-        type="text"
-        className="confirm-password-entry"
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        required
-      />
+      <div className="password-container">
+        <input
+          type={showPassword ? "text" : "password"}
+          className="password-entry"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => updateFields({ password: e.target.value })}
+          required
+        />
+        <button
+          type="button"
+          className="eye"
+          onClick={togglePasswordVisibility}
+        >
+          <img
+            src={showPassword ? Show : Hide}
+            alt={showPassword ? "Show Password" : "Hide Password"}
+          ></img>
+        </button>
+      </div>
+      <div className="password-container">
+        <input
+          type={showConfirmPassword ? "text" : "password"}
+          className="confirm-password-entry"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => updateFields({ confirmPassword: e.target.value })}
+          required
+        />
+        <button
+          type="button"
+          className="eye"
+          onClick={toggleConfirmPasswordVisibility}
+        >
+          <img
+            src={showConfirmPassword ? Show : Hide}
+            alt={showConfirmPassword ? "Show Password" : "Hide Password"}
+          ></img>
+        </button>
+      </div>
       <div className="login-redirect">
         <p className="account-text">Already have an account?</p>
-        <Link to="/login">Log In</Link>
+        <Link to="/login" className="log-in">
+          Log In
+        </Link>
       </div>
     </>
   );
