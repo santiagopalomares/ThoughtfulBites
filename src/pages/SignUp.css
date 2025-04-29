@@ -1,17 +1,13 @@
-.signup-background {
-  background-color: #667754;
-  height: 100vh;
-}
-
 .signup-container,
 form {
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
 .signup-container {
+  background-color: #667754;
+  min-height: 100vh;
   padding-top: 10px;
 }
 
@@ -24,29 +20,31 @@ form {
   font-weight: 400 !important;
 }
 
-.step-heading {
-  font-size: 50px;
-  padding-top: 50px;
-  color: white;
+.form {
+  flex: 1;
 }
 
-input {
-  font-family: "Josefin Sans", sans-serif;
-  font-size: 14px;
-  width: 250px;
-  height: 30px;
-  border-radius: 7px;
-  border: 0;
-  text-indent: 5px;
-  margin-top: 12px;
-  margin-bottom: 12px;
+.step-heading {
+  font-size: 64px;
+  padding-top: 50px;
+  color: white;
+  text-align: center;
 }
 
 .error-message {
   color: #ffa1a1;
 }
 
-.nextButton {
+.navigation {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding-bottom: 20px;
+}
+
+.nextButton,
+.backButton {
   font-family: "Josefin Sans", sans-serif;
   font-size: 24px;
   background: none;
@@ -54,11 +52,16 @@ input {
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin-left: 70vw;
+  color: white;
 }
 
-.right-arrow {
+.right-arrow,
+.left-arrow {
   height: 50px;
   width: 50px;
   padding-left: 10px;
+}
+
+.left-arrow {
+  transform: scaleX(-1);
 }

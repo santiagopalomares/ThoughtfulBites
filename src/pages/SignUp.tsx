@@ -5,17 +5,20 @@ import arrow from "../assets/ArrowButton.png";
 import { Link } from "react-router-dom";
 import { useMultistepForm } from "../components/useMultistepForm";
 import { UserInformation } from "./signup-pages/UserInformation";
+import { DietaryRestrictions } from "./signup-pages/DietaryRestrictions";
 
 type FormData = {
   email: string;
   password: string;
   confirmPassword: string;
+  userDiet: string[];
 };
 
 const INITIAL_DATA: FormData = {
   email: "",
   password: "",
   confirmPassword: "",
+  userDiet: [],
 };
 
 export default function SignUp() {
@@ -30,7 +33,7 @@ export default function SignUp() {
 
   const { step, isFirstStep, back, next, isLastStep } = useMultistepForm([
     <UserInformation {...data} updateFields={updateFields} />,
-    <h1 className="step-heading">Step 2: Dietary Restrictions</h1>,
+    <DietaryRestrictions {...data} updateFields={updateFields} />,
   ]);
 
   function checkPasswordMatch() {
@@ -57,37 +60,36 @@ export default function SignUp() {
   }
 
   return (
-    <div className="signup-background">
-      <div className="signup-container">
-        <div className="header">
-          <Link to="/" className="link-no-underline">
-            <img src={logo} alt="Logo" className="logo" />
-            <span className="site-name">ThoughtfulBites</span>
-          </Link>
-        </div>
-        <form onSubmit={onSubmit}>
-          {step}
-          <p className="error-message">{errorMessage}</p>
-          <div className="navigation">
-            <div className="pagination-dots"></div>
-            {!isFirstStep && (
-              <button type="button" className="backButton" onClick={back}>
-                Back
-              </button>
-            )}
-            <button type="submit" className="nextButton">
-              {isLastStep ? (
-                "Finish"
-              ) : (
-                <>
-                  Next
-                  <img src={arrow} alt="right arrow" className="right-arrow" />
-                </>
-              )}
-            </button>
-          </div>
-        </form>
+    <div className="signup-container">
+      <div className="header">
+        <Link to="/" className="link-no-underline">
+          <img src={logo} alt="Logo" className="logo" />
+          <span className="site-name">ThoughtfulBites</span>
+        </Link>
       </div>
+      <form onSubmit={onSubmit}>
+        {step}
+        <p className="error-message">{errorMessage}</p>
+        <div className="navigation">
+          <div className="pagination-dots"></div>
+          {!isFirstStep && (
+            <button type="button" className="backButton" onClick={back}>
+              <img src={arrow} alt="left arrow" className="left-arrow" />
+              Back
+            </button>
+          )}
+          <button type="submit" className="nextButton">
+            {isLastStep ? (
+              "Finish"
+            ) : (
+              <>
+                Next
+                <img src={arrow} alt="right arrow" className="right-arrow" />
+              </>
+            )}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
