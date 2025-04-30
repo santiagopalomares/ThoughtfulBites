@@ -2,13 +2,51 @@ import "./Navbar.css";
 import Logo from "../assets/Logo.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoggedIn, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        menuOpen &&
+        !target.closest(".navbar-right") &&
+        !target.closest(".hamburger")
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
+
+  // Close menu when resizing to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && menuOpen) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [menuOpen]);
+
+  // Close menu when navigation changes
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   if (location.pathname === "/sign-up") {
     return null;
@@ -26,12 +64,22 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <img src={Logo} alt="Logo" className="logo" />
+        <Link to="/">
+          <img src={Logo} alt="Logo" className="logo" />
+        </Link>
         <span className="site-name">ThoughtfulBites</span>
       </div>
 
-      <button className="hamburger" onClick={toggleMenu}>
-        ☰
+      <button
+        className="hamburger"
+        onClick={toggleMenu}
+        aria-label="Toggle menu"
+      >
+        <div className="hamburger-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </button>
 
       <div className={`navbar-right ${menuOpen ? "open" : ""}`}>
