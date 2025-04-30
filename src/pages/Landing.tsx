@@ -41,7 +41,7 @@ export default function Landing() {
           <input
             type="text"
             className="search-bar"
-            placeholder="Search for restaurants, cuisines, or dietary preferences..."
+            placeholder="Search for restaurants, cuisines, ..."
             value={searchText}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}

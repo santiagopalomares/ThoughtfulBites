@@ -1,4 +1,3 @@
-// src/components/Navbar.tsx
 import "./Navbar.css";
 import viteLogo from "../assets/react.svg";
 import { Link, useLocation } from "react-router-dom";
