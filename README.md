@@ -1,54 +1,42 @@
-# React + TypeScript + Vite
+# ThoughtfulBites
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![ThoughtfulBites Logo](./src/assets/Logo.png)
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ThoughtfulBites is a web application designed to help users find restaurants that accommodate their dietary restrictions and preferences. The platform allows users to preview menus, nutritional information, and filter restaurants based on specific dietary needs.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Restaurant Search**: Find restaurants by name, cuisine, or location
+- **Menu Preview**: View restaurant menus and nutritional information before visiting
+- **Dietary Filters**: Filter options based on dietary restrictions (gluten-free, vegan, low-sodium, etc.)
+- **User Accounts**: Create an account to save favorite restaurants and preferences
+- **Responsive Design**: Fully responsive interface that works on desktop and mobile devices
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Technology Stack
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Frontend**: React, TypeScript, CSS
+- **State Management**: React Context API
+- **Routing**: React Router
+- **Authentication**: JWT-based authentication
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Installation
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/santiagopalomares/ThoughtfulBites.git
+   cd ThoughtfulBites
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open your browser and navigate to `http://localhost:5173` (or the port shown in your terminal)
