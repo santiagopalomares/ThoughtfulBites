@@ -10,10 +10,9 @@ export default function Navbar() {
   const { isLoggedIn, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Close menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
+    const handleClickOutside = (e) => {
+      const target = e.target;
       if (
         menuOpen &&
         !target.closest(".navbar-right") &&
@@ -29,7 +28,6 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  // Close menu when resizing to desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768 && menuOpen) {
@@ -43,7 +41,6 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  // Close menu when navigation changes
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
@@ -75,7 +72,7 @@ export default function Navbar() {
         onClick={toggleMenu}
         aria-label="Toggle menu"
       >
-        <div className="hamburger-icon">
+        <div className={`hamburger-icon ${menuOpen ? "open" : ""}`}>
           <span></span>
           <span></span>
           <span></span>

@@ -43,12 +43,35 @@
   text-decoration: none;
   color: black;
   line-height: 1;
-  transition: transform 0.2s ease, font-size 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    font-size 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    text-shadow 0.3s ease, color 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .nav-item:hover {
   transform: scale(1.1);
   font-size: 1.4rem;
+  font-weight: 600;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  color: #212f24;
+}
+
+.nav-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #212f24;
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.nav-item:hover::after {
+  width: 80%;
+  left: 10%;
 }
 
 .nav-button-signup {
@@ -60,6 +83,9 @@
   font-size: 1rem;
   border: 4px solid #212f24;
   box-shadow: inset 0 0 0 2px white;
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+    font-size 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.3s ease,
+    background-color 0.3s ease;
 }
 
 .nav-button-logout {
@@ -73,15 +99,26 @@
   cursor: pointer;
   font-weight: 500;
   font-size: 1rem;
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+    font-size 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.3s ease,
+    background-color 0.3s ease;
 }
 
 .nav-button-signup:hover,
 .nav-button-logout:hover {
   transform: scale(1.1);
   font-size: 1.4rem;
+  box-shadow: inset 0 0 0 2px white, 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Hamburger menu styles */
+.nav-button-signup:hover {
+  background-color: #2a3e2e;
+}
+
+.nav-button-logout:hover {
+  background-color: #9e2a0a;
+}
+
 .hamburger {
   display: none;
   background: none;
@@ -111,7 +148,18 @@
   transition: all 0.3s ease;
 }
 
-/* Media query for mobile devices */
+.hamburger-icon.open span:nth-child(1) {
+  transform: translateY(8.5px) rotate(45deg);
+}
+
+.hamburger-icon.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-icon.open span:nth-child(3) {
+  transform: translateY(-8.5px) rotate(-45deg);
+}
+
 @media screen and (max-width: 768px) {
   .hamburger {
     display: flex;
@@ -141,7 +189,31 @@
 
   .nav-item {
     width: 100%;
-    margin: 0.5rem 0;
+    margin: 0.8rem 0;
     justify-content: flex-start;
+    transform-origin: left center;
+  }
+
+  .nav-item:hover {
+    transform: scale(1.08);
+    font-size: 1.3rem;
+    padding-left: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-item::after {
+    height: 2px;
+    bottom: -2px;
+  }
+
+  .nav-item:hover::after {
+    width: 60%;
+    left: 0;
+  }
+
+  .nav-button-signup,
+  .nav-button-logout {
+    margin-top: 0.5rem;
   }
 }
