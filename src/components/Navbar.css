@@ -1,15 +1,13 @@
-/* src/components/Navbar.css */
-
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  position: sticky;
+  background-color: transparent;
+  position: fixed;
   top: 0;
   z-index: 1000;
+  width: 94%;
 }
 
 .navbar-left {
@@ -22,24 +20,55 @@
   margin-right: 0.5rem;
 }
 
-.site-name {
+.navbar-left .site-name {
   font-size: 1.25rem;
   font-weight: bold;
-  color: #2c3e50;
+  color: black !important;
 }
 
 .navbar-right {
   display: flex;
+  align-items: center;
   gap: 1.5rem;
 }
 
-.nav-link {
-  text-decoration: none;
-  color: #2c3e50;
+.nav-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 1rem;
   font-weight: 500;
-  transition: color 0.2s ease;
+  text-decoration: none;
+  color: black;
+  line-height: 1;
+  transition: transform 0.2s ease, font-size 0.2s ease;
 }
 
-.nav-link:hover {
-  color: #42b883;
+.nav-item:hover {
+  transform: scale(1.1);
+  font-size: 1.4rem;
+}
+
+.nav-button {
+  background-color: #212f24;
+  color: white !important;
+  border-radius: 4px;
+}
+
+.button-link {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.nav-button:hover {
+  transform: scale(1.1);
 }
