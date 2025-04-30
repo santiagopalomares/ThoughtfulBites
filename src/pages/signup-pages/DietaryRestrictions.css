@@ -1,0 +1,42 @@
+.chips-container {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.diet-chip,
+.diet-chip.selected {
+  background: #212f24;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 18px;
+  color: white;
+  border-radius: 50px;
+  border: none;
+  padding: 0.9rem 2.6rem;
+}
+
+.diet-chip:hover,
+.diet-chip.selected:hover {
+  background: #bc9c85;
+  color: black;
+}
+
+.diet-chip:active {
+  background: #ece8e5;
+}
+
+.diet-chip.selected {
+  background: #ece8e5;
+  color: black;
+}
+
+.information-text {
+  color: white;
+  margin-top: -10px;
+  text-align: center;
+  padding-bottom: 50px;
+}
