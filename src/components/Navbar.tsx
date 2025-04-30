@@ -2,11 +2,13 @@ import "./Navbar.css";
 import Logo from "../assets/Logo.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
 
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoggedIn, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   if (location.pathname === "/sign-up") {
     return null;
@@ -14,7 +16,11 @@ export default function Navbar() {
 
   const handleLogout = () => {
     logout();
-    navigate("/"); // redirect to landing
+    navigate("/");
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen((prev) => !prev);
   };
 
   return (
@@ -24,27 +30,61 @@ export default function Navbar() {
         <span className="site-name">ThoughtfulBites</span>
       </div>
 
-      <div className="navbar-right">
-        <Link to="/about" className="nav-item">
+      <button className="hamburger" onClick={toggleMenu}>
+        ☰
+      </button>
+
+      <div className={`navbar-right ${menuOpen ? "open" : ""}`}>
+        <Link
+          to="/about"
+          className="nav-item"
+          onClick={() => setMenuOpen(false)}
+        >
           About
         </Link>
-        <Link to="/contact" className="nav-item">
+        <Link
+          to="/contact"
+          className="nav-item"
+          onClick={() => setMenuOpen(false)}
+        >
           Contact
         </Link>
-        <Link to="/sign-up" className="nav-item">
-          Login
-        </Link>
         {!isLoggedIn ? (
-          <Link to="/SignUp" className="nav-item nav-button">
-            SignUp
-          </Link>
+          <>
+            <Link
+              to="/sign-up"
+              className="nav-item"
+              onClick={() => setMenuOpen(false)}
+            >
+              Login
+            </Link>
+            <Link
+              to="/SignUp"
+              className="nav-item nav-button-signup"
+              onClick={() => setMenuOpen(false)}
+            >
+              Sign Up
+            </Link>
+          </>
         ) : (
-          <button
-            onClick={handleLogout}
-            className="nav-item nav-button button-link"
-          >
-            Logout
-          </button>
+          <>
+            <Link
+              to="/account"
+              className="nav-item"
+              onClick={() => setMenuOpen(false)}
+            >
+              Account
+            </Link>
+            <button
+              onClick={() => {
+                handleLogout();
+                setMenuOpen(false);
+              }}
+              className="nav-item nav-button-logout"
+            >
+              Log Out
+            </button>
+          </>
         )}
       </div>
     </nav>
