@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SearchBar.css";
 import CustomButton from "./Button";
 
@@ -16,6 +16,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
   searchIconSrc,
 }) => {
   const [searchText, setSearchText] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
