@@ -97,14 +97,14 @@ export default function Navbar() {
         {!isLoggedIn ? (
           <>
             <Link
-              to="/sign-up"
+              to="/login"
               className="nav-item"
               onClick={() => setMenuOpen(false)}
             >
               Login
             </Link>
             <Link
-              to="/SignUp"
+              to="/sign-up"
               className="nav-item nav-button-signup"
               onClick={() => setMenuOpen(false)}
             >
