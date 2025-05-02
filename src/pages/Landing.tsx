@@ -4,10 +4,15 @@ import SearchIcon from "../assets/SearchIcon.png";
 import EatingImage from "../assets/EatingLanding.png";
 import EatingHappy from "../assets/EatingHappy.png";
 import MenueBefore from "../assets/MenuBeforeTime.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Landing() {
+  const navigate = useNavigate();
+
   const handleSearch = (searchQuery: string) => {
     console.log("Search submitted:", searchQuery);
+    // Navigate to the search results page with the query as a parameter
+    navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
   };
 
   return (
@@ -24,6 +29,7 @@ export default function Landing() {
         />
       </section>
 
+      {/* Rest of your component stays the same */}
       <section className="section split-section left-image">
         <div className="left-box">
           <img src={MenueBefore} alt="Menu Before" />
