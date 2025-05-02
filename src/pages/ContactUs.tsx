@@ -17,6 +17,8 @@ type FormData = {
 export default function ContactUs() {
   const [data, setData] = useState(INITIAL_DATA);
   const [errorMessage, setErrorMessage] = useState("");
+  const { name, email, message } = data;
+
 
   function updateFields(fields: Partial<FormData>) {
     setData((prev) => {
@@ -26,12 +28,14 @@ export default function ContactUs() {
 
 function onSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!email || !name) {
-        setErrorMessage("No input was given for user or email. Try again.")
-    
-    } else {
+    if (!name.trim() || !email.trim()) {
+        setErrorMessage("Please provide both your name and email.")
+        return;
+    }
+
     setErrorMessage("");
-    alert(`SUCCESS: Account created for ${data.email}`); // TODO: Add User to database
+    alert(`SUCCESS: Message sent by ${data.name}`); // TODO: Add endpoint here when ready
+    setData(INITIAL_DATA)
     }
 }
 
@@ -44,8 +48,8 @@ function onSubmit(e: FormEvent) {
       </section>
 
       {/* Section 2 (Contact-Us Form) */}
-      <section className="section split-section left-image">
-        <form onSubmit={onSubmit}>
+      <section className="section split-section">
+        <form className="contact-form" onSubmit={onSubmit}>
             <div className="left-box">
                 <input
                     type="text"
@@ -54,7 +58,6 @@ function onSubmit(e: FormEvent) {
                     value={name}
                     onChange={(e) => updateFields({ name: e.target.value })}
                     required
-                    autoFocus
                 />
                 <input
                     type="text"
@@ -63,7 +66,6 @@ function onSubmit(e: FormEvent) {
                     value={email}
                     onChange={(e) => updateFields({ email: e.target.value })}
                     required
-                    autoFocus
                 />
                 <textarea
                     className="message-entry"
@@ -71,12 +73,10 @@ function onSubmit(e: FormEvent) {
                     value={message}
                     onChange={(e) => updateFields({ name: e.target.value })}
                     required
-                    autoFocus
                 />
                 <button
-          type="button"
-          className="eye"
-          onClick={submitContactUsMessage}
+          type="submit"
+          className="send-button"
         >Send</button>
             </div>
         </form>
