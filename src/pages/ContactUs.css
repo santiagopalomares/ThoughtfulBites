@@ -1,0 +1,17 @@
+form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  input {
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 18px;
+    width: 350px;
+    height: 35px;
+    border-radius: 7px;
+    border: 0;
+    text-indent: 7px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }

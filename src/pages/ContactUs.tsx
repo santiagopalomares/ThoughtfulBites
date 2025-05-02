@@ -1,6 +1,5 @@
 import { FormEvent, useState } from "react";
 import "./Landing.css";
-import CustomButton from "../components/Button";
 
 type FormData = {
     name: string;
@@ -14,22 +13,19 @@ type FormData = {
     message: "",
   };
 
-export default function ContactUs() {
-  const [searchText, setSearchText] = useState("");
+  type ContactInfoProps = FormData & {
+    updateFields: (fields: Partial<FormData>) => void;
+  };
+
+export default function ContactUs({name, email, message}: ContactInfoProps) {
+  const [data, setData] = useState(INITIAL_DATA);
+  const [errorMessage, setErrorMessage] = useState("");
 
 function onSubmit(e: FormEvent) {
     e.preventDefault();
-    if (isFirstStep) {
-    if (!checkPasswordMatch()) {
-        setErrorMessage("ERROR: Passwords do not match!");
-        return;
-    } else {
-        setErrorMessage("");
-        return next();
-    }
-    } else if (!isLastStep) {
-    setErrorMessage("");
-    return next();
+    if (!email || !name) {
+        setErrorMessage("No input was given for user or email. Try again.")
+    
     } else {
     setErrorMessage("");
     alert(`SUCCESS: Account created for ${data.email}`); // TODO: Add User to database
@@ -46,16 +42,36 @@ function onSubmit(e: FormEvent) {
 
       {/* Section 2 (Contact-Us Form) */}
       <section className="section split-section left-image">
-        <div className="left-box">
-            <input
-                type="text"
-                className="search-bar"
-                placeholder="Search for restaurants, cuisines, ..."
-                value={searchText}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-            />
-        </div>
+        <form onSubmit={onSubmit}>
+            <div className="left-box">
+                <input
+                    type="text"
+                    className="name-entry"
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => updateFields({ name: e.target.value })}
+                    required
+                    autoFocus
+                />
+                <input
+                    type="text"
+                    className="email-entry"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => updateFields({ email: e.target.value })}
+                    required
+                    autoFocus
+                />
+                <textarea
+                    className="message-entry"
+                    placeholder="Message"
+                    value={message}
+                    onChange={(e) => updateFields({ name: e.target.value })}
+                    required
+                    autoFocus
+                />
+            </div>
+        </form>
         <div className="right-text">
           <h3>Want to contact us?</h3>
           <p>
