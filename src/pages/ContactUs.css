@@ -4,6 +4,20 @@ form {
     flex-direction: column;
   }
 
+  .search-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 25px;
+    background-color: #212f24;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
   input {
     font-family: "Josefin Sans", sans-serif;
     font-size: 18px;

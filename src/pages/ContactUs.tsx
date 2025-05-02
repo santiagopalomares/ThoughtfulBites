@@ -13,13 +13,16 @@ type FormData = {
     message: "",
   };
 
-  type ContactInfoProps = FormData & {
-    updateFields: (fields: Partial<FormData>) => void;
-  };
 
-export default function ContactUs({name, email, message}: ContactInfoProps) {
+export default function ContactUs() {
   const [data, setData] = useState(INITIAL_DATA);
   const [errorMessage, setErrorMessage] = useState("");
+
+  function updateFields(fields: Partial<FormData>) {
+    setData((prev) => {
+      return { ...prev, ...fields };
+    });
+  }
 
 function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -70,6 +73,11 @@ function onSubmit(e: FormEvent) {
                     required
                     autoFocus
                 />
+                <button
+          type="button"
+          className="eye"
+          onClick={submitContactUsMessage}
+        >Send</button>
             </div>
         </form>
         <div className="right-text">
