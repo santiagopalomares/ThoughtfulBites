@@ -1,9 +1,40 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import "./Landing.css";
 import CustomButton from "../components/Button";
 
+type FormData = {
+    name: string;
+    email: string;
+    message: string;
+  };
+  
+  const INITIAL_DATA: FormData = {
+    name: "",
+    email: "",
+    message: "",
+  };
+
 export default function ContactUs() {
   const [searchText, setSearchText] = useState("");
+
+function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (isFirstStep) {
+    if (!checkPasswordMatch()) {
+        setErrorMessage("ERROR: Passwords do not match!");
+        return;
+    } else {
+        setErrorMessage("");
+        return next();
+    }
+    } else if (!isLastStep) {
+    setErrorMessage("");
+    return next();
+    } else {
+    setErrorMessage("");
+    alert(`SUCCESS: Account created for ${data.email}`); // TODO: Add User to database
+    }
+}
 
   return (
     <div className="landing-container">
@@ -16,7 +47,14 @@ export default function ContactUs() {
       {/* Section 2 (Contact-Us Form) */}
       <section className="section split-section left-image">
         <div className="left-box">
-          <img src={MenueBefore} alt="Menu Before" />
+            <input
+                type="text"
+                className="search-bar"
+                placeholder="Search for restaurants, cuisines, ..."
+                value={searchText}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+            />
         </div>
         <div className="right-text">
           <h3>Want to contact us?</h3>
