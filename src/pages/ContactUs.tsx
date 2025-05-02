@@ -15,18 +15,18 @@ type FormData = {
 
 
 export default function ContactUs() {
-  const [data, setData] = useState(INITIAL_DATA);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [data, setData] = useState<FormData>(INITIAL_DATA);
+  const [errorMessage, setErrorMessage] = useState<String>("");
+
   const { name, email, message } = data;
 
-
-  function updateFields(fields: Partial<FormData>) {
+  function updateFields(fields: Partial<FormData>): void {
     setData((prev) => {
       return { ...prev, ...fields };
     });
   }
 
-function onSubmit(e: FormEvent) {
+function onSubmit(e: FormEvent): void {
     e.preventDefault();
     if (!name.trim() || !email.trim()) {
         setErrorMessage("Please provide both your name and email.")
@@ -37,7 +37,6 @@ function onSubmit(e: FormEvent) {
     alert(`SUCCESS: Message sent by ${data.name}`); // TODO: Add endpoint here when ready
     setData(INITIAL_DATA)
     }
-}
 
   return (
     <div className="landing-container">
@@ -78,6 +77,7 @@ function onSubmit(e: FormEvent) {
           type="submit"
           className="send-button"
         >Send</button>
+        {errorMessage && <p className="error">{errorMessage}</p>}
             </div>
         </form>
         <div className="right-text">
