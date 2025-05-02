@@ -20,6 +20,9 @@ export default function Navbar() {
         <Link to="/about" className="nav-link">
           About
         </Link>
+        <Link to="/contact-us" className="nav-link">
+          Contact
+        </Link>
         <Link to="/" className="nav-link">
           Landing
         </Link>
