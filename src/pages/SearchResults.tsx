@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import "./SearchResults.css";
+import SearchBar from "../components/SearchBar";
+import SearchIcon from "../assets/SearchIcon.png";
 
 interface SearchResult {
   image: string;
@@ -8,8 +10,7 @@ interface SearchResult {
 }
 
 const SearchResults: React.FC = () => {
-  // Sample data with 10 entries
-  const sampleResults: SearchResult[] = [
+  const initialResults: SearchResult[] = [
     {
       image: "https://via.placeholder.com/100",
       title: "Product 1: Smart Watch",
@@ -78,21 +79,61 @@ const SearchResults: React.FC = () => {
     },
   ];
 
+  const [results, setResults] = useState<SearchResult[]>(initialResults);
+
+  const handleSearch = (searchQuery: string) => {
+    console.log("Searching for:", searchQuery);
+
+    if (searchQuery.trim() === "") {
+      setResults(initialResults);
+      return;
+    }
+
+    const filteredResults = initialResults.filter(
+      (item) =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.bulletPoints.some((point) =>
+          point.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    );
+
+    setResults(filteredResults);
+  };
+
   return (
-    <div className="search-results">
-      {sampleResults.map((item, index) => (
-        <div className="result-item" key={index}>
-          <img src={item.image} alt="Result" className="result-image" />
-          <div className="result-description">
-            <div className="description-top">{item.title}</div>
-            <ul className="description-bottom">
-              {item.bulletPoints.map((point, idx) => (
-                <li key={idx}>{point}</li>
-              ))}
-            </ul>
-          </div>
+    <div className="search-results-page">
+      <div className="results-search-container">
+        <div className="search-container">
+          <SearchBar
+            placeholder="Filter results..."
+            onSearch={handleSearch}
+            buttonText="Search"
+            searchIconSrc={SearchIcon}
+          />
         </div>
-      ))}
+      </div>
+
+      <div className="search-results">
+        {results.length > 0 ? (
+          results.map((item, index) => (
+            <div className="result-item" key={index}>
+              <img src={item.image} alt={item.title} className="result-image" />
+              <div className="result-description">
+                <div className="description-top">{item.title}</div>
+                <ul className="description-bottom">
+                  {item.bulletPoints.map((point, idx) => (
+                    <li key={idx}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="no-results">
+            No results found. Try a different search term.
+          </div>
+        )}
+      </div>
     </div>
   );
 };
