@@ -1,78 +1,83 @@
 .section {
-    min-height: 50vh;
+    min-height: 40vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 
-  .hero {
-    background-color: #667754;
-    padding: 40px;
-    text-align: center;
-    color: white;
-    align-items: center;
-    
-  }
+.hero {
+  background-color: #667754;
+  padding: 40px;
+  text-align: center;
+  color: white;
+  align-items: center;
+  
+}
   
 .split-section {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     padding: 0 40px;
     flex-wrap: wrap;
     column-gap: 100px;
   }
   
-  .left-box,
-  .right-box {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-  }
+.left-box,
+.right-box {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  text-align: left;
+  height: 100%;
+}
 
-  .split-section .right-box {
-    flex: 0 0 auto;        /* size to content, no growing */
-    height: auto;          /* shrink-wrap to its own content */
-    max-width: 500px;      /* whatever max width you want */
-  }
+.left-box
+{
+  justify-content: center;
+  align-items: center;
+}
 
-  .right-text,
-  .left-text {
-    flex: 1;
-    padding: 20px;
-  }
+.split-section .right-box {
+  flex: 0 0 auto;       
+  height: auto;      
+  max-width: 500px;   
+}
 
-  .right-text h2,
+.right-text,
+.left-text {
+  flex: 1;
+  padding: 20px;
+}
+
+.right-text h2,
 .left-text h2 {
-  font-weight: bold;
-  font-size: 2.5rem;
-  margin-bottom: 30px;
+font-weight: bold;
+font-size: 2.5rem;
+margin-bottom: 30px;
+}
+
+.right-text p,
+.left-text p {
+  margin-top: 10px;
+  font-size: 2.25rem;
+  line-height: 1.6;
 }
   
-  .right-text p,
-  .left-text p {
-    margin-top: 10px;
-    font-size: 1.25rem;
-    color: #555;
-    line-height: 1.6;
-  }
-
-    
-  .send-button {
-    padding: 12px 30px;
-    bottom: 30px;
-    font-size: 1.1rem;
-    border: none;
-    border-radius: 25px;
-    background-color: #212f24;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  }
+.send-button {
+  padding: 12px 30px;
+  bottom: 30px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 25px;
+  background-color: #212f24;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
   
 input,
 textarea {
@@ -86,6 +91,7 @@ textarea {
   margin-top: 12px;
   margin-bottom: 12px;
 }
+
 textarea {
     height: 150px;
     resize: vertical; 
