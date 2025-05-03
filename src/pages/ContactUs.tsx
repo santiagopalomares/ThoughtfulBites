@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import "./Landing.css";
+import "./ContactUs.css";
 
 type FormData = {
     name: string;
@@ -44,44 +44,42 @@ function onSubmit(e: FormEvent): void {
         <h1 className="landing-title">
           Contact Us
         </h1>
-      </section>
-
-      {/* Section 2 (Contact-Us Form) */}
+        {/* Section 2 (Contact-Us Form) */}
       <section className="section split-section">
         <form className="contact-form" onSubmit={onSubmit}>
-            <div className="left-box">
-                <input
-                    type="text"
-                    className="name-entry"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => updateFields({ name: e.target.value })}
-                    required
-                />
-                <input
-                    type="text"
-                    className="email-entry"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => updateFields({ email: e.target.value })}
-                    required
-                />
-                <textarea
-                    className="message-entry"
-                    placeholder="Message"
-                    value={message}
-                    onChange={(e) => updateFields({ name: e.target.value })}
-                    required
-                />
-                <button
-          type="submit"
-          className="send-button"
-        >Send</button>
-        {errorMessage && <p className="error">{errorMessage}</p>}
-            </div>
+                <div className="left-box">
+                    <input
+                        type="text"
+                        className="name-entry"
+                        placeholder="Name"
+                        value={name}
+                        onChange={(e) => updateFields({ name: e.target.value })}
+                        required
+                    />
+                    <input
+                        type="text"
+                        className="email-entry"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => updateFields({ email: e.target.value })}
+                        required
+                    />
+                    <textarea
+                        className="message-entry"
+                        placeholder="Message"
+                        value={message}
+                        onChange={(e) => updateFields({ message: e.target.value })}
+                        required
+                    />
+                    <button
+            type="submit"
+            className="send-button"
+            >Send</button>
+            {errorMessage && <p className="error">{errorMessage}</p>}
+                </div>
         </form>
-        <div className="right-text">
-          <h3>Want to contact us?</h3>
+        <div className="right-box">
+          <h2>Want to contact us?</h2>
           <p>
           Have questions, feedback, or need help finding the perfect restaurant for your dietary needs?
           We're here to help!
@@ -89,6 +87,7 @@ function onSubmit(e: FormEvent): void {
           or just have something to share, feel free to reach out. Your experience matters to us.
           </p>
         </div>
+      </section>
       </section>
 
       <section className="section footer-section"></section>

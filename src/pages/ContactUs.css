@@ -1,15 +1,71 @@
-form {
+.section {
+    min-height: 50vh;
     display: flex;
-    align-items: center;
     flex-direction: column;
+    justify-content: center;
   }
 
-  .search-button {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    padding: 15px 30px;
-    font-size: 1.2rem;
+  .hero {
+    background-color: #667754;
+    padding: 40px;
+    text-align: center;
+    color: white;
+    align-items: center;
+    
+  }
+  
+.split-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    flex-wrap: wrap;
+    column-gap: 100px;
+  }
+  
+  .left-box,
+  .right-box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+  }
+
+  .split-section .right-box {
+    flex: 0 0 auto;        /* size to content, no growing */
+    height: auto;          /* shrink-wrap to its own content */
+    max-width: 500px;      /* whatever max width you want */
+  }
+
+  .right-text,
+  .left-text {
+    flex: 1;
+    padding: 20px;
+  }
+
+  .right-text h2,
+.left-text h2 {
+  font-weight: bold;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+}
+  
+  .right-text p,
+  .left-text p {
+    margin-top: 10px;
+    font-size: 1.25rem;
+    color: #555;
+    line-height: 1.6;
+  }
+
+    
+  .send-button {
+    padding: 12px 30px;
+    bottom: 30px;
+    font-size: 1.1rem;
     border: none;
     border-radius: 25px;
     background-color: #212f24;
@@ -18,14 +74,19 @@ form {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
   
-  input {
-    font-family: "Josefin Sans", sans-serif;
-    font-size: 18px;
-    width: 350px;
-    height: 35px;
-    border-radius: 7px;
-    border: 0;
-    text-indent: 7px;
-    margin-top: 12px;
-    margin-bottom: 12px;
+input,
+textarea {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 18px;
+  width: 350px;
+  height: 35px;
+  border-radius: 7px;
+  border: 0;
+  text-indent: 7px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+textarea {
+    height: 150px;
+    resize: vertical; 
   }
