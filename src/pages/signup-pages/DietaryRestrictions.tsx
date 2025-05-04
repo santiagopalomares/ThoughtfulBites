@@ -1,7 +1,7 @@
 import "./DietaryRestrictions.css";
 
 type DietData = {
-  userDiet: string[];
+  userDietTypes: string[];
 };
 
 type DietaryRestrictionsProps = DietData & {
@@ -13,34 +13,33 @@ const DIET_RESTRICTIONS: string[] = [
   "Dairy-Free",
   "Gluten-Free",
   "Pescatarian",
-  "Vegetarian",
   "Vegan",
+  "Vegetarian",
   "Other",
   "None",
 ];
 
 export function DietaryRestrictions({
-  userDiet,
+  userDietTypes,
   updateFields,
 }: DietaryRestrictionsProps) {
   const updateUserDiet = (dietChoice: string) => {
-    if (dietChoice === "None" && !userDiet.includes("None")) {
+    if (dietChoice === "None" && !userDietTypes.includes("None")) {
       // Selecting "None" clears all other selections
-      updateFields({ userDiet: ["None"] });
-    } else if (userDiet.includes(dietChoice)) {
+      updateFields({ userDietTypes: ["None"] });
+    } else if (userDietTypes.includes(dietChoice)) {
       // Deselect current choice
       updateFields({
-        userDiet: userDiet.filter((diet) => diet !== dietChoice),
+        userDietTypes: userDietTypes.filter((diet) => diet !== dietChoice),
       });
     } else {
       // Deselect "None" if it's selected, and add the new choice
-      const updatedDiet = userDiet.includes("None")
+      const updatedDiet = userDietTypes.includes("None")
         ? [dietChoice]
-        : [...userDiet, dietChoice];
+        : [...userDietTypes, dietChoice];
 
-      updateFields({ userDiet: updatedDiet });
+      updateFields({ userDietTypes: updatedDiet });
     }
-    console.log(userDiet);
   };
 
   return (
@@ -57,13 +56,29 @@ export function DietaryRestrictions({
             type="button"
             value={dietChoice}
             className={`diet-chip ${
-              userDiet.includes(dietChoice) ? "selected" : ""
+              userDietTypes.includes(dietChoice) ? "selected" : ""
             }`}
             onClick={() => updateUserDiet(dietChoice)}
           >
             {dietChoice}
           </button>
         ))}
+      </div>
+      <div className="extra-step-text">
+        {(userDietTypes.includes("Allergens") ||
+          userDietTypes.includes("Other")) && (
+          <p>
+            Since you selected
+            {[
+              userDietTypes.includes("Allergens") && " Allergens",
+              userDietTypes.includes("Other") &&
+                (userDietTypes.includes("Allergens") ? " and Other" : " Other"),
+            ]
+              .filter(Boolean)
+              .join("")}
+            , we'll ask for more details in the next step.
+          </p>
+        )}
       </div>
     </>
   );

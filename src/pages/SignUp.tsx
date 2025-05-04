@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useMemo } from "react";
 import "./SignUp.css";
 import logo from "../assets/Logo.png";
 import arrow from "../assets/ArrowButton.png";
@@ -6,19 +6,22 @@ import { Link } from "react-router-dom";
 import { useMultistepForm } from "../components/useMultistepForm";
 import { UserInformation } from "./signup-pages/UserInformation";
 import { DietaryRestrictions } from "./signup-pages/DietaryRestrictions";
+import { DietDetails } from "./signup-pages/DietDetails";
 
 type FormData = {
   email: string;
   password: string;
   confirmPassword: string;
-  userDiet: string[];
+  userDietTypes: string[];
+  userDietDetails: string[];
 };
 
 const INITIAL_DATA: FormData = {
   email: "",
   password: "",
   confirmPassword: "",
-  userDiet: [],
+  userDietTypes: [],
+  userDietDetails: [],
 };
 
 export default function SignUp() {
@@ -31,10 +34,24 @@ export default function SignUp() {
     });
   }
 
-  const { step, isFirstStep, back, next, isLastStep } = useMultistepForm([
-    <UserInformation {...data} updateFields={updateFields} />,
-    <DietaryRestrictions {...data} updateFields={updateFields} />,
-  ]);
+  // DietDetails page only appears if Allergens or Other is selected
+  const steps = useMemo(() => {
+    const baseSteps = [
+      <UserInformation {...data} updateFields={updateFields} />,
+      <DietaryRestrictions {...data} updateFields={updateFields} />,
+    ];
+
+    if (
+      data.userDietTypes.includes("Allergens") ||
+      data.userDietTypes.includes("Other")
+    ) {
+      baseSteps.push(<DietDetails {...data} updateFields={updateFields} />);
+    }
+
+    return baseSteps;
+  }, [data]);
+
+  const { step, isFirstStep, back, next, isLastStep } = useMultistepForm(steps);
 
   function checkPasswordMatch() {
     return data.confirmPassword === data.password;

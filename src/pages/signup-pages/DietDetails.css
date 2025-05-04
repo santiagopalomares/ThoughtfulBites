@@ -1,0 +1,68 @@
+.diet-details-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 110%;
+}
+
+.search-container {
+  width: 90% !important;
+}
+
+.diet-details-container .search-bar {
+  min-height: 45px !important;
+  padding: 12px 20px 12px 70px !important;
+  font-size: 18px;
+}
+
+.search-icon {
+  width: 25px !important;
+  height: 25px !important;
+}
+
+.diet-details-container .search-button {
+  padding: 8px 12px !important;
+  max-height: 40px !important;
+  right: 3px !important;
+}
+
+.searchbar-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.food-chips-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  padding-top: 30px;
+}
+
+.food-chips-container .diet-chip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+}
+
+.chip {
+  background: none;
+  border: none;
+  background-image: url("../../assets/X-white.png");
+  width: 30px;
+  height: 30px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+}
+
+.diet-chip:hover .chip {
+  background-image: url("../../assets/X-black.png");
+}
