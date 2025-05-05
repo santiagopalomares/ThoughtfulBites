@@ -4,6 +4,7 @@ import Landing from "./pages/Landing";
 import ContactUs from "./pages/ContactUs"
 import AboutUs from "./pages/AboutUs";
 import Navbar from "./components/Navbar";
+import { AuthProvider } from "./context/AuthContext";
 import "./App.css";
 
 function App() {

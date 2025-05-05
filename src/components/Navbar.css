@@ -1,14 +1,13 @@
-/* src/components/Navbar.css */
-
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  position: sticky;
+  background-color: transparent;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
 }
 
@@ -22,24 +21,199 @@
   margin-right: 0.5rem;
 }
 
-.site-name {
+.navbar-left .site-name {
   font-size: 1.25rem;
   font-weight: bold;
-  color: #2c3e50;
+  color: black !important;
 }
 
 .navbar-right {
   display: flex;
+  align-items: center;
   gap: 1.5rem;
 }
 
-.nav-link {
-  text-decoration: none;
-  color: #2c3e50;
+.nav-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 1rem;
   font-weight: 500;
-  transition: color 0.2s ease;
+  text-decoration: none;
+  color: black;
+  line-height: 1;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    font-size 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    text-shadow 0.3s ease, color 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.nav-link:hover {
-  color: #42b883;
+.nav-item:hover {
+  transform: scale(1.1);
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  color: #212f24;
+}
+
+.nav-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #212f24;
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.nav-item:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.nav-button-signup {
+  background-color: #212f24;
+  color: white !important;
+  border-radius: 40px;
+  padding: 0 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  border: 4px solid #212f24;
+  box-shadow: inset 0 0 0 2px white;
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+    font-size 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.nav-button-logout {
+  background-color: #872208;
+  color: white !important;
+  border-radius: 40px;
+  padding: 0 1rem;
+  border: 4px solid #872208;
+  box-shadow: inset 0 0 0 2px white;
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+    font-size 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.nav-button-signup:hover,
+.nav-button-logout:hover {
+  transform: scale(1.1);
+  font-size: 1.4rem;
+  box-shadow: inset 0 0 0 2px white, 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.nav-button-signup:hover {
+  background-color: #2a3e2e;
+}
+
+.nav-button-logout:hover {
+  background-color: #9e2a0a;
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+  padding: 0.5rem;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 20px;
+}
+
+.hamburger-icon span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: black;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger-icon.open span:nth-child(1) {
+  transform: translateY(8.5px) rotate(45deg);
+}
+
+.hamburger-icon.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-icon.open span:nth-child(3) {
+  transform: translateY(-8.5px) rotate(-45deg);
+}
+
+@media screen and (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .navbar {
+    padding: 1rem 1.5rem;
+  }
+
+  .navbar-right {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 70%;
+    height: 100vh;
+    background-color: white;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5rem 2rem 2rem;
+    transition: right 0.3s ease;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .navbar-right.open {
+    right: 0;
+  }
+
+  .nav-item {
+    width: 100%;
+    margin: 0.8rem 0;
+    justify-content: flex-start;
+    transform-origin: left center;
+  }
+
+  .nav-item:hover {
+    transform: scale(1.08);
+    font-size: 1.3rem;
+    padding-left: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-item::after {
+    height: 2px;
+    bottom: -2px;
+  }
+
+  .nav-item:hover::after {
+    width: 60%;
+    left: 0;
+  }
+
+  .nav-button-signup,
+  .nav-button-logout {
+    margin-top: 0.5rem;
+  }
 }
