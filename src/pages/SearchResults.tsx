@@ -2,16 +2,21 @@ import React, { useState, useEffect, useRef } from "react";
 import "./SearchResults.css";
 import SearchBar from "../components/SearchBar";
 import SearchIcon from "../assets/SearchIcon.png";
+import { useNavigate } from "react-router-dom";
 
 interface SearchResult {
+  id: string;
   image: string;
   title: string;
   bulletPoints: string[];
 }
 
 const SearchResults: React.FC = () => {
+  const navigate = useNavigate();
+
   const initialResults: SearchResult[] = [
     {
+      id: "nobu",
       image: "https://via.placeholder.com/100",
       title: "Nobu: Japanese Fusion",
       bulletPoints: [
@@ -21,6 +26,7 @@ const SearchResults: React.FC = () => {
       ],
     },
     {
+      id: "french-laundry",
       image: "https://via.placeholder.com/100",
       title: "The French Laundry: Fine Dining",
       bulletPoints: [
@@ -30,11 +36,13 @@ const SearchResults: React.FC = () => {
       ],
     },
     {
+      id: "shake-shack",
       image: "https://via.placeholder.com/100",
       title: "Shake Shack: Gourmet Fast Food",
       bulletPoints: ["ShackBurger", "Cheese Fries", "Chocolate Shake"],
     },
     {
+      id: "le-bernardin",
       image: "https://via.placeholder.com/100",
       title: "Le Bernardin: Seafood",
       bulletPoints: [
@@ -44,6 +52,7 @@ const SearchResults: React.FC = () => {
       ],
     },
     {
+      id: "momofuku",
       image: "https://via.placeholder.com/100",
       title: "Momofuku: Asian Fusion",
       bulletPoints: [
@@ -53,6 +62,7 @@ const SearchResults: React.FC = () => {
       ],
     },
     {
+      id: "alinea",
       image: "https://via.placeholder.com/100",
       title: "Alinea: Molecular Gastronomy",
       bulletPoints: [
@@ -62,11 +72,13 @@ const SearchResults: React.FC = () => {
       ],
     },
     {
+      id: "in-n-out",
       image: "https://via.placeholder.com/100",
       title: "In-N-Out Burger: Fast Food Classic",
       bulletPoints: ["Double-Double", "Animal Style Fries", "Neapolitan Shake"],
     },
     {
+      id: "eleven-madison",
       image: "https://via.placeholder.com/100",
       title: "Eleven Madison Park: Fine Dining",
       bulletPoints: [
@@ -76,6 +88,7 @@ const SearchResults: React.FC = () => {
       ],
     },
     {
+      id: "osteria",
       image: "https://via.placeholder.com/100",
       title: "Osteria Francescana: Italian",
       bulletPoints: [
@@ -85,6 +98,7 @@ const SearchResults: React.FC = () => {
       ],
     },
     {
+      id: "noma",
       image: "https://via.placeholder.com/100",
       title: "Noma: Nordic Cuisine",
       bulletPoints: ["Moss and Cep", "Mahogany Clam", "Vegetable Season Menu"],
@@ -211,6 +225,11 @@ const SearchResults: React.FC = () => {
     }
   };
 
+  const handleResultClick = (resultId: string) => {
+    // Navigate to the menu options page with the result ID
+    navigate(`/menu-options/${resultId}`);
+  };
+
   return (
     <div className="search-results-page">
       <div className="results-search-container">
@@ -234,7 +253,12 @@ const SearchResults: React.FC = () => {
           {results.length > 0 ? (
             <>
               {results.map((item, index) => (
-                <div className="result-item" key={index}>
+                <div
+                  className="result-item"
+                  key={index}
+                  onClick={() => handleResultClick(item.id)}
+                  style={{ cursor: "pointer" }}
+                >
                   <img
                     src={item.image}
                     alt={item.title}
