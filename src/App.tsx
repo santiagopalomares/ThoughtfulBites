@@ -3,6 +3,7 @@ import SignUp from "./pages/SignUp";
 import Landing from "./pages/Landing";
 import AboutUs from "./pages/AboutUs";
 import ContactUs  from "./pages/ContactUs";
+import Account  from "./pages/Account";
 import Search from "./pages/SearchResults";
 import Navbar from "./components/Navbar";
 import MenuOptions from "./pages/MenuOptions";
@@ -20,6 +21,7 @@ function App() {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/search" element={<Search />} />
+            <Route path="/account" element={<Account />} />
           <Route path="/menu-options/:restaurantId" element={<MenuOptions />} />
         </Routes>
       </Router>

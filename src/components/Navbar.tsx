@@ -96,7 +96,7 @@ export default function Navbar() {
         >
           Contact
         </Link>
-        {!isLoggedIn ? (
+        {isLoggedIn ? (
           <>
             <Link
               to="/login"

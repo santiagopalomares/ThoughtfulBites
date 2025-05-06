@@ -126,12 +126,6 @@ const Account: React.FC = () => {
                         <span>Diet Restrictions</span>
                     </button>
                 </nav>
-                <div className="sidebar-footer">
-                    <button className="logout-button" onClick={handleLogout}>
-                        <div className="logout-icon"></div>
-                        <span>Log Out</span>
-                    </button>
-                </div>
             </div>
 
             <div className="main-content">
