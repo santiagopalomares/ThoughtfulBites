@@ -1,0 +1,71 @@
+.restaurant-info {
+    padding: 20px;
+}
+
+.rating-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.stars {
+    font-size: 24px;
+}
+
+.star.filled {
+    color: black;
+}
+
+.star.empty {
+    color: #ccc;
+}
+
+.rating-text {
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.badges {
+    display: flex;
+    gap: 10px;
+}
+
+.badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    background-size: 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.info-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.allergies ul, .offers ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.action-button {
+    padding: 10px;
+    background-color: #e0e0e0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
