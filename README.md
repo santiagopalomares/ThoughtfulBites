@@ -34,9 +34,19 @@ ThoughtfulBites is a web application designed to help users find restaurants tha
    npm install
    ```
 
-3. Start the development server:
+3. Source dependencies/services locally to remote
+   ```
+   set -a
+   source .env
+   set +a
+   ```
+   
+> [!NOTE]
+> Retrieve the env file in the Discord
+
+4. Start the development server:
    ```bash
    npm run dev
    ```
 
-4. Open your browser and navigate to `http://localhost:5173` (or the port shown in your terminal)
+5. Open your browser and navigate to `http://localhost:5173` (or the port shown in your terminal)
