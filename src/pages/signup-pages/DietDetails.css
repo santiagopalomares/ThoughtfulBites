@@ -36,7 +36,7 @@
 }
 
 .food-chips-container {
-  width: 100%;
+  width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,6 +52,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.7rem 1.2rem;
+  animation: fade-up 1s ease-out forwards;
 }
 
 .chip {

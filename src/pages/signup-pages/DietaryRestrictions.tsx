@@ -50,7 +50,7 @@ export function DietaryRestrictions({
         diet select <strong>Other</strong>.
       </p>
       <div className="chips-container">
-        {DIET_RESTRICTIONS.map((dietChoice) => (
+        {DIET_RESTRICTIONS.map((dietChoice, index) => (
           <button
             key={dietChoice}
             type="button"
@@ -58,15 +58,21 @@ export function DietaryRestrictions({
             className={`diet-chip ${
               userDietTypes.includes(dietChoice) ? "selected" : ""
             }`}
+            style={{ animationDelay: `${index * 0.1}s` }}
             onClick={() => updateUserDiet(dietChoice)}
           >
             {dietChoice}
           </button>
         ))}
       </div>
-      <div className="extra-step-text">
-        {(userDietTypes.includes("Allergens") ||
-          userDietTypes.includes("Other")) && (
+      {(userDietTypes.includes("Allergens") ||
+        userDietTypes.includes("Other")) && (
+        <div
+          className="extra-step-text animated"
+          key={userDietTypes
+            .filter((t) => t === "Allergens" || t === "Other")
+            .join()}
+        >
           <p>
             Since you selected
             <strong>
@@ -82,8 +88,8 @@ export function DietaryRestrictions({
             </strong>
             , we'll ask for more details in the next step.
           </p>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 }

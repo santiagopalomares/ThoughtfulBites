@@ -85,26 +85,28 @@ export default function SignUp() {
         </Link>
       </div>
       <form onSubmit={onSubmit}>
-        {step}
-        <p className="error-message">{errorMessage}</p>
-        <div className="navigation">
-          <div className="pagination-dots"></div>
-          {!isFirstStep && (
-            <button type="button" className="backButton" onClick={back}>
-              <img src={arrow} alt="left arrow" className="left-arrow" />
-              Back
-            </button>
-          )}
-          <button type="submit" className="nextButton">
-            {isLastStep ? (
-              "Finish"
-            ) : (
-              <>
-                Next
-                <img src={arrow} alt="right arrow" className="right-arrow" />
-              </>
+        <div className="form-content">
+          {step}
+          <p className="error-message">{errorMessage}</p>
+          <div className="navigation">
+            <div className="pagination-dots"></div>
+            {!isFirstStep && (
+              <button type="button" className="backButton" onClick={back}>
+                <img src={arrow} alt="left arrow" className="left-arrow" />
+                Back
+              </button>
             )}
-          </button>
+            <button type="submit" className="nextButton">
+              {isLastStep ? (
+                "Finish"
+              ) : (
+                <>
+                  Next
+                  <img src={arrow} alt="right arrow" className="right-arrow" />
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </form>
     </div>

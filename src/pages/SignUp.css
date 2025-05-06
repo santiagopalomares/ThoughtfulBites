@@ -9,6 +9,31 @@ form {
   background-color: #667754;
   min-height: 100vh;
   padding-top: 10px;
+  width: 100%;
+}
+
+form {
+  align-items: center;
+  flex: 1;
+  width: 100%;
+}
+
+.form-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.navigation {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px 0;
+  width: 100%;
+  animation: fade-up 1s ease-out forwards;
 }
 
 .link-no-underline {
@@ -20,27 +45,16 @@ form {
   font-weight: 400 !important;
 }
 
-.form {
-  flex: 1;
-}
-
 .step-heading {
   font-size: 64px;
   padding-top: 0.5em;
   color: white;
   text-align: center;
+  animation: fade-up 1s;
 }
 
 .error-message {
   color: #ffa1a1;
-}
-
-.navigation {
-  margin-top: auto;
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-bottom: 0rem;
 }
 
 .nextButton,
@@ -64,4 +78,16 @@ form {
 
 .left-arrow {
   transform: scaleX(-1);
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
 }
