@@ -1,0 +1,46 @@
+.carousel-container {
+    position: relative;
+    height: 250px;
+    background-color: #f8f8f8;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.carousel-button {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: black;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.carousel-button.left {
+    left: 20px;
+}
+
+.carousel-button.right {
+    right: 20px;
+}
+
+.carousel-content {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.carousel-item {
+    width: 150px;
+    height: 150px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="gray" stroke-width="2"/><path d="M35,30 L35,70" stroke="gray" stroke-width="4"/><path d="M65,30 C75,40 75,60 65,70" stroke="gray" stroke-width="4" fill="none"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}

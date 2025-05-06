@@ -80,7 +80,7 @@
   border-radius: 40px;
   padding: 0 1rem;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: .87rem;
   border: 4px solid #212f24;
   box-shadow: inset 0 0 0 2px white;
   transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55),
