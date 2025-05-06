@@ -69,13 +69,17 @@ export function DietaryRestrictions({
           userDietTypes.includes("Other")) && (
           <p>
             Since you selected
-            {[
-              userDietTypes.includes("Allergens") && " Allergens",
-              userDietTypes.includes("Other") &&
-                (userDietTypes.includes("Allergens") ? " and Other" : " Other"),
-            ]
-              .filter(Boolean)
-              .join("")}
+            <strong>
+              {[
+                userDietTypes.includes("Allergens") && " Allergens",
+                userDietTypes.includes("Other") &&
+                  (userDietTypes.includes("Allergens")
+                    ? " and Other"
+                    : " Other"),
+              ]
+                .filter(Boolean)
+                .join("")}
+            </strong>
             , we'll ask for more details in the next step.
           </p>
         )}

@@ -1,8 +1,17 @@
+.userinformation-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-direction: column;
+}
+
 input {
   font-family: "Josefin Sans", sans-serif;
   font-size: 18px;
-  width: 350px;
-  height: 35px;
+  width: 100%;
+  height: 100%;
+  max-width: 400px;
   border-radius: 7px;
   border: 0;
   text-indent: 7px;
@@ -17,6 +26,7 @@ input {
   flex-direction: row;
   gap: 10px;
   color: white;
+  padding-top: 20px;
 }
 
 .log-in {
@@ -24,15 +34,21 @@ input {
   font-weight: 700;
 }
 
-.password-container {
+.password-container,
+.email-container {
   position: relative;
+  width: 18em;
+  height: 1.9em;
+}
+
+.email-container {
+  margin-top: -30px;
 }
 
 .eye {
   position: absolute;
   right: 10px;
   top: 50%;
-  transform: translateY(-50%);
   background: none;
   border: none;
   padding: 0;
@@ -41,6 +57,7 @@ input {
   height: 24px;
   width: 24px;
 }
+
 .eye img {
   width: 100%;
   height: 100%;
