@@ -285,6 +285,7 @@ const SearchResults: React.FC = () => {
 
         {isWideScreen && <div className="resizer" ref={resizerRef}></div>}
 
+        {/* Google Maps API Section */}
         {isWideScreen && (
           <div className="right-section" style={{ width: `${rightWidth}%` }}>
             <div className="gray-box"></div>
