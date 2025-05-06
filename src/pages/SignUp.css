@@ -26,16 +26,6 @@ form {
   width: 100%;
 }
 
-.navigation {
-  margin-top: auto;
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  padding: 20px 0;
-  width: 100%;
-  animation: fade-up 1s ease-out forwards;
-}
-
 .link-no-underline {
   text-decoration: none;
 }
@@ -57,6 +47,15 @@ form {
   color: #ffa1a1;
 }
 
+.navigation {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 0;
+  width: 95%;
+  animation: fade-up 1s ease-out forwards;
+}
+
 .nextButton,
 .backButton {
   font-family: "Josefin Sans", sans-serif;
@@ -67,6 +66,10 @@ form {
   align-items: center;
   cursor: pointer;
   color: white;
+}
+
+.backButton {
+  flex-grow: 1;
 }
 
 .right-arrow,

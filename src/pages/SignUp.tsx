@@ -89,7 +89,7 @@ export default function SignUp() {
           {step}
           <p className="error-message">{errorMessage}</p>
           <div className="navigation">
-            <div className="pagination-dots"></div>
+            {/* <div className="pagination-dots"></div> */}
             {!isFirstStep && (
               <button type="button" className="backButton" onClick={back}>
                 <img src={arrow} alt="left arrow" className="left-arrow" />
