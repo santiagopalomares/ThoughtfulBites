@@ -11,12 +11,13 @@ export default function Landing() {
 
   const handleSearch = (searchQuery: string) => {
     console.log("Search submitted:", searchQuery);
-    // Navigate to the search results page with the query as a parameter
     navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
   };
 
   return (
     <div className="landing-container">
+      <div className="sticky-bar"></div>
+
       <section className="section hero">
         <h1 className="landing-title">
           Find Restaurants That Match Your Dietary Needs
@@ -29,7 +30,6 @@ export default function Landing() {
         />
       </section>
 
-      {/* Rest of your component stays the same */}
       <section className="section split-section left-image">
         <div className="left-box">
           <img src={MenueBefore} alt="Menu Before" />
