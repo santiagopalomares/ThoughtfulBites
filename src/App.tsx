@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUp from "./pages/SignUp";
+import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import AboutUs from "./pages/AboutUs";
-import ContactUs  from "./pages/ContactUs";
+import ContactUs from "./pages/ContactUs";
 import Search from "./pages/SearchResults";
 import Navbar from "./components/Navbar";
 import MenuOptions from "./pages/MenuOptions";
@@ -20,6 +21,7 @@ function App() {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/menu-options/:restaurantId" element={<MenuOptions />} />
         </Routes>
       </Router>
