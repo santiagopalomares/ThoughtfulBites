@@ -24,12 +24,12 @@ export default function Login() {
   return (
     <div className="login-container">
       <form onSubmit={onSubmit}>
-        <div className="form-content">
-          <h1 className="heading">Welcome Back!</h1>
-          <div className="email-container">
+        <div className="login-form-content">
+          <h1 className="login-heading">Welcome Back!</h1>
+          <div className="login-email-container">
             <input
               type="text"
-              className="email-entry"
+              className="login-email-entry"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -37,10 +37,10 @@ export default function Login() {
               autoFocus
             />
           </div>
-          <div className="password-container">
+          <div className="login-password-container">
             <input
               type={showPassword ? "text" : "password"}
-              className="password-entry"
+              className="login-password-entry"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -48,7 +48,7 @@ export default function Login() {
             />
             <button
               type="button"
-              className="eye"
+              className="login-eye"
               onClick={togglePasswordVisibility}
             >
               {" "}
@@ -58,7 +58,7 @@ export default function Login() {
               ></img>
             </button>
           </div>
-          <p className="error-message">{errorMessage}</p>
+          <p className="login-error-message">{errorMessage}</p>
           <button type="submit" className="login-button">
             Login
           </button>
