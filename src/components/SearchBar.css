@@ -37,7 +37,6 @@
 }
 
 .search-button {
-  font-family: "Josefin Sans";
   position: absolute;
   right: 12px;
   top: 50%;
@@ -51,7 +50,7 @@
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   max-height: 55px;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 @media (max-width: 768px) {

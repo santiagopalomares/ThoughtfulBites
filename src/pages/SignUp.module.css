@@ -1,3 +1,8 @@
+.signup-header {
+  margin-top: 1%;
+  animation: fade-up 1s;
+}
+
 .signup-container,
 form {
   display: flex;
@@ -18,7 +23,7 @@ form {
   width: 100%;
 }
 
-.form-content {
+.signup-form-content {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -26,11 +31,11 @@ form {
   width: 100%;
 }
 
-.link-no-underline {
+.signup-link-no-underline {
   text-decoration: none;
 }
 
-.site-name {
+.signup-site-name {
   color: white !important;
   font-weight: 400 !important;
 }
@@ -43,11 +48,11 @@ form {
   animation: fade-up 1s;
 }
 
-.error-message {
+.signup-error-message {
   color: #ffa1a1;
 }
 
-.navigation {
+.signup-navigation {
   margin-top: auto;
   display: flex;
   justify-content: flex-end;
@@ -56,8 +61,8 @@ form {
   animation: fade-up 1s ease-out forwards;
 }
 
-.nextButton,
-.backButton {
+.signup-next-button,
+.signup-back-button {
   font-family: "Josefin Sans", sans-serif;
   font-size: 24px;
   background: none;
@@ -68,7 +73,7 @@ form {
   color: white;
 }
 
-.backButton {
+.signup-back-button {
   flex-grow: 1;
 }
 
@@ -81,6 +86,25 @@ form {
 
 .left-arrow {
   transform: scaleX(-1);
+}
+
+.signup-finish-button {
+  font-size: 24px;
+  border-radius: 30px;
+  border: none;
+  font-family: "Josefin Sans";
+  color: white;
+  background-color: #212f24;
+  padding: 17px 30px 12px 30px;
+}
+
+.signup-finish-button:hover {
+  background: #bc9c85;
+  color: black;
+}
+
+.signup-finish-button:active {
+  background: #ece8e5;
 }
 
 @keyframes fade-up {

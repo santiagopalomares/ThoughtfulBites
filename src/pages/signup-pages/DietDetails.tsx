@@ -3,7 +3,7 @@ import SearchBar from "../../components/SearchBar";
 import SearchIcon from "../../assets/SearchIcon.png";
 import XWhite from "../../assets/X-white.png";
 import XBlack from "../../assets/X-black.png";
-import "./DietDetails.css";
+import styles from "./DietDetails.module.css";
 
 type DietDetailsData = {
   userDietDetails: string[];
@@ -39,13 +39,13 @@ export function DietDetails({
 
   return (
     <>
-      <h1 className="step-heading">Step 3: Diet Details</h1>
-      <p className="information-text">
+      <h1 className={styles["step-heading"]}>Step 3: Diet Details</h1>
+      <p className={styles["information-text"]}>
         Please provide further details on your diet restrictions by searching
         for your food in the search bar.
       </p>
-      <div className="diet-details-container">
-        <div className="searchbar-wrapper">
+      <div className={styles["diet-details-container"]}>
+        <div className={styles["searchbar-wrapper"]}>
           <SearchBar
             placeholder="Search for foods, ingredients, ..."
             onSearch={handleSearch}
@@ -53,11 +53,11 @@ export function DietDetails({
             searchIconSrc={SearchIcon}
           />
         </div>
-        <div className="food-chips-container">
+        <div className={styles["food-chips-container"]}>
           {userDietDetails.map((food) => (
-            <div className="diet-chip" key={food}>
+            <div className={styles["diet-chip"]} key={food}>
               <button
-                className="chip"
+                className={styles["chip"]}
                 type="button"
                 onClick={() => removeFood(food)}
               ></button>

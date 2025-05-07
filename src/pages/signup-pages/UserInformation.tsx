@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../signup-pages/UserInformation.css";
+import styles from "../signup-pages/UserInformation.module.css";
 import { useState } from "react";
 import Show from "../../assets/Show.png";
 import Hide from "../../assets/Hide.png";
@@ -33,9 +33,9 @@ export function UserInformation({
 
   return (
     <>
-      <div className="userinformation-container">
-        <h1 className="step-heading">Step 1: Sign Up</h1>
-        <div className="email-container">
+      <div className={styles["userinformation-container"]}>
+        <h1 className={styles["step-heading"]}>Step 1: Sign Up</h1>
+        <div className={styles["email-container"]}>
           <input
             type="text"
             className="email-entry"
@@ -46,7 +46,7 @@ export function UserInformation({
             autoFocus
           />
         </div>
-        <div className="password-container">
+        <div className={styles["password-container"]}>
           <input
             type={showPassword ? "text" : "password"}
             className="password-entry"
@@ -57,7 +57,7 @@ export function UserInformation({
           />
           <button
             type="button"
-            className="eye"
+            className={styles["eye"]}
             onClick={togglePasswordVisibility}
           >
             <img
@@ -66,10 +66,10 @@ export function UserInformation({
             ></img>
           </button>
         </div>
-        <div className="password-container">
+        <div className={styles["password-container"]}>
           <input
             type={showConfirmPassword ? "text" : "password"}
-            className="confirm-password-entry"
+            className={styles["confirm-password-entry"]}
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => updateFields({ confirmPassword: e.target.value })}
@@ -77,7 +77,7 @@ export function UserInformation({
           />
           <button
             type="button"
-            className="eye"
+            className={styles["eye"]}
             onClick={toggleConfirmPasswordVisibility}
           >
             <img
@@ -86,9 +86,9 @@ export function UserInformation({
             ></img>
           </button>
         </div>
-        <div className="login-redirect">
-          <p className="account-text">Already have an account?</p>
-          <Link to="/login" className="log-in">
+        <div className={styles["login-redirect"]}>
+          <p className={styles["account-text"]}>Already have an account?</p>
+          <Link to="/login" className={styles["log-in"]}>
             Log In
           </Link>
         </div>

@@ -13,11 +13,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   className,
 }) => {
   return (
-    <button
-      className={`custom-button ${className || ""}`}
-      onClick={onClick}
-      type="button"
-    >
+    <button className={`custom-button ${className || ""}`} onClick={onClick}>
       {text}
     </button>
   );

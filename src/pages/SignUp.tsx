@@ -1,8 +1,8 @@
 import { FormEvent, useState, useMemo } from "react";
-import "./SignUp.css";
+import styles from "./SignUp.module.css";
 import logo from "../assets/Logo.png";
 import arrow from "../assets/ArrowButton.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMultistepForm } from "../components/useMultistepForm";
 import { UserInformation } from "./signup-pages/UserInformation";
 import { DietaryRestrictions } from "./signup-pages/DietaryRestrictions";
@@ -27,6 +27,7 @@ const INITIAL_DATA: FormData = {
 export default function SignUp() {
   const [data, setData] = useState(INITIAL_DATA);
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   function updateFields(fields: Partial<FormData>) {
     setData((prev) => {
@@ -73,39 +74,53 @@ export default function SignUp() {
     } else {
       setErrorMessage("");
       alert(`SUCCESS: Account created for ${data.email}`); // TODO: Add User to database
+      navigate("/login");
     }
   }
 
   return (
-    <div className="signup-container">
-      <div className="header">
-        <Link to="/" className="link-no-underline">
+    <div className={styles["signup-container"]}>
+      <div className={styles["signup-header"]}>
+        <Link to="/" className={styles["signup-link-no-underline"]}>
           <img src={logo} alt="Logo" className="logo" />
-          <span className="site-name">ThoughtfulBites</span>
+          <span className={styles["signup-site-name"]}>ThoughtfulBites</span>
         </Link>
       </div>
       <form onSubmit={onSubmit}>
-        <div className="form-content">
+        <div className={styles["signup-form-content"]}>
           {step}
-          <p className="error-message">{errorMessage}</p>
-          <div className="navigation">
+          <p className={styles["signup-error-message"]}>{errorMessage}</p>
+          <div className={styles["signup-navigation"]}>
             {/* <div className="pagination-dots"></div> */}
             {!isFirstStep && (
-              <button type="button" className="backButton" onClick={back}>
-                <img src={arrow} alt="left arrow" className="left-arrow" />
+              <button
+                type="button"
+                className={styles["signup-back-button"]}
+                onClick={back}
+              >
+                <img
+                  src={arrow}
+                  alt="left arrow"
+                  className={styles["left-arrow"]}
+                />
                 Back
               </button>
             )}
-            <button type="submit" className="nextButton">
-              {isLastStep ? (
-                "Finish"
-              ) : (
-                <>
-                  Next
-                  <img src={arrow} alt="right arrow" className="right-arrow" />
-                </>
-              )}
-            </button>
+
+            {isLastStep ? (
+              <button type="submit" className={styles["signup-finish-button"]}>
+                Finish
+              </button>
+            ) : (
+              <button type="submit" className={styles["signup-next-button"]}>
+                Next
+                <img
+                  src={arrow}
+                  alt="right arrow"
+                  className={styles["right-arrow"]}
+                />
+              </button>
+            )}
           </div>
         </div>
       </form>

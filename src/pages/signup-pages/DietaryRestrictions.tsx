@@ -1,4 +1,4 @@
-import "./DietaryRestrictions.css";
+import styles from "./DietaryRestrictions.module.css";
 
 type DietData = {
   userDietTypes: string[];
@@ -44,19 +44,19 @@ export function DietaryRestrictions({
 
   return (
     <>
-      <h1 className="step-heading">Step 2: Dietary Restrictions</h1>
-      <p className="information-text">
+      <h1 className={styles["step-heading"]}>Step 2: Dietary Restrictions</h1>
+      <p className={styles["information-text"]}>
         Please select all of your dietary restrictions. If you don’t see your
         diet select <strong>Other</strong>.
       </p>
-      <div className="chips-container">
+      <div className={styles["chips-container"]}>
         {DIET_RESTRICTIONS.map((dietChoice, index) => (
           <button
             key={dietChoice}
             type="button"
             value={dietChoice}
-            className={`diet-chip ${
-              userDietTypes.includes(dietChoice) ? "selected" : ""
+            className={`${styles["diet-chip"]} ${
+              userDietTypes.includes(dietChoice) ? styles["selected"] : ""
             }`}
             style={{ animationDelay: `${index * 0.1}s` }}
             onClick={() => updateUserDiet(dietChoice)}
@@ -68,7 +68,7 @@ export function DietaryRestrictions({
       {(userDietTypes.includes("Allergens") ||
         userDietTypes.includes("Other")) && (
         <div
-          className="extra-step-text animated"
+          className={`${styles["extra-step-text"]} ${styles.animated}`}
           key={userDietTypes
             .filter((t) => t === "Allergens" || t === "Other")
             .join()}

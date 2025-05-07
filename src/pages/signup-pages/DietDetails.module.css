@@ -5,6 +5,23 @@
   width: 110%;
 }
 
+.step-heading {
+  font-size: 64px;
+  padding-top: 0.5em;
+  color: white;
+  text-align: center;
+  animation: fade-up 1s;
+}
+
+.information-text {
+  text-align: center;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  animation: fade-up 1s ease-out;
+  color: white;
+  margin-bottom: 3.5rem;
+}
+
 .search-container {
   display: flex !important;
   flex-direction: column !important;
@@ -55,6 +72,35 @@
   animation: fade-up 1s ease-out forwards;
 }
 
+.diet-chip,
+.diet-chip.selected {
+  background: #212f24;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 18px;
+  color: white;
+  border-radius: 50px;
+  border: none;
+  padding: 0.9rem 2.6rem;
+  opacity: 0;
+  transform: translateY(30px) scale(0.9);
+  animation: fade-up 1s ease-out forwards;
+}
+
+.diet-chip:hover,
+.diet-chip.selected:hover {
+  background: #bc9c85;
+  color: black;
+}
+
+.diet-chip:active {
+  background: #ece8e5;
+}
+
+.diet-chip.selected {
+  background: #ece8e5;
+  color: black;
+}
+
 .chip {
   background: none;
   border: none;
@@ -69,4 +115,16 @@
 
 .diet-chip:hover .chip {
   background-image: url("../../assets/X-black.png");
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
 }
