@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
-import AboutUs from "./pages/AboutUs";
+import About from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import Search from "./pages/SearchResults";
 import Navbar from "./components/Navbar";
@@ -17,7 +17,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/AboutUs" element={<AboutUs />} />
+          <Route path="/about" element={<About />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/search" element={<Search />} />

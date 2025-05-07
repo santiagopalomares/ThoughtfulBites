@@ -1,0 +1,261 @@
+.about-container {
+  width: 100%;
+  margin: 0;
+  padding: 10vh 0 0 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  background-color: #667754;
+  color: white;
+}
+
+.section {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.about-section {
+  justify-content: flex-start;
+}
+
+.section-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+  width: 100%;
+  color: white;
+}
+
+.section-subtitle {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+  width: 100%;
+  color: white;
+}
+
+.about-content {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.mission-box {
+  width: 90%;
+  max-width: 1400px;
+  background-color: none;
+  padding: 40px;
+  border-radius: 10px;
+  color: white;
+}
+
+.mission-box p {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: white;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.mission-box p:last-child {
+  margin-bottom: 0;
+}
+
+.image-container {
+  width: 100vw;
+  overflow: hidden;
+  margin: 0 -20px;
+  padding: 0;
+  max-width: none;
+}
+
+.full-width-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  object-position: center 30%;
+  max-height: 60vh;
+}
+
+.team-section {
+  background-color: none;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.team-member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #212f24;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.team-member:hover {
+  transform: translateY(-5px);
+}
+
+.member-image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+  background-color: transparent;
+}
+
+.member-image {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background-color: #ece8e5;
+  background-size: cover;
+  background-position: center;
+  border: 5px solid #667754;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.member-info {
+  padding: 20px;
+  margin-top: -50px;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  color: white;
+}
+
+.member-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.member-bio {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: white;
+}
+
+.footer-section {
+  background-color: #212f24;
+  min-height: 20vh;
+  color: white;
+  padding: 30px 20px;
+  margin-top: 40px;
+}
+
+.footer-content {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-links {
+  display: flex;
+  gap: 30px;
+  margin-top: 15px;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: opacity 0.3s ease;
+}
+
+.footer-links a:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 992px) {
+  .team-grid {
+    gap: 30px;
+  }
+
+  .member-image {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .team-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .mission-box {
+    width: 90%;
+    padding: 30px;
+  }
+
+  .section-title {
+    font-size: 2.8rem;
+  }
+
+  .section-subtitle {
+    font-size: 2.3rem;
+  }
+
+  .member-name {
+    font-size: 1.6rem;
+  }
+
+  .section {
+    padding: 40px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 2.3rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.8rem;
+  }
+
+  .mission-box p {
+    font-size: 1.1rem;
+  }
+
+  .mission-box {
+    width: 95%;
+    padding: 25px;
+  }
+
+  .member-image {
+    width: 160px;
+    height: 160px;
+  }
+
+  .member-name {
+    font-size: 1.4rem;
+  }
+
+  .team-grid {
+    gap: 30px;
+  }
+}
