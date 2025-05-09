@@ -2,11 +2,13 @@ import styles from "./AboutUs.module.css";
 import React, { useEffect, useState } from "react";
 import sillyguy from "../assets/sillyguy.png";
 import happyCustomers from "../assets/PeopleEating.png";
+import { Link } from "react-router-dom";
 
 interface TeamMember {
   name: string;
   bio: string;
   image: string;
+  link: string;
 }
 
 export default function AboutUs(): React.ReactElement {
@@ -27,23 +29,27 @@ export default function AboutUs(): React.ReactElement {
   const teamMembers: TeamMember[] = [
     {
       name: "Julian Apraicio",
-      bio: "Text",
+      bio: "Third year computer science major allergic to cats and C++.",
       image: sillyguy,
+      link: "https://www.linkedin.com/in/japa1/",
     },
     {
       name: "Queensley Lim",
-      bio: "Text",
+      bio: "A Software Engineering major who enjoys finding creative solutions and drinking matcha.",
       image: sillyguy,
+      link: "https://www.linkedin.com/in/queensley-lim/",
     },
     {
       name: "Geric Norman",
-      bio: "Text",
+      bio: "Third year CS major who’s tired of UCI CS upperdivs.",
       image: sillyguy,
+      link: "https://www.linkedin.com/in/gericcapili/",
     },
     {
       name: "Santiago Palomares",
-      bio: "Text",
+      bio: "Software Engineer who loves building fullstack projects and fish keeping.",
       image: sillyguy,
+      link: "https://www.linkedin.com/in/santiagopalomares/",
     },
   ];
 
@@ -57,22 +63,18 @@ export default function AboutUs(): React.ReactElement {
       <section className={`${styles.section} ${styles["about-section"]}`}>
         <h1 className={styles["section-title"]}>About</h1>
         <div className={styles["about-content"]}>
-          <div className={styles["mission-box"]}>
-            <p>
-              We believe everyone deserves to enjoy dining out without worry.
-              Our mission is to connect people with dietary restrictions to
-              restaurants that cater to their specific needs. Whether you have
-              allergies, follow a specific diet, or have other food preferences,
-              we're here to make finding the right restaurant easier.
-            </p>
+          <div className={styles["about-background-image"]}>
+            <div className={styles["mission-box"]}>
+              <p>
+                We believe everyone deserves to enjoy dining out without worry.
+                Our mission is to connect people with dietary restrictions to
+                restaurants that cater to their specific needs. Whether you have
+                allergies, follow a specific diet, or have other food
+                preferences, we're here to make finding the right restaurant
+                easier.
+              </p>
+            </div>
           </div>
-        </div>
-        <div className={styles["image-container"]}>
-          <img
-            src={happyCustomers}
-            className={styles["full-width-image"]}
-            alt="Happy customers enjoying their meal"
-          />
         </div>
       </section>
 
@@ -90,6 +92,15 @@ export default function AboutUs(): React.ReactElement {
               <div className={styles["member-info"]}>
                 <h3 className={styles["member-name"]}>{member.name}</h3>
                 <p className={styles["member-bio"]}>{member.bio}</p>
+                <p>
+                  {
+                    <strong>
+                      <Link className={styles["member-link"]} to={member.link}>
+                        LinkedIn
+                      </Link>
+                    </strong>
+                  }
+                </p>
               </div>
             </div>
           ))}
