@@ -1,24 +1,47 @@
-import "./Landing.css";
+import styles from "./Landing.module.css";
 import SearchBar from "../components/SearchBar";
 import SearchIcon from "../assets/SearchIcon.png";
 import EatingImage from "../assets/EatingLanding.png";
 import EatingHappy from "../assets/EatingHappy.png";
 import MenueBefore from "../assets/MenuBeforeTime.png";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function Landing() {
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Handle responsive layout detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // Check on initial load
+    checkMobile();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkMobile);
+
+    // Clean up event listener
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const handleSearch = (searchQuery: string) => {
     console.log("Search submitted:", searchQuery);
-    // Navigate to the search results page with the query as a parameter
     navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
   };
 
   return (
-    <div className="landing-container">
-      <section className="section hero">
-        <h1 className="landing-title">
+    <div className={styles["landing-container"]}>
+      {/* Meta tag for proper mobile viewport */}
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      />
+
+      <section className={`${styles.section} ${styles.hero}`}>
+        <h1 className={styles["landing-title"]}>
           Find Restaurants That Match Your Dietary Needs
         </h1>
         <SearchBar
@@ -29,12 +52,17 @@ export default function Landing() {
         />
       </section>
 
-      {/* Rest of your component stays the same */}
-      <section className="section split-section left-image">
-        <div className="left-box">
-          <img src={MenueBefore} alt="Menu Before" />
+      <section
+        className={`${styles.section} ${styles["split-section"]} ${styles["left-image"]}`}
+      >
+        <div className={styles["left-box"]}>
+          <img
+            src={MenueBefore}
+            alt="Menu Before"
+            className={styles.responsiveImage}
+          />
         </div>
-        <div className="right-text">
+        <div className={styles["right-text"]}>
           <h2>Preview Menus and Nutritional Info in Advance</h2>
           <p>
             Before you even step inside, explore the menu online to check for
@@ -45,10 +73,10 @@ export default function Landing() {
       </section>
 
       <section
-        className="section image-highlight"
+        className={`${styles.section} ${styles["image-highlight"]}`}
         style={{ backgroundImage: `url(${EatingImage})` }}
       >
-        <div className="image-overlay-text">
+        <div className={styles["image-overlay-text"]}>
           <h2>Make Dining Out Stress-Free with Customizable Filters</h2>
           <p>
             Filter restaurants based on your dietary restrictions, whether you
@@ -58,8 +86,10 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="section split-section right-image">
-        <div className="left-text">
+      <section
+        className={`${styles.section} ${styles["split-section"]} ${styles["right-image"]}`}
+      >
+        <div className={styles["left-text"]}>
           <h2>Discover Places Where You Can Enjoy a Safe Meal</h2>
           <p>
             Whether you're avoiding dairy, following a keto diet, or managing a
@@ -67,12 +97,18 @@ export default function Landing() {
             your health and dietary needs. Enjoy your meal without compromise!
           </p>
         </div>
-        <div className="right-box">
-          <img src={EatingHappy} alt="Eating Happy" />
+        <div className={styles["right-box"]}>
+          <img
+            src={EatingHappy}
+            alt="Eating Happy"
+            className={styles.responsiveImage}
+          />
         </div>
       </section>
 
-      <section className="section footer-section"></section>
+      <section
+        className={`${styles.section} ${styles["footer-section"]}`}
+      ></section>
     </div>
   );
 }
