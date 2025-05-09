@@ -3,6 +3,7 @@ import styles from "./Login.module.css";
 import Show from "../assets/Show.png";
 import Hide from "../assets/Hide.png";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.tsx";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,10 +11,12 @@ export default function Login() {
   const [showPassword, setshowPassword] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
     // TODO: Set Error Message if user not found.
+    login();
     navigate("/");
   }
 
