@@ -73,15 +73,14 @@
   line-height: 1.2;
 }
 
-/* Hide the expanded overlay for mobile - this is no longer needed */
 .expanded {
-  position: relative; /* Changed from fixed to relative */
+  position: relative;
   top: auto;
   left: auto;
   width: auto;
   height: auto;
   z-index: auto;
-  background-color: transparent; /* Changed from rgba(255, 255, 255, 0.95) to transparent */
+  background-color: transparent;
   margin: 0;
   padding: 0;
   display: block;
@@ -101,24 +100,23 @@
   cursor: pointer;
   color: #333;
   z-index: 1001;
-  display: none; /* Hide close button */
+  display: none;
 }
 
 .expanded .search-inner-container {
-  margin-top: 0; /* Changed from 50px to 0 */
+  margin-top: 0;
   width: 100%;
   max-width: none;
 }
 
-/* Hide search button on screens below 1200px */
 @media (max-width: 1199px) {
   .search-button-container {
     display: none;
   }
 
   .search-bar {
-    margin-right: 20px; /* Adjust margin when button is hidden */
-    width: calc(100% - 90px); /* Adjust width when button is hidden */
+    margin-right: 20px;
+    width: calc(100% - 90px);
   }
 }
 

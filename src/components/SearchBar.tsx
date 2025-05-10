@@ -71,7 +71,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
           ref={searchInputRef}
         />
 
-        {/* Only show search button on screens 1200px and above */}
         {!isSmallScreen && (
           <div className={styles["search-button-container"]}>
             <CustomButton
