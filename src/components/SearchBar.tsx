@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import "./SearchBar.css";
+import React, { useState, useEffect, useRef } from "react";
+import styles from "./SearchBar.module.css";
 import CustomButton from "./Button";
 
 interface SearchBarProps {
@@ -16,14 +16,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
   searchIconSrc,
 }) => {
   const [searchText, setSearchText] = useState("");
-  const [isMobile, setIsMobile] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsSmallScreen(window.innerWidth < 1200);
     };
+
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
+
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
@@ -33,6 +36,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       handleSearch();
     }
   };
@@ -43,29 +47,40 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
 
     onSearch(searchText);
-    setSearchText("");
   };
 
   return (
-    <div className="search-container">
-      {searchIconSrc && (
-        <div className="search-icon-container">
-          <img src={searchIconSrc} alt="Search Icon" className="search-icon" />
-        </div>
-      )}
-      <input
-        type="text"
-        className="search-bar"
-        placeholder={placeholder}
-        value={searchText}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-      />
-      <CustomButton
-        text={buttonText}
-        onClick={handleSearch}
-        className="search-button"
-      />
+    <div className={styles["search-container"]}>
+      <div className={styles["search-inner-container"]}>
+        {searchIconSrc && (
+          <div className={styles["search-icon-container"]}>
+            <img
+              src={searchIconSrc}
+              alt="Search Icon"
+              className={styles["search-icon"]}
+            />
+          </div>
+        )}
+        <input
+          type="text"
+          className={styles["search-bar"]}
+          placeholder={placeholder}
+          value={searchText}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          ref={searchInputRef}
+        />
+
+        {!isSmallScreen && (
+          <div className={styles["search-button-container"]}>
+            <CustomButton
+              text={buttonText}
+              onClick={handleSearch}
+              className={styles["search-button"]}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

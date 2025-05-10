@@ -1,0 +1,77 @@
+.step-heading {
+  font-size: 64px;
+  padding-top: 0.5em;
+  color: white;
+  text-align: center;
+  animation: fade-up 1s;
+}
+
+.chips-container {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.diet-chip,
+.diet-chip.selected {
+  background: #212f24;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 18px;
+  color: white;
+  border-radius: 50px;
+  border: none;
+  padding: 0.9rem 2.6rem;
+  opacity: 0;
+  transform: translateY(30px) scale(0.9);
+  animation: fade-up 1s ease-out forwards;
+}
+
+.diet-chip:hover,
+.diet-chip.selected:hover {
+  background: #bc9c85;
+  color: black;
+}
+
+.diet-chip:active {
+  background: #ece8e5;
+}
+
+.diet-chip.selected {
+  background: #ece8e5;
+  color: black;
+}
+
+.information-text,
+.extra-step-text {
+  text-align: center;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  animation: fade-up 1s ease-out;
+}
+
+.information-text {
+  color: white;
+  margin-bottom: 3.5rem;
+}
+
+.extra-step-text {
+  margin-top: 3.5rem;
+  margin-bottom: 0;
+  color: white;
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
