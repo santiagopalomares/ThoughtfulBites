@@ -16,14 +16,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
   searchIconSrc,
 }) => {
   const [searchText, setSearchText] = useState("");
-  const [isMobile, setIsMobile] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const searchContainerRef = useRef<HTMLDivElement>(null);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsSmallScreen(window.innerWidth < 1200);
     };
 
     checkScreenSize();
@@ -32,39 +30,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        isExpanded &&
-        searchContainerRef.current &&
-        !searchContainerRef.current.contains(event.target as Node)
-      ) {
-        setIsExpanded(false);
-      }
-    };
-
-    if (isExpanded) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isExpanded]);
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
-  };
-
-  const handleInputFocus = () => {
-    if (isMobile) {
-      setIsExpanded(true);
-      setTimeout(() => {
-        if (searchInputRef.current) {
-          searchInputRef.current.focus();
-        }
-      }, 100);
-    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -80,19 +47,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
 
     onSearch(searchText);
-    setIsExpanded(false);
   };
-
-  const handleCloseSearch = () => {
-    setIsExpanded(false);
-  };
-
-  const containerClassName = isExpanded
-    ? `${styles["search-container"]} ${styles.expanded}`
-    : styles["search-container"];
 
   return (
-    <div className={containerClassName} ref={searchContainerRef}>
+    <div className={styles["search-container"]}>
       <div className={styles["search-inner-container"]}>
         {searchIconSrc && (
           <div className={styles["search-icon-container"]}>
@@ -110,27 +68,20 @@ const SearchBar: React.FC<SearchBarProps> = ({
           value={searchText}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          onFocus={handleInputFocus}
           ref={searchInputRef}
         />
-        <div className={styles["search-button-container"]}>
-          <CustomButton
-            text={buttonText}
-            onClick={handleSearch}
-            className={styles["search-button"]}
-          />
-        </div>
-      </div>
 
-      {isMobile && isExpanded && (
-        <button
-          className={styles["close-search"]}
-          onClick={handleCloseSearch}
-          aria-label="Close search"
-        >
-          ✕
-        </button>
-      )}
+        {/* Only show search button on screens 1200px and above */}
+        {!isSmallScreen && (
+          <div className={styles["search-button-container"]}>
+            <CustomButton
+              text={buttonText}
+              onClick={handleSearch}
+              className={styles["search-button"]}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
