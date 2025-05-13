@@ -1,14 +1,15 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+/** {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    box-sizing: border-box;*/
+/*    font-family: Arial, sans-serif;*/
+/*}*/
 
 .main-content {
     overflow-y: auto;
     max-height: 100vh;
     padding-bottom: 20px;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .account-profile-container {
@@ -20,21 +21,23 @@
 
 .sidebar {
     width: 300px;
-    background-color: #f2f2f2;
+    background-color: lightgray;
     color: #333;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #ddd;
-    padding-top: 1px;
+    /*border-right: 1px solid #ddd;*/
+    padding-top: 65px;
+    /*height: 100vh;*/
+    position: relative;
 }
 
-.navigation {
+.navigation2 {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 
-.nav-item {
+.nav-item2 {
     display: flex;
     align-items: center;
     padding: 15px 20px;
@@ -47,29 +50,30 @@
     color: #333;
     transition: background-color 0.3s;
     margin: 0;
+    font-family: "Josefin Sans", sans-serif;
 }
 
-.navigation button {
+.navigation button2 {
     margin: 0;
     padding-top: 15px;
     padding-bottom: 15px;
 }
 
-.nav-item {
+.nav-item2 {
     display: flex;
     align-items: center;
 }
 
-.nav-item:hover {
+.nav-item2:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
-.nav-item.active {
+.nav-item2.active {
     background-color: #333;
     color: white;
 }
 
-.nav-icon {
+.nav-icon2 {
     width: 24px;
     height: 24px;
     margin-right: 15px;
@@ -121,6 +125,7 @@
 .profile-info h1 {
     font-size: 28px;
     margin-bottom: 5px;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .profile-info p {
@@ -143,6 +148,7 @@
 
 .card-header h2 {
     font-size: 24px;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .edit-button {
@@ -156,6 +162,7 @@
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .edit-button:hover {
@@ -191,11 +198,13 @@
     font-size: 14px;
     margin-bottom: 5px;
     color: #e0e0e0;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .field-value {
     font-size: 16px;
     padding: 5px 0;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .delete-account-container {
@@ -213,6 +222,7 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .delete-account-button:hover {
@@ -227,6 +237,7 @@
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
     font-size: 16px;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .field-input:focus {
@@ -249,6 +260,7 @@
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .cancel-button:hover {
@@ -299,6 +311,7 @@
 .delete-confirmation-modal h2 {
     color: #d32f2f;
     margin-bottom: 20px;
+    font-family: "Josefin Sans", sans-serif;
     font-size: 24px;
 }
 
@@ -306,6 +319,7 @@
     margin-bottom: 30px;
     line-height: 1.5;
     font-size: 16px;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .modal-actions {
@@ -323,6 +337,7 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .cancel-button:hover {
@@ -338,6 +353,7 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .confirm-delete-button:hover {
@@ -352,6 +368,7 @@
     font-size: 28px;
     color: white;
     margin: 0;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .diet-details-card {
@@ -397,4 +414,100 @@
 
 .checkbox-item input[type="checkbox"]:disabled + label {
     cursor: default;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.sidebar-logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-logo {
+    height: 30px;
+    width: auto;
+}
+
+.sidebar-site-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 10px;
+    color: #333;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.navbar2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.navbar-left2 {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-left2 .site-name {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: black !important;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.logo2 {
+    height: 32px;
+    margin-right: 0.5rem;
+}
+
+.logout-container2 {
+    padding: 20px;
+    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.logout-button2 {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 20px;
+    cursor: pointer;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.logout-icon2 {
+    width: 32px;
+    height: 32px;
+    margin-right: 15px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.logout-button2:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }

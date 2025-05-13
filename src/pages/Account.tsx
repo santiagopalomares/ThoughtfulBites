@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './Account.css';
+import Logo from "../assets/Logo.png";
+import { Link } from "react-router-dom";
 
 const Account: React.FC = () => {
     const [user, setUser] = useState({
@@ -110,23 +112,39 @@ const Account: React.FC = () => {
     return (
         <div className="account-profile-container">
             <div className="sidebar">
+                <nav className="navbar2">
+                    <div className="navbar-left2">
+                        <Link to="/">
+                            <img src={Logo} alt="Logo" className="logo2" />
+                        </Link>
+                        <span className="site-name">ThoughtfulBites</span>
+                    </div>
+                </nav>
+
                 <nav className="navigation">
                     <button
-                        className={`nav-item ${activePage === 'profile' ? 'active' : ''}`}
+                        className={`nav-item2 ${activePage === 'profile' ? 'active' : ''}`}
                         onClick={handleProfileClick}
                     >
-                        <div className="nav-icon profile-icon"></div>
+                        <div className="nav-icon2 profile-icon"></div>
                         <span>Profile</span>
                     </button>
                     <button
-                        className={`nav-item ${activePage === 'dietRestrictions' ? 'active' : ''}`}
+                        className={`nav-item2 ${activePage === 'dietRestrictions' ? 'active' : ''}`}
                         onClick={handleDietRestrictionsClick}
                     >
-                        <div className="nav-icon diet-icon"></div>
+                        <div className="nav-icon2 diet-icon"></div>
                         <span>Diet Restrictions</span>
                     </button>
                 </nav>
+
+                {/*<div className="sidebar-footer">*/}
+                <div className="logout-container2">
+                    <div className="logout-icon2"></div>
+                    <button className="logout-button2">Log Out</button>
+                </div>
             </div>
+            {/*</div>*/}
 
             <div className="main-content">
                 {activePage === 'profile' ? (
