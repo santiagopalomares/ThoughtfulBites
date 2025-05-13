@@ -2,6 +2,7 @@
   width: 100%;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 html,
@@ -9,6 +10,8 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .section {
@@ -16,6 +19,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%;
 }
 
 .hero {
@@ -23,6 +27,8 @@ body {
   text-align: center;
   color: white;
   align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .landing-title {
@@ -42,6 +48,8 @@ body {
   justify-content: space-between;
   padding: 0 40px;
   flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .left-box,
@@ -51,6 +59,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100%;
+  min-width: 300px;
 }
 
 .left-box img,
@@ -62,10 +71,20 @@ body {
   border-radius: 10px;
 }
 
+.responsiveImage {
+  width: 80%;
+  max-width: 100%;
+  height: auto;
+  max-height: 450px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
 .right-text,
 .left-text {
   flex: 1;
   padding: 20px;
+  min-width: 300px;
 }
 
 .right-text h2,
@@ -118,6 +137,8 @@ body {
   padding: 40px 20px;
   overflow: hidden;
   flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .image-highlight::before {
@@ -166,12 +187,27 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
+  .landing-container {
+    overflow-x: hidden;
+    width: 100vw;
+  }
+
   .split-section {
     flex-direction: column;
     padding: 40px 20px;
+  }
+
+  .left-box,
+  .right-box,
+  .left-text,
+  .right-text {
+    width: 100%;
+    min-width: 100%;
+    padding: 10px;
   }
 
   .grey-box {
@@ -191,14 +227,51 @@ body {
   .right-image .left-text,
   .right-image .right-box {
     order: unset;
+    width: 100%;
+  }
+
+  .left-image .left-box,
+  .right-image .right-box {
+    margin-bottom: 20px;
   }
 
   .landing-title {
     font-size: 3rem;
+    max-width: 100%;
   }
 
   .eating-image {
     height: 45%;
     max-width: 100%;
+  }
+
+  .image-overlay-text {
+    width: 90%;
+  }
+
+  .responsiveImage {
+    width: 90%;
+  }
+
+  .section {
+    padding: 20px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-title {
+    font-size: 2.5rem;
+  }
+
+  .right-text h2,
+  .left-text h2,
+  .image-overlay-text h2 {
+    font-size: 1.8rem;
+  }
+
+  .right-text p,
+  .left-text p,
+  .image-overlay-text p {
+    font-size: 1rem;
   }
 }
