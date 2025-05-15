@@ -1,7 +1,7 @@
 
 
 import { FormEvent, useState } from "react";
-import "./ContactUs.css";
+import "./ContactUs.module.css";
 
 type FormData = {
     name: string;

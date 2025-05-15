@@ -42,7 +42,7 @@ ThoughtfulBites is a web application designed to help users find restaurants tha
    ```
    
 > [!NOTE]
-> Retrieve the env file in the Discord
+> Make sure to retrieve the env file in the Discord!
 
 4. Start the development server:
    ```bash
