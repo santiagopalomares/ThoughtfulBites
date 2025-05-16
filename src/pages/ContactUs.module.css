@@ -1,0 +1,254 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero {
+  background-color: #667754;
+  padding: 40px;
+  text-align: center;
+  color: white;
+  align-items: center;
+}
+
+.splitSection {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0 40px;
+  flex-wrap: nowrap;
+  column-gap: 100px;
+}
+
+@media (min-width: 1001px) {
+  .splitSection {
+    flex-direction: row;
+  }
+
+  .leftBox {
+    flex: 0 1 auto;
+    min-width: 350px;
+  }
+
+  .rightBox {
+    flex: 1 0 auto;
+  }
+}
+
+.leftBox,
+.rightBox {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  text-align: left;
+  height: 100%;
+}
+
+.leftBox {
+  justify-content: center;
+  align-items: center;
+}
+
+.rightBox {
+  flex: 0 0 auto;
+  height: auto;
+  max-width: 500px;
+}
+
+.rightText,
+.leftText {
+  flex: 1;
+  padding: 20px;
+}
+
+.rightText h2,
+.leftText h2 {
+  font-weight: bold;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+}
+
+.rightText p,
+.leftText p {
+  margin-top: 10px;
+  font-size: 2.25rem;
+  line-height: 1.6;
+}
+
+.sendButton {
+  font-family: "Josefin Sans", sans-serif;
+  padding: 15px 20px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 25px;
+  background-color: #212f24;
+  color: white;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 2px white, 0 0 10px rgba(0, 0, 0, 0.3);
+  margin-top: 12px;
+}
+
+input,
+textarea {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 18px;
+  width: 350px;
+  border-radius: 7px;
+  border: 0;
+  text-indent: 9px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+input {
+  height: 35px;
+}
+
+textarea {
+  height: 150px;
+  resize: vertical;
+  padding-top: 9px;
+}
+
+.error {
+  color: red;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.landingContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  min-height: 100vh;
+}
+
+.landingTitle {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.footerSection {
+  background-color: #212f24;
+  flex: 1 0 auto;
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+* {
+  margin-bottom: 0;
+}
+
+@media (min-width: 1001px) and (max-width: 1130px) {
+  .splitSection {
+    flex-direction: row-reverse;
+    column-gap: 40px;
+  }
+
+  .leftBox {
+    flex: 0 0 350px;
+  }
+
+  .rightBox {
+    flex: 1 1 auto;
+  }
+}
+
+@media (max-width: 1000px) {
+  .splitSection {
+    flex-direction: column-reverse;
+    column-gap: 20px;
+  }
+
+  .rightBox,
+  .leftBox {
+    max-width: 100%;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  .leftBox {
+    align-items: center;
+    order: 2;
+  }
+
+  .rightBox {
+    order: 1;
+    text-align: center;
+  }
+
+  .contactForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .sendButton {
+    align-self: center;
+  }
+
+  .hero {
+    padding: 30px 20px;
+  }
+
+  .landingTitle {
+    font-size: 2.5rem;
+  }
+
+  .rightBox h2,
+  .rightBox p {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 20px 15px;
+  }
+
+  .splitSection {
+    padding: 0 15px;
+  }
+
+  .rightText h2,
+  .leftText h2 {
+    font-size: 2rem;
+  }
+
+  .rightText p,
+  .leftText p {
+    font-size: 1.8rem;
+  }
+
+  .landingTitle {
+    font-size: 2.2rem;
+  }
+}
