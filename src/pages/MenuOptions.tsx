@@ -30,12 +30,9 @@ const MenuOptions: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
-  // Mock data - in a real app, you would fetch this from an API
   useEffect(() => {
-    // Simulate API fetch with timeout
     setLoading(true);
     setTimeout(() => {
-      // Mock database of restaurants
       const restaurantsData: { [key: string]: RestaurantData } = {
         nobu: {
           id: "nobu",
@@ -209,12 +206,10 @@ const MenuOptions: React.FC = () => {
         },
       };
 
-      // Find the restaurant by ID
       const foundRestaurant = restaurantsData[restaurantId || ""] || null;
       setRestaurant(foundRestaurant);
       setLoading(false);
 
-      // Set first category as active if restaurant is found
       if (foundRestaurant && foundRestaurant.menuItems.length > 0) {
         const categories = [
           ...new Set(foundRestaurant.menuItems.map((item) => item.category)),
@@ -223,10 +218,9 @@ const MenuOptions: React.FC = () => {
           setActiveCategory("all");
         }
       }
-    }, 800); // Simulate network delay
+    }, 800);
   }, [restaurantId]);
 
-  // Get unique categories
   const categories = restaurant?.menuItems
     ? [
         "all",
@@ -236,21 +230,18 @@ const MenuOptions: React.FC = () => {
       ]
     : ["all"];
 
-  // Filter menu items by category
   const filteredItems = restaurant?.menuItems
     ? activeCategory === "all"
       ? restaurant.menuItems
       : restaurant.menuItems.filter((item) => item.category === activeCategory)
     : [];
 
-  // Handle back button
   const handleBack = () => {
     navigate(-1);
   };
 
   return (
     <div className="menu-options-container">
-      {/* Header with back button */}
       <div className="menu-header">
         <button className="back-button" onClick={handleBack}>
           &lt; Back to Results
@@ -265,7 +256,6 @@ const MenuOptions: React.FC = () => {
         </div>
       ) : restaurant ? (
         <div className="restaurant-content">
-          {/* Restaurant info */}
           <div className="restaurant-info">
             <p className="restaurant-description">{restaurant.description}</p>
             <div className="restaurant-details">
@@ -291,7 +281,6 @@ const MenuOptions: React.FC = () => {
             </div>
           </div>
 
-          {/* Category tabs */}
           <div className="category-tabs">
             {categories.map((category) => (
               <button
@@ -306,7 +295,6 @@ const MenuOptions: React.FC = () => {
             ))}
           </div>
 
-          {/* Menu items */}
           <div className="menu-items-grid">
             {filteredItems.map((item) => (
               <div key={item.id} className="menu-item-card">
