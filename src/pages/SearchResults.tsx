@@ -3,6 +3,7 @@ import "./SearchResults.css";
 import SearchBar from "../components/SearchBar";
 import SearchIcon from "../assets/SearchIcon.png";
 import { useNavigate } from "react-router-dom";
+import MapPanel from "../components/MapPanel";
 
 interface SearchResult {
   id: string;
@@ -287,7 +288,7 @@ const SearchResults: React.FC = () => {
 
         {isWideScreen && (
           <div className="right-section" style={{ width: `${rightWidth}%` }}>
-            <div className="gray-box"></div>
+            <MapPanel/>
           </div>
         )}
       </div>
