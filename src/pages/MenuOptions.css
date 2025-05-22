@@ -6,15 +6,15 @@
   color: #333;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  padding-top: 150px; /* Add padding to top equal to header height */
+  overflow-x: hidden;
+  padding-top: 150px;
 }
 
 .menu-header {
   background-color: #667754;
   padding: 40px 20px 20px 20px;
   color: white;
-  position: fixed; /* Fixed position instead of sticky */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -24,8 +24,8 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  width: 100%; /* Ensure header doesn't extend beyond screen */
-  box-sizing: border-box; /* Include padding in width calculation */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .menu-header h1 {
@@ -35,11 +35,10 @@
   font-weight: 600;
   letter-spacing: 0.5px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  white-space: normal; /* Allow text to wrap */
-  overflow-wrap: break-word; /* Break long words if needed */
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
-/* Repositioned back button */
 .back-button {
   background-color: rgba(0, 0, 0, 0.2);
   border: none;
@@ -50,10 +49,10 @@
   font-size: 0.9rem;
   transition: background-color 0.3s ease;
   align-self: flex-start;
-  position: absolute; /* Position absolutely */
-  bottom: 15px; /* Position near the bottom of the header */
-  left: 20px; /* Keep some distance from the left edge */
-  z-index: 101; /* Ensure it's above other elements */
+  position: absolute;
+  bottom: 15px;
+  left: 20px;
+  z-index: 101;
 }
 
 .back-button:hover {
@@ -104,11 +103,11 @@
 
 .restaurant-content {
   width: 100%;
-  padding: 20px 20px; /* Fixed pixel padding */
+  padding: 20px 20px;
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  box-sizing: border-box; /* Include padding in width calculation */
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .restaurant-info {
@@ -118,7 +117,7 @@
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   width: 100%;
-  box-sizing: border-box; /* Include padding in width calculation */
+  box-sizing: border-box;
 }
 
 .restaurant-description {
@@ -149,7 +148,7 @@
   padding: 15px;
   -webkit-overflow-scrolling: touch;
   width: 100%;
-  box-sizing: border-box; /* Include padding in width calculation */
+  box-sizing: border-box;
 }
 
 .category-tabs::-webkit-scrollbar {
@@ -189,14 +188,13 @@
   font-weight: 500;
 }
 
-/* Grid layout ensuring no horizontal overflow */
 .menu-items-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   padding-bottom: 40px;
   width: 100%;
-  box-sizing: border-box; /* Include padding in width calculation */
+  box-sizing: border-box;
 }
 
 .menu-item-card {
@@ -208,7 +206,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  width: 100%; /* Ensure cards don't exceed their container */
+  width: 100%;
 }
 
 .menu-item-card:hover {
@@ -239,7 +237,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  box-sizing: border-box; /* Include padding in width calculation */
+  box-sizing: border-box;
 }
 
 .menu-item-info h3 {
@@ -273,7 +271,7 @@
 
 .menu-item-dietary {
   display: flex;
-  flex-wrap: wrap; /* Allow tags to wrap on small screens */
+  flex-wrap: wrap;
   gap: 5px;
 }
 
@@ -285,7 +283,6 @@
   color: #666;
 }
 
-/* Responsive adjustments */
 @media (max-width: 1024px) {
   .menu-items-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -299,7 +296,7 @@
   }
 
   .menu-options-container {
-    padding-top: 140px; /* Adjust padding to match header height */
+    padding-top: 140px;
   }
 
   .menu-header h1 {
@@ -337,7 +334,7 @@
   }
 
   .menu-options-container {
-    padding-top: 130px; /* Adjust padding to match header height */
+    padding-top: 130px;
   }
 
   .menu-header h1 {
