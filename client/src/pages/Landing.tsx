@@ -11,31 +11,22 @@ export default function Landing() {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
 
-  // Handle responsive layout detection
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-
-    // Check on initial load
     checkMobile();
-
-    // Add event listener for window resize
     window.addEventListener("resize", checkMobile);
-
-    // Clean up event listener
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const handleSearch = (searchQuery: string) => {
     console.log("Search submitted:", searchQuery);
-    // Navigate to search results with the query
     navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
   };
 
   return (
     <div className={styles["landing-container"]}>
-      {/* Meta tag for proper mobile viewport */}
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
