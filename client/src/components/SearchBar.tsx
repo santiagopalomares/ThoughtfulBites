@@ -47,6 +47,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
 
     onSearch(searchText);
+    setSearchText("");
   };
 
   return (

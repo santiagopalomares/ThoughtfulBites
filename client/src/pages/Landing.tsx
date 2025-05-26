@@ -29,6 +29,7 @@ export default function Landing() {
 
   const handleSearch = (searchQuery: string) => {
     console.log("Search submitted:", searchQuery);
+    // Navigate to search results with the query
     navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
   };
 
