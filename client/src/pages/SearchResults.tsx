@@ -185,8 +185,8 @@ const SearchResults: React.FC = () => {
     }
   };
 
-  const handleResultClick = (resultId: string) => {
-    navigate(`/menu-options/${resultId}`);
+  const handleResultClick = (resultId: string, restaurantName: string) => {
+    navigate(`/menu-options/${encodeURIComponent(restaurantName)}`);
   };
 
   return (
@@ -217,7 +217,7 @@ const SearchResults: React.FC = () => {
                 <div
                   className="result-item"
                   key={index}
-                  onClick={() => handleResultClick(item.id)}
+                  onClick={() => handleResultClick(item.id, item.title)}
                   style={{ cursor: "pointer" }}
                 >
                   <img
