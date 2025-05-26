@@ -58,6 +58,30 @@ export default function SignUp() {
     return data.confirmPassword === data.password;
   }
 
+  async function addUserToDatabase() {
+    try {
+      const response = await fetch("http://localhost:3001/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+        }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        setErrorMessage(`${result.message}`);
+        return;
+      }
+      return null;
+    } catch (error) {
+      setErrorMessage("Cannot connect to server");
+    }
+  }
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (isFirstStep) {
@@ -76,29 +100,15 @@ export default function SignUp() {
     } else {
       // Adds account to database after user clicks Finish
       setErrorMessage("");
-      try {
-        const response = await fetch("http://localhost:3001/api/signup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: data.email,
-            password: data.password,
-          }),
-        });
+      const error = await addUserToDatabase();
 
-        const result = await response.json();
-        if (!response.ok) {
-          setErrorMessage(`ERROR RESPONSE: ${result.message}`);
-          return;
-        }
-
-        alert(`SUCCESS: Account created for ${data.email}`);
-        navigate("/login");
-      } catch (error) {
-        setErrorMessage("ERROR: Cannot connect to server");
+      if (error) {
+        setErrorMessage(`ERROR: ${error}`);
+        return;
       }
+
+      alert(`SUCCESS: Account created for ${data.email}`);
+      navigate("/login");
     }
   }
 
