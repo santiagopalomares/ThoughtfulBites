@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const OpenAI = require("openai");
 require("dotenv").config();
 
 const app = express();
@@ -9,6 +10,10 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+const openai = new OpenAI({
+  apiKey: process.env.OPEN_AI_API_KEY,
+});
 
 app.get("/api", (req, res) => {
   res.json({ example: ["data1", "data2", "data3"] });
@@ -50,6 +55,40 @@ app.get("/api/restaurants", async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.get("/api/menu/:restaurantName", async (req, res) => {
+  const { restaurantName } = req.params;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Generate a realistic menu for a restaurant called "${restaurantName}". Return exactly 8-12 menu items in this JSON format:
+       {
+         "menu": [
+           {
+             "name": "Item Name",
+             "price": "$12.99",
+             "description": "Brief description",
+             "category": "appetizer/main/dessert/drink"
+           }
+         ]
+       }
+       Make the items realistic for this type of restaurant. Include a mix of categories.`,
+        },
+      ],
+      temperature: 0.7,
+    });
+
+    const menuData = JSON.parse(completion.choices[0].message.content);
+    res.json(menuData);
+  } catch (error) {
+    console.error("Error generating menu:", error);
+    res.status(500).json({ error: "Failed to generate menu" });
   }
 });
 
