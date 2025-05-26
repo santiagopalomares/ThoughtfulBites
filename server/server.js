@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const corsOptions = {
@@ -17,28 +18,43 @@ const pool = mysql.createPool({
 });
 
 app.use(cors(corsOptions));
-
 app.use(express.json());
 
-app.get("/test-db", async (req, res) => {
+app.post("/api/signup", async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const [rows] = await pool.query("SELECT 1 + 1 AS solution");
-    res.json({ result: rows[0].solution });
-  } catch (error) {
-    console.error("MySQL error:", error);
-    res.status(500).json({ error: "Database error" });
-  }
-});
+    const [existingUser] = await pool.query(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    if (existingUser.length > 0) {
+      return res
+        .status(400)
+        .json({ message: `Email: ${email} has already been registered` });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const [result] = await pool.query(
+      "INSERT INTO users (email, password_hash) VALUES (?, ?)",
+      [email, hashedPassword]
+    );
+
+    res.status(201).json({
+      message: `User: ${email} registered successfully!`,
+      userId: result.insertId,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "500 ERROR" });
+  }
 });
 
 app.get("/api", (req, res) => {
   res.json({ example: ["data1", "data2", "data3"] });
 });
 
-app.listen(8080, () => {
-  console.log("Server started on port 8080");
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

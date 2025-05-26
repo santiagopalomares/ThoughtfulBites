@@ -58,9 +58,10 @@ export default function SignUp() {
     return data.confirmPassword === data.password;
   }
 
-  function onSubmit(e: FormEvent) {
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (isFirstStep) {
+      // Checks for matching passwords
       if (!checkPasswordMatch()) {
         setErrorMessage("ERROR: Passwords do not match!");
         return;
@@ -69,12 +70,35 @@ export default function SignUp() {
         return next();
       }
     } else if (!isLastStep) {
+      // Proceeds through all the pages
       setErrorMessage("");
       return next();
     } else {
+      // Adds account to database after user clicks Finish
       setErrorMessage("");
-      alert(`SUCCESS: Account created for ${data.email}`); // TODO: Add User to database
-      navigate("/login");
+      try {
+        const response = await fetch("http://localhost:3001/api/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+          }),
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+          setErrorMessage(`ERROR RESPONSE: ${result.message}`);
+          return;
+        }
+
+        alert(`SUCCESS: Account created for ${data.email}`);
+        navigate("/login");
+      } catch (error) {
+        setErrorMessage("ERROR: Cannot connect to server");
+      }
     }
   }
 
