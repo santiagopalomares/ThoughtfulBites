@@ -13,7 +13,7 @@ type FormData = {
   password: string;
   confirmPassword: string;
   userDietTypes: string[];
-  userDietDetails: string[];
+  userDietDetails: string[]; // This is for allergens and other, if user does not select this, it will be empty
 };
 
 const INITIAL_DATA: FormData = {
@@ -68,6 +68,8 @@ export default function SignUp() {
         body: JSON.stringify({
           email: data.email,
           password: data.password,
+          userDietTypes: data.userDietTypes,
+          userDietDetails: data.userDietDetails,
         }),
       });
 
@@ -85,7 +87,7 @@ export default function SignUp() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (isFirstStep) {
-      // Checks for matching passwords
+      // Checks for matching passwords for first page
       if (!checkPasswordMatch()) {
         setErrorMessage("ERROR: Passwords do not match!");
         return;

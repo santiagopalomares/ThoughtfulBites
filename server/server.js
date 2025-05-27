@@ -21,8 +21,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.post("/api/signup", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, userDietTypes, userDietDetails } = req.body;
   try {
+    // Checks if user exists already, if not, then they will be added to the database
     const [existingUser] = await pool.query(
       "SELECT * FROM users WHERE email = ?",
       [email]
@@ -40,6 +41,19 @@ app.post("/api/signup", async (req, res) => {
       "INSERT INTO users (email, password_hash) VALUES (?, ?)",
       [email, hashedPassword]
     );
+
+    // Adds the user's dietary restriction information
+    for (const restrictionType of userDietTypes) {
+      const custom_items =
+        restrictionType === "Allergens" || restrictionType === "Other"
+          ? userDietDetails.join(",")
+          : null;
+
+      await pool.query(
+        "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+        [result.insertId, restrictionType, custom_items]
+      );
+    }
 
     res.status(201).json({
       message: `User: ${email} registered successfully!`,
