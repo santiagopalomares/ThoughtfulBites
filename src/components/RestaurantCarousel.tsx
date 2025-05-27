@@ -3,15 +3,14 @@ import styles from './RestaurantCarousel.module.css';
 
 const RestaurantCarousel: React.FC = () => {
     return (
-        <div className={styles.carouselContainer}>
-            <button className={`${styles.carouselButton} ${styles.left}`}>←</button>
-            <div className={styles.carouselContent}>
-                {/* Placeholder for the fork and spoon icons */}
-                <div className={styles.carouselItem}></div>
-                <div className={styles.carouselItem}></div>
-                <div className={styles.carouselItem}></div>
+        <div className={styles["carousel-container"]}>
+            <button className={`${styles["carousel-button"]} ${styles["left"]}`}>←</button>
+            <div className={styles["carousel-content"]}>
+                <div className={styles["carousel-item"]}></div>
+                <div className={styles["carousel-item"]}></div>
+                <div className={styles["carousel-item"]}></div>
             </div>
-            <button className={`${styles.carouselButton} ${styles.right}`}>→</button>
+            <button className={`${styles["carousel-button"]} ${styles["right"]}`}>→</button>
         </div>
     );
 };
