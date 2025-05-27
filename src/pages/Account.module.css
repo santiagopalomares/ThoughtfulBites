@@ -1,4 +1,15 @@
-.mainContent {
+.account-profile-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    color: white;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.main-content {
     flex-grow: 1;
     padding: 30px;
     background-color: #5a6e4b;
@@ -6,21 +17,35 @@
     flex-direction: column;
     gap: 30px;
     overflow-y: auto;
-    max-width: 800px;
-    margin: 0 auto;
+    overflow-x: hidden;
     min-height: 100vh;
+    width: calc(100% - 250px);
+    box-sizing: border-box;
+}
+
+html, body, #root {
+    margin: 0;
+    padding: 0;
     width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
-    .mainContent {
+    .main-content {
         padding: 15px;
         max-width: none;
         width: 100%;
         margin: 0;
+        overflow-x: hidden;
     }
 
-    .accountProfileContainer {
+    .account-profile-container {
         flex-direction: column;
         min-height: 100vh;
         overflow-x: hidden;
@@ -46,15 +71,15 @@
     top: 0;
     height: 100vh;
     flex-shrink: 0;
+    box-sizing: border-box;
 }
-
-.navigation2 {
+.navigation {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 
-.navItem2 {
+.nav-item2 {
     display: flex;
     align-items: center;
     padding: 15px 20px;
@@ -70,16 +95,16 @@
     font-family: "Josefin Sans", sans-serif;
 }
 
-.navItem2:hover {
+.nav-item2:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
-.navItem2.active {
+.nav-item2.active {
     background-color: #333;
     color: white;
 }
 
-.navIcon2 {
+.nav-icon2 {
     width: 24px;
     height: 24px;
     margin-right: 15px;
@@ -87,27 +112,27 @@
     background-repeat: no-repeat;
 }
 
-.profileIcon {
+.profile-icon {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
 }
 
-.dietIcon {
+.diet-icon {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>');
 }
 
-.sidebarFooter {
+.sidebar-footer {
     padding: 20px;
     border-top: 1px solid #ddd;
     margin-top: auto;
 }
 
-.profileHeader {
+.profile-header {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.profileAvatar {
+.profile-avatar {
     width: 100px;
     height: 100px;
     border-radius: 50%;
@@ -119,17 +144,17 @@
     background-repeat: no-repeat;
 }
 
-.profileInfo h1 {
+.profile-info h1 {
     font-size: 28px;
     margin-bottom: 5px;
     font-family: "Josefin Sans", sans-serif;
 }
 
-.profileInfo p {
+.profile-info p {
     color: #e0e0e0;
 }
 
-.profileDetailsCard {
+.profile-details-card {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     padding: 20px;
@@ -137,25 +162,25 @@
     width: 100%;
 }
 
-.cardHeader {
+.card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.cardHeader h2 {
+.card-header h2 {
     font-size: 24px;
     font-family: "Josefin Sans", sans-serif;
 }
 
-.profileFields {
+.profile-fields {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.fieldRow {
+.field-row {
     display: flex;
     gap: 20px;
 }
@@ -172,13 +197,13 @@
     font-family: "Josefin Sans", sans-serif;
 }
 
-.fieldValue {
+.field-value {
     font-size: 16px;
     padding: 5px 0;
     font-family: "Josefin Sans", sans-serif;
 }
 
-.fieldInput {
+.field-input {
     width: 100%;
     padding: 8px 10px;
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -190,20 +215,20 @@
     max-width: 300px;
 }
 
-.fieldInput:focus {
+.field-input:focus {
     outline: none;
     border-color: rgba(255, 255, 255, 0.5);
     background-color: rgba(255, 255, 255, 0.15);
 }
 
-.editButton,
-.cancelButton,
-.deleteAccountButton {
+.edit-button,
+.cancel-button,
+.delete-account-button {
     width: 100%;
     max-width: 300px;
 }
 
-.editButton {
+.edit-button {
     display: flex;
     align-items: center;
     background-color: #333;
@@ -217,11 +242,11 @@
     font-family: "Josefin Sans", sans-serif;
 }
 
-.editButton:hover {
+.edit-button:hover {
     background-color: #444;
 }
 
-.editIcon {
+.edit-icon {
     width: 16px;
     height: 16px;
     margin-right: 8px;
@@ -230,12 +255,12 @@
     background-repeat: no-repeat;
 }
 
-.editActions {
+.edit-actions {
     display: flex;
     gap: 10px;
 }
 
-.cancelButton {
+.cancel-button {
     background-color: transparent;
     color: white;
     border: 1px solid white;
@@ -247,19 +272,19 @@
     font-family: "Josefin Sans", sans-serif;
 }
 
-.cancelButton:hover {
+.cancel-button:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.editButton.saveButton {
+.edit-button.save-button {
     background-color: #4CAF50;
 }
 
-.editButton.saveButton:hover {
+.edit-button.save-button:hover {
     background-color: #3e8e41;
 }
 
-.saveIcon {
+.save-icon {
     width: 16px;
     height: 16px;
     margin-right: 8px;
@@ -268,14 +293,14 @@
     background-repeat: no-repeat;
 }
 
-.deleteAccountContainer {
+.delete-account-container {
     display: flex;
     justify-content: center;
     margin-top: 30px;
     margin-bottom: 20px;
 }
 
-.deleteAccountButton {
+.delete-account-button {
     background-color: #333;
     color: white;
     border: none;
@@ -287,11 +312,11 @@
     font-family: "Josefin Sans", sans-serif;
 }
 
-.deleteAccountButton:hover {
+.delete-account-button:hover {
     background-color: #444;
 }
 
-.modalOverlay {
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -304,7 +329,7 @@
     z-index: 1000;
 }
 
-.deleteConfirmationModal {
+.delete-confirmation-modal {
     background-color: #fff;
     border-radius: 10px;
     padding: 30px;
@@ -315,27 +340,27 @@
     text-align: center;
 }
 
-.deleteConfirmationModal h2 {
+.delete-confirmation-modal h2 {
     color: #d32f2f;
     margin-bottom: 20px;
     font-family: "Josefin Sans", sans-serif;
     font-size: 24px;
 }
 
-.deleteConfirmationModal p {
+.delete-confirmation-modal p {
     margin-bottom: 30px;
     line-height: 1.5;
     font-size: 16px;
     font-family: "Josefin Sans", sans-serif;
 }
 
-.modalActions {
+.modal-actions {
     display: flex;
     justify-content: center;
     gap: 20px;
 }
 
-.confirmDeleteButton {
+.confirm-delete-button {
     background-color: #d32f2f;
     color: white;
     border: none;
@@ -347,22 +372,22 @@
     font-family: "Josefin Sans", sans-serif;
 }
 
-.confirmDeleteButton:hover {
+.confirm-delete-button:hover {
     background-color: #b71c1c;
 }
 
-.dietHeader {
+.diet-header {
     margin-bottom: 30px;
 }
 
-.dietHeader h1 {
+.diet-header h1 {
     font-size: 28px;
     color: white;
     margin: 0;
     font-family: "Josefin Sans", sans-serif;
 }
 
-.dietDetailsCard {
+.diet-details-card {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     padding: 20px;
@@ -370,45 +395,45 @@
     width: 100%;
 }
 
-.dietContent {
+.diet-content {
     padding: 20px 0;
     color: white;
 }
 
-.dietRestrictionsOptions {
+.diet-restrictions-options {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
     padding: 20px;
 }
 
-.checkboxItem {
+.checkbox-item {
     display: flex;
     align-items: center;
     color: white;
 }
 
-.checkboxItem input[type="checkbox"] {
+.checkbox-item input[type="checkbox"] {
     margin-right: 10px;
     width: 18px;
     height: 18px;
     cursor: pointer;
 }
 
-.checkboxItem label {
+.checkbox-item label {
     cursor: pointer;
 }
 
-.checkboxItem input[type="checkbox"]:disabled {
+.checkbox-item input[type="checkbox"]:disabled {
     opacity: 0.7;
     cursor: default;
 }
 
-.checkboxItem input[type="checkbox"]:disabled + label {
+.checkbox-item input[type="checkbox"]:disabled + label {
     cursor: default;
 }
 
-.sidebarHeader {
+.sidebar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -421,17 +446,17 @@
     z-index: 1000;
 }
 
-.sidebarLogoContainer {
+.sidebar-logo-container {
     display: flex;
     align-items: center;
 }
 
-.sidebarLogo {
+.sidebar-logo {
     height: 30px;
     width: auto;
 }
 
-.sidebarSiteName {
+.sidebar-site-name {
     font-size: 18px;
     font-weight: bold;
     margin-left: 10px;
@@ -450,12 +475,12 @@
     z-index: 1000;
 }
 
-.navbarLeft2 {
+.navbar-left2 {
     display: flex;
     align-items: center;
 }
 
-.navbarLeft2 .siteName {
+.navbar-left2 .site-name {
     font-size: 1.25rem;
     font-weight: bold;
     color: black !important;
@@ -467,7 +492,7 @@
     margin-right: 0.5rem;
 }
 
-.logoutContainer2 {
+.logout-container2 {
     padding: 20px;
     margin-top: auto;
     position: absolute;
@@ -476,7 +501,7 @@
     width: 100%;
 }
 
-.logoutButton2 {
+.logout-button2 {
     background: none;
     border: none;
     color: inherit;
@@ -485,7 +510,7 @@
     font-family: "Josefin Sans", sans-serif;
 }
 
-.logoutIcon2 {
+.logout-icon2 {
     width: 32px;
     height: 32px;
     margin-right: 15px;
@@ -498,25 +523,25 @@
     vertical-align: middle;
 }
 
-.logoutButton2:hover {
+.logout-button2:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
-.foodSearchSection {
+.food-search-section {
     padding: 15px 0;
 }
 
-.searchContainer {
+.search-container {
     margin-bottom: 20px;
 }
 
-.searchInputContainer {
+.search-input-container {
     position: relative;
     width: 100%;
     max-width: 500px;
 }
 
-.searchInput {
+.search-input {
     width: 100%;
     padding: 10px 40px 10px 15px;
     border-radius: 20px;
@@ -527,7 +552,7 @@
     font-family: "Josefin Sans", sans-serif;
 }
 
-.searchIcon {
+.search-icon {
     position: absolute;
     right: 15px;
     top: 50%;
@@ -539,14 +564,14 @@
     background-repeat: no-repeat;
 }
 
-.selectedFoods h3 {
+.selected-foods h3 {
     font-size: 18px;
     margin-bottom: 15px;
     font-family: "Josefin Sans", sans-serif;
     color: white;
 }
 
-.mobileMenuButton {
+.mobile-menu-button {
     display: none;
     background: none;
     border: none;
@@ -560,7 +585,7 @@
         overflow-x: hidden;
     }
 
-    .accountProfileContainer {
+    .account-profile-container {
         flex-direction: column;
         min-height: 100vh;
         overflow-x: hidden;
@@ -582,18 +607,18 @@
         display: block;
     }
 
-    .mainContent {
+    .main-content {
         padding: 15px;
         max-width: 100%;
         min-height: auto;
     }
 
-    .profileDetailsCard,
-    .dietDetailsCard {
+    .profile-details-card,
+    .diet-details-card {
         padding: 15px;
     }
 
-    .fieldRow {
+    .field-row {
         flex-direction: column;
         gap: 15px;
     }
@@ -602,34 +627,34 @@
         margin-bottom: 15px;
     }
 
-    .profileHeader {
+    .profile-header {
         flex-direction: column;
         align-items: center;
         text-align: center;
     }
 
-    .profileAvatar {
+    .profile-avatar {
         margin-right: 0;
         margin-bottom: 15px;
         width: 80px;
         height: 80px;
     }
 
-    .profileInfo h1 {
+    .profile-info h1 {
         font-size: 22px;
     }
 
-    .cardHeader {
+    .card-header {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .cardHeader h2 {
+    .card-header h2 {
         margin-bottom: 10px;
         font-size: 20px;
     }
 
-    .fieldValue {
+    .field-value {
         font-size: 14px;
     }
 
@@ -637,52 +662,52 @@
         font-size: 12px;
     }
 
-    .dietRestrictionsOptions {
+    .diet-restrictions-options {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
 
-    .fieldInput,
-    .editButton,
-    .cancelButton,
-    .deleteAccountButton {
+    .field-input,
+    .edit-button,
+    .cancel-button,
+    .delete-account-button {
         max-width: none;
     }
 
-    .editButton {
+    .edit-button {
         width: 100%;
         justify-content: center;
         margin-top: 10px;
     }
 
-    .profileFields {
+    .profile-fields {
         gap: 15px;
     }
 
-    .editActions {
+    .edit-actions {
         flex-direction: column;
         gap: 10px;
         width: 100%;
     }
 
-    .cancelButton,
-    .editButton,
-    .deleteAccountButton {
+    .cancel-button,
+    .edit-button,
+    .delete-account-button {
         width: 100%;
         padding: 12px;
         display: flex;
         justify-content: center;
     }
 
-    .modalActions {
+    .modal-actions {
         flex-direction: column;
     }
 
-    .confirmDeleteButton,
-    .cancelButton {
+    .confirm-delete-button,
+    .cancel-button {
         width: 100%;
     }
 
-    .mobileMenuButton {
+    .mobile-menu-button {
         display: block;
         position: fixed;
         top: 10px;
@@ -697,31 +722,25 @@
         align-items: flex-start;
     }
 
-    .navbarLeft2 {
+    .navbar-left2 {
         margin-bottom: 10px;
     }
 
-    .logoutContainer2 {
+    .logout-container2 {
         position: static;
         margin-top: 20px;
         margin-bottom: 20px;
     }
 
-    .navigation2 {
+    .navigation {
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
     }
 
-    .navItem2 {
+    .nav-item2 {
         width: auto;
         padding: 10px 15px;
-    }
-
-    .navigation {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
     }
 }
 
@@ -735,59 +754,26 @@ html, body {
     max-width: 100%;
 }
 
-.accountProfileContainer {
-    display: flex;
-    min-height: 100vh;
-    background-color: #1a1a1a;
-    color: white;
-    overflow-x: hidden;
-    width: 100%;
-    position: relative;
-}
-
-.mainContent {
-    flex-grow: 1;
-    padding: 30px;
-    background-color: #5a6e4b;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-width: 800px;
-    margin: 0 auto;
-    min-height: 100vh;
-    width: 100%;
-}
-
-.profileDetailsCard,
-.dietDetailsCard,
-.profileFields,
-.fieldRow,
+.profile-details-card,
+.diet-details-card,
+.profile-fields,
+.field-row,
 .field,
-.editActions,
-.dietRestrictionsOptions {
+.edit-actions,
+.diet-restrictions-options {
     max-width: 100%;
     overflow-x: hidden;
 }
 
 @media (max-width: 768px) {
-    .mainContent {
-        padding: 15px;
-        max-width: none;
-        width: 100%;
-        margin: 0;
-        overflow-x: hidden;
-    }
-
-    .editButton,
-    .cancelButton,
-    .deleteAccountButton {
+    .edit-button,
+    .cancel-button,
+    .delete-account-button {
         width: 100%;
         max-width: 100%;
     }
 
-    .fieldInput {
+    .field-input {
         max-width: 100%;
     }
 }

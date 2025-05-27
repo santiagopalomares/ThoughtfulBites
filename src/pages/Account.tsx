@@ -110,72 +110,72 @@ const Account: React.FC = () => {
     };
 
     return (
-        <div className={styles.accountProfileContainer}>
+        <div className={styles["account-profile-container"]}>
             <div className={styles.sidebar}>
                 <nav className={styles.navbar2}>
-                    <div className={styles.navbarLeft2}>
+                    <div className={styles["navbar-left2"]}>
                         <Link to="/">
                             <img src={Logo} alt="Logo" className={styles.logo2} />
                         </Link>
-                        <span className={styles.siteName}>ThoughtfulBites</span>
+                        <span className={styles["site-name"]}>ThoughtfulBites</span>
                     </div>
                 </nav>
 
                 <nav className={styles.navigation}>
                     <button
-                        className={`${styles.navItem2} ${activePage === 'profile' ? styles.active : ''}`}
+                        className={`${styles["nav-item2"]} ${activePage === 'profile' ? styles.active : ''}`}
                         onClick={handleProfileClick}
                     >
-                        <div className={`${styles.navIcon2} ${styles.profileIcon}`}></div>
+                        <div className={`${styles["nav-icon2"]} ${styles["profile-icon"]}`}></div>
                         <span>Profile</span>
                     </button>
                     <button
-                        className={`${styles.navItem2} ${activePage === 'dietRestrictions' ? styles.active : ''}`}
+                        className={`${styles["nav-item2"]} ${activePage === 'dietRestrictions' ? styles.active : ''}`}
                         onClick={handleDietRestrictionsClick}
                     >
-                        <div className={`${styles.navIcon2} ${styles.dietIcon}`}></div>
+                        <div className={`${styles["nav-icon2"]} ${styles["diet-icon"]}`}></div>
                         <span>Diet Restrictions</span>
                     </button>
                 </nav>
 
-                <div className={styles.logoutContainer2}>
-                    <div className={styles.logoutIcon2}></div>
-                    <button className={styles.logoutButton2} onClick={handleLogout}>Log Out</button>
+                <div className={styles["logout-container2"]}>
+                    <div className={styles["logout-icon2"]}></div>
+                    <button className={styles["logout-button2"]} onClick={handleLogout}>Log Out</button>
                 </div>
             </div>
 
-            <div className={styles.mainContent}>
+            <div className={styles["main-content"]}>
                 {activePage === 'profile' ? (
                     <>
-                        <div className={styles.profileHeader}>
-                            <div className={styles.profileAvatar}></div>
-                            <div className={styles.profileInfo}>
+                        <div className={styles["profile-header"]}>
+                            <div className={styles["profile-avatar"]}></div>
+                            <div className={styles["profile-info"]}>
                                 <h1>{user.firstName} {user.lastName}</h1>
                                 <p>{user.email}</p>
                             </div>
                         </div>
 
-                        <div className={styles.profileDetailsCard}>
-                            <div className={styles.cardHeader}>
+                        <div className={styles["profile-details-card"]}>
+                            <div className={styles["card-header"]}>
                                 <h2>My Profile</h2>
-                                <div className={styles.editActions}>
+                                <div className={styles["edit-actions"]}>
                                     {isEditing && (
-                                        <button className={styles.cancelButton} onClick={handleCancel}>
+                                        <button className={styles["cancel-button"]} onClick={handleCancel}>
                                             Cancel
                                         </button>
                                     )}
                                     <button
-                                        className={`${styles.editButton} ${isEditing ? styles.saveButton : ''}`}
+                                        className={`${styles["edit-button"]} ${isEditing ? styles["save-button"] : ''}`}
                                         onClick={handleEdit}
                                     >
-                                        <span className={isEditing ? styles.saveIcon : styles.editIcon}></span>
+                                        <span className={isEditing ? styles["save-icon"] : styles["edit-icon"]}></span>
                                         {isEditing ? 'Save' : 'Edit'}
                                     </button>
                                 </div>
                             </div>
 
-                            <div className={styles.profileFields}>
-                                <div className={styles.fieldRow}>
+                            <div className={styles["profile-fields"]}>
+                                <div className={styles["field-row"]}>
                                     <div className={styles.field}>
                                         <label>Firstname</label>
                                         {isEditing ? (
@@ -184,10 +184,10 @@ const Account: React.FC = () => {
                                                 name="firstName"
                                                 value={formValues.firstName}
                                                 onChange={handleInputChange}
-                                                className={styles.fieldInput}
+                                                className={styles["field-input"]}
                                             />
                                         ) : (
-                                            <div className={styles.fieldValue}>{user.firstName}</div>
+                                            <div className={styles["field-value"]}>{user.firstName}</div>
                                         )}
                                     </div>
                                     <div className={styles.field}>
@@ -198,14 +198,14 @@ const Account: React.FC = () => {
                                                 name="lastName"
                                                 value={formValues.lastName}
                                                 onChange={handleInputChange}
-                                                className={styles.fieldInput}
+                                                className={styles["field-input"]}
                                             />
                                         ) : (
-                                            <div className={styles.fieldValue}>{user.lastName}</div>
+                                            <div className={styles["field-value"]}>{user.lastName}</div>
                                         )}
                                     </div>
                                 </div>
-                                <div className={styles.fieldRow}>
+                                <div className={styles["field-row"]}>
                                     <div className={styles.field}>
                                         <label>Email</label>
                                         {isEditing ? (
@@ -214,10 +214,10 @@ const Account: React.FC = () => {
                                                 name="email"
                                                 value={formValues.email}
                                                 onChange={handleInputChange}
-                                                className={styles.fieldInput}
+                                                className={styles["field-input"]}
                                             />
                                         ) : (
-                                            <div className={styles.fieldValue}>{user.email}</div>
+                                            <div className={styles["field-value"]}>{user.email}</div>
                                         )}
                                     </div>
                                     <div className={styles.field}>
@@ -228,50 +228,50 @@ const Account: React.FC = () => {
                                                 name="password"
                                                 value={formValues.password}
                                                 onChange={handleInputChange}
-                                                className={styles.fieldInput}
+                                                className={styles["field-input"]}
                                             />
                                         ) : (
-                                            <div className={styles.fieldValue}>{user.password}</div>
+                                            <div className={styles["field-value"]}>{user.password}</div>
                                         )}
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className={styles.deleteAccountContainer}>
-                            <button className={styles.deleteAccountButton} onClick={handleDeleteAccount}>
+                        <div className={styles["delete-account-container"]}>
+                            <button className={styles["delete-account-button"]} onClick={handleDeleteAccount}>
                                 Delete Account
                             </button>
                         </div>
                     </>
                 ) : (
                     <>
-                        <div className={styles.dietHeader}>
+                        <div className={styles["diet-header"]}>
                             <h1>Diet Information</h1>
                         </div>
 
-                        <div className={styles.dietDetailsCard}>
-                            <div className={styles.cardHeader}>
+                        <div className={styles["diet-details-card"]}>
+                            <div className={styles["card-header"]}>
                                 <h2>Diet Restrictions</h2>
-                                <div className={styles.editActions}>
+                                <div className={styles["edit-actions"]}>
                                     {isEditingDietRestrictions && (
-                                        <button className={styles.cancelButton} onClick={handleCancelDietRestrictions}>
+                                        <button className={styles["cancel-button"]} onClick={handleCancelDietRestrictions}>
                                             Cancel
                                         </button>
                                     )}
                                     <button
-                                        className={`${styles.editButton} ${isEditingDietRestrictions ? styles.saveButton : ''}`}
+                                        className={`${styles["edit-button"]} ${isEditingDietRestrictions ? styles["save-button"] : ''}`}
                                         onClick={handleEditDietRestrictions}
                                     >
-                                        <span className={isEditingDietRestrictions ? styles.saveIcon : styles.editIcon}></span>
+                                        <span className={isEditingDietRestrictions ? styles["save-icon"] : styles["edit-icon"]}></span>
                                         {isEditingDietRestrictions ? 'Save' : 'Edit'}
                                     </button>
                                 </div>
                             </div>
 
-                            <div className={styles.dietRestrictionsOptions}>
+                            <div className={styles["diet-restrictions-options"]}>
                                 {dietaryOptions.map(option => (
-                                    <div key={option.id} className={styles.checkboxItem}>
+                                    <div key={option.id} className={styles["checkbox-item"]}>
                                         <input
                                             type="checkbox"
                                             id={option.id}
@@ -286,40 +286,40 @@ const Account: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className={styles.dietDetailsCard}>
-                            <div className={styles.cardHeader}>
+                        <div className={styles["diet-details-card"]}>
+                            <div className={styles["card-header"]}>
                                 <h2>Dietary Details</h2>
-                                <div className={styles.editActions}>
+                                <div className={styles["edit-actions"]}>
                                     {isEditingDietaryDetails && (
-                                        <button className={styles.cancelButton} onClick={() => setIsEditingDietaryDetails(false)}>
+                                        <button className={styles["cancel-button"]} onClick={() => setIsEditingDietaryDetails(false)}>
                                             Cancel
                                         </button>
                                     )}
                                     <button
-                                        className={`${styles.editButton} ${isEditingDietaryDetails ? styles.saveButton : ''}`}
+                                        className={`${styles["edit-button"]} ${isEditingDietaryDetails ? styles["save-button"] : ''}`}
                                         onClick={handleEditDietaryDetails}
                                     >
-                                        <span className={isEditingDietaryDetails ? styles.saveIcon : styles.editIcon}></span>
+                                        <span className={isEditingDietaryDetails ? styles["save-icon"] : styles["edit-icon"]}></span>
                                         {isEditingDietaryDetails ? 'Save' : 'Edit'}
                                     </button>
                                 </div>
                             </div>
 
-                            <div className={styles.foodSearchSection}>
+                            <div className={styles["food-search-section"]}>
                                 {isEditingDietaryDetails && (
-                                    <div className={styles.searchContainer}>
-                                        <div className={styles.searchInputContainer}>
+                                    <div className={styles["search-container"]}>
+                                        <div className={styles["search-input-container"]}>
                                             <input
                                                 type="text"
-                                                className={styles.searchInput}
+                                                className={styles["search-input"]}
                                                 placeholder="Search for foods..."
                                             />
-                                            <span className={styles.searchIcon}></span>
+                                            <span className={styles["search-icon"]}></span>
                                         </div>
                                     </div>
                                 )}
 
-                                <div className={styles.selectedFoods}>
+                                <div className={styles["selected-foods"]}>
                                     <h3>Selected Foods</h3>
                                 </div>
                             </div>
@@ -329,15 +329,15 @@ const Account: React.FC = () => {
             </div>
 
             {showDeleteModal && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.deleteConfirmationModal}>
+                <div className={styles["modal-overlay"]}>
+                    <div className={styles["delete-confirmation-modal"]}>
                         <h2>WARNING</h2>
                         <p>Are you sure you want to delete your account? Your data will be lost and this action cannot be undone.</p>
-                        <div className={styles.modalActions}>
-                            <button className={styles.cancelButton} onClick={cancelDeleteAccount}>
+                        <div className={styles["modal-actions"]}>
+                            <button className={styles["cancel-button"]} onClick={cancelDeleteAccount}>
                                 Cancel
                             </button>
-                            <button className={styles.confirmDeleteButton} onClick={confirmDeleteAccount}>
+                            <button className={styles["confirm-delete-button"]} onClick={confirmDeleteAccount}>
                                 Delete Account
                             </button>
                         </div>
