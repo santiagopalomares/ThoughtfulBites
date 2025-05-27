@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./SearchResults.css";
+import styles from "./SearchResults.module.css";
 import SearchBar from "../components/SearchBar";
 import SearchIcon from "../assets/SearchIcon.png";
 import { useNavigate } from "react-router-dom";
@@ -111,7 +111,7 @@ const SearchResults: React.FC = () => {
   const [rightWidth, setRightWidth] = useState<number>(50);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [isWideScreen, setIsWideScreen] = useState<boolean>(
-    window.innerWidth > 1024
+      window.innerWidth > 1024
   );
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -132,7 +132,7 @@ const SearchResults: React.FC = () => {
 
       if (containerRef.current) {
         const searchContainer = document.querySelector(
-          ".results-search-container"
+            `.${styles["results-search-container"]}`
         );
         if (searchContainer) {
           const searchHeight = searchContainer.clientHeight;
@@ -201,24 +201,26 @@ const SearchResults: React.FC = () => {
 
     if (searchQuery.trim() === "") {
       setResults(initialResults);
-      if (document.querySelector(".search-results")) {
-        document.querySelector(".search-results")!.scrollTop = 0;
+      const searchResultsElement = document.querySelector(`.${styles["search-results"]}`);
+      if (searchResultsElement) {
+        searchResultsElement.scrollTop = 0;
       }
       return;
     }
 
     const filteredResults = initialResults.filter(
-      (item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.bulletPoints.some((point) =>
-          point.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+        (item) =>
+            item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.bulletPoints.some((point) =>
+                point.toLowerCase().includes(searchQuery.toLowerCase())
+            )
     );
 
     setResults(filteredResults);
 
-    if (document.querySelector(".search-results")) {
-      document.querySelector(".search-results")!.scrollTop = 0;
+    const searchResultsElement = document.querySelector(`.${styles["search-results"]}`);
+    if (searchResultsElement) {
+      searchResultsElement.scrollTop = 0;
     }
 
     if (window.innerWidth <= 768) {
@@ -227,72 +229,71 @@ const SearchResults: React.FC = () => {
   };
 
   const handleResultClick = (resultId: string) => {
-    // Navigate to the menu options page with the result ID
     navigate(`/menu-options/${resultId}`);
   };
 
   return (
-    <div className="search-results-page">
-      <div className="results-search-container">
-        <div className="search-container">
-          <SearchBar
-            placeholder={
-              window.innerWidth <= 480 ? "Search..." : "Filter results..."
-            }
-            onSearch={handleSearch}
-            buttonText={window.innerWidth <= 480 ? "" : "Search"}
-            searchIconSrc={SearchIcon}
-          />
+      <div className={styles["search-results-page"]}>
+        <div className={styles["results-search-container"]}>
+          <div className={styles["search-container"]}>
+            <SearchBar
+                placeholder={
+                  window.innerWidth <= 480 ? "Search..." : "Filter results..."
+                }
+                onSearch={handleSearch}
+                buttonText={window.innerWidth <= 480 ? "" : "Search"}
+                searchIconSrc={SearchIcon}
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="content-container" ref={containerRef}>
-        <div
-          className="search-results"
-          style={{ width: isWideScreen ? `${leftWidth}%` : "100%" }}
-        >
-          {results.length > 0 ? (
-            <>
-              {results.map((item, index) => (
-                <div
-                  className="result-item"
-                  key={index}
-                  onClick={() => handleResultClick(item.id)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="result-image"
-                  />
-                  <div className="result-description">
-                    <div className="description-top">{item.title}</div>
-                    <ul className="description-bottom">
-                      {item.bulletPoints.map((point, idx) => (
-                        <li key={idx}>{point}</li>
-                      ))}
-                    </ul>
-                  </div>
+        <div className={styles["content-container"]} ref={containerRef}>
+          <div
+              className={styles["search-results"]}
+              style={{ width: isWideScreen ? `${leftWidth}%` : "100%" }}
+          >
+            {results.length > 0 ? (
+                <>
+                  {results.map((item, index) => (
+                      <div
+                          className={styles["result-item"]}
+                          key={index}
+                          onClick={() => handleResultClick(item.id)}
+                          style={{ cursor: "pointer" }}
+                      >
+                        <img
+                            src={item.image}
+                            alt={item.title}
+                            className={styles["result-image"]}
+                        />
+                        <div className={styles["result-description"]}>
+                          <div className={styles["description-top"]}>{item.title}</div>
+                          <ul className={styles["description-bottom"]}>
+                            {item.bulletPoints.map((point, idx) => (
+                                <li key={idx}>{point}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                  ))}
+                  <div style={{ height: "20px" }}></div>
+                </>
+            ) : (
+                <div className={styles["no-results"]}>
+                  No results found. Try a different search term.
                 </div>
-              ))}
-              <div style={{ height: "20px" }}></div>
-            </>
-          ) : (
-            <div className="no-results">
-              No results found. Try a different search term.
-            </div>
+            )}
+          </div>
+
+          {isWideScreen && <div className={styles["resizer"]} ref={resizerRef}></div>}
+
+          {isWideScreen && (
+              <div className={styles["right-section"]} style={{ width: `${rightWidth}%` }}>
+                <MapPanel/>
+              </div>
           )}
         </div>
-
-        {isWideScreen && <div className="resizer" ref={resizerRef}></div>}
-
-        {isWideScreen && (
-          <div className="right-section" style={{ width: `${rightWidth}%` }}>
-            <MapPanel/>
-          </div>
-        )}
       </div>
-    </div>
   );
 };
 

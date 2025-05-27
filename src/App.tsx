@@ -9,23 +9,32 @@ import Navbar from "./components/Navbar";
 import MenuOptions from "./pages/MenuOptions";
 import { AuthProvider } from "./context/AuthContext";
 import "./App.css";
+import Account from "./pages/Account";
+
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/menu-options/:restaurantId" element={<MenuOptions />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
+          <Route path="/account" element={<Account />} />
+          <Route path="*" element={
+            <>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/menu-options/:restaurantId" element={<MenuOptions />} />
+          </Routes>
+            </>
+          } />
+          </Routes>
+        </Router>
+      </AuthProvider>
   );
 }
 

@@ -1,0 +1,16 @@
+.stars {
+    font-size: 24px;
+}
+
+.star.filled {
+    color: black;
+}
+
+.star.empty {
+    color: #ccc;
+}
+
+.rating-text {
+    font-size: 16px;
+    margin-left: 10px;
+}

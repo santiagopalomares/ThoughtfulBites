@@ -81,7 +81,9 @@ export default function Navbar() {
 
       <div className={`navbar-right ${menuOpen ? "open" : ""}`}>
         <Link
+          // to="/restaurant"
           to="/about"
+          //   to="/account"
           className="nav-item"
           onClick={() => setMenuOpen(false)}
         >
@@ -94,7 +96,7 @@ export default function Navbar() {
         >
           Contact
         </Link>
-        {!isLoggedIn ? (
+        {isLoggedIn ? (
           <>
             <Link
               to="/login"
