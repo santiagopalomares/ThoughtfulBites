@@ -1,15 +1,15 @@
 import React from 'react';
-import './RestaurantInfo.css';
+import styles from './RestaurantInfo.module.css';
 
 const RestaurantInfo: React.FC = () => {
     return (
-        <div className="stars">
-            <span className="star filled">★</span>
-            <span className="star filled">★</span>
-            <span className="star filled">★</span>
-            <span className="star empty">★</span>
-            <span className="star empty">★</span>
-            <span className="rating-text">3.0 (58 Reviews)</span>
+        <div className={styles.stars}>
+            <span className={`${styles.star} ${styles.filled}`}>★</span>
+            <span className={`${styles.star} ${styles.filled}`}>★</span>
+            <span className={`${styles.star} ${styles.filled}`}>★</span>
+            <span className={`${styles.star} ${styles.empty}`}>★</span>
+            <span className={`${styles.star} ${styles.empty}`}>★</span>
+            <span className={styles.ratingText}>3.0 (58 Reviews)</span>
         </div>
     );
 };

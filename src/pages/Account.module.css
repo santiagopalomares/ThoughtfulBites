@@ -1,0 +1,793 @@
+.mainContent {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: #5a6e4b;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    overflow-y: auto;
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 100vh;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .mainContent {
+        padding: 15px;
+        max-width: none;
+        width: 100%;
+        margin: 0;
+    }
+
+    .accountProfileContainer {
+        flex-direction: column;
+        min-height: 100vh;
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        overflow-x: hidden;
+    }
+}
+
+.sidebar {
+    width: 250px;
+    background-color: lightgray;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    padding-top: 65px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    flex-shrink: 0;
+}
+
+.navigation2 {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.navItem2 {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    transition: background-color 0.3s;
+    margin: 0;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.navItem2:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.navItem2.active {
+    background-color: #333;
+    color: white;
+}
+
+.navIcon2 {
+    width: 24px;
+    height: 24px;
+    margin-right: 15px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.profileIcon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+}
+
+.dietIcon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>');
+}
+
+.sidebarFooter {
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    margin-top: auto;
+}
+
+.profileHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profileAvatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin-right: 20px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23999"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+    background-position: center;
+    background-size: 60%;
+    background-repeat: no-repeat;
+}
+
+.profileInfo h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.profileInfo p {
+    color: #e0e0e0;
+}
+
+.profileDetailsCard {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cardHeader h2 {
+    font-size: 24px;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.profileFields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.fieldRow {
+    display: flex;
+    gap: 20px;
+}
+
+.field {
+    flex: 1;
+}
+
+.field label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #e0e0e0;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.fieldValue {
+    font-size: 16px;
+    padding: 5px 0;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.fieldInput {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 16px;
+    font-family: "Josefin Sans", sans-serif;
+    max-width: 300px;
+}
+
+.fieldInput:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.editButton,
+.cancelButton,
+.deleteAccountButton {
+    width: 100%;
+    max-width: 300px;
+}
+
+.editButton {
+    display: flex;
+    align-items: center;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.editButton:hover {
+    background-color: #444;
+}
+
+.editIcon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.editActions {
+    display: flex;
+    gap: 10px;
+}
+
+.cancelButton {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    border-radius: 20px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.cancelButton:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.editButton.saveButton {
+    background-color: #4CAF50;
+}
+
+.editButton.saveButton:hover {
+    background-color: #3e8e41;
+}
+
+.saveIcon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.deleteAccountContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.deleteAccountButton {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.deleteAccountButton:hover {
+    background-color: #444;
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.deleteConfirmationModal {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    color: #333;
+    text-align: center;
+}
+
+.deleteConfirmationModal h2 {
+    color: #d32f2f;
+    margin-bottom: 20px;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 24px;
+}
+
+.deleteConfirmationModal p {
+    margin-bottom: 30px;
+    line-height: 1.5;
+    font-size: 16px;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.confirmDeleteButton {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.confirmDeleteButton:hover {
+    background-color: #b71c1c;
+}
+
+.dietHeader {
+    margin-bottom: 30px;
+}
+
+.dietHeader h1 {
+    font-size: 28px;
+    color: white;
+    margin: 0;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.dietDetailsCard {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.dietContent {
+    padding: 20px 0;
+    color: white;
+}
+
+.dietRestrictionsOptions {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+.checkboxItem {
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.checkboxItem input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.checkboxItem label {
+    cursor: pointer;
+}
+
+.checkboxItem input[type="checkbox"]:disabled {
+    opacity: 0.7;
+    cursor: default;
+}
+
+.checkboxItem input[type="checkbox"]:disabled + label {
+    cursor: default;
+}
+
+.sidebarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.sidebarLogoContainer {
+    display: flex;
+    align-items: center;
+}
+
+.sidebarLogo {
+    height: 30px;
+    width: auto;
+}
+
+.sidebarSiteName {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 10px;
+    color: #333;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.navbar2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: transparent;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbarLeft2 {
+    display: flex;
+    align-items: center;
+}
+
+.navbarLeft2 .siteName {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: black !important;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.logo2 {
+    height: 32px;
+    margin-right: 0.5rem;
+}
+
+.logoutContainer2 {
+    padding: 20px;
+    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.logoutButton2 {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 20px;
+    cursor: pointer;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.logoutIcon2 {
+    width: 32px;
+    height: 32px;
+    margin-right: 15px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.logoutButton2:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.foodSearchSection {
+    padding: 15px 0;
+}
+
+.searchContainer {
+    margin-bottom: 20px;
+}
+
+.searchInputContainer {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 16px;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.searchIcon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.selectedFoods h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-family: "Josefin Sans", sans-serif;
+    color: white;
+}
+
+.mobileMenuButton {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    .accountProfileContainer {
+        flex-direction: column;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        padding-top: 20px;
+        min-height: auto;
+    }
+
+    .sidebar.hidden {
+        display: none;
+    }
+
+    .sidebar.active {
+        display: block;
+    }
+
+    .mainContent {
+        padding: 15px;
+        max-width: 100%;
+        min-height: auto;
+    }
+
+    .profileDetailsCard,
+    .dietDetailsCard {
+        padding: 15px;
+    }
+
+    .fieldRow {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .field {
+        margin-bottom: 15px;
+    }
+
+    .profileHeader {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profileAvatar {
+        margin-right: 0;
+        margin-bottom: 15px;
+        width: 80px;
+        height: 80px;
+    }
+
+    .profileInfo h1 {
+        font-size: 22px;
+    }
+
+    .cardHeader {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cardHeader h2 {
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+
+    .fieldValue {
+        font-size: 14px;
+    }
+
+    .field label {
+        font-size: 12px;
+    }
+
+    .dietRestrictionsOptions {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+
+    .fieldInput,
+    .editButton,
+    .cancelButton,
+    .deleteAccountButton {
+        max-width: none;
+    }
+
+    .editButton {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .profileFields {
+        gap: 15px;
+    }
+
+    .editActions {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .cancelButton,
+    .editButton,
+    .deleteAccountButton {
+        width: 100%;
+        padding: 12px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .modalActions {
+        flex-direction: column;
+    }
+
+    .confirmDeleteButton,
+    .cancelButton {
+        width: 100%;
+    }
+
+    .mobileMenuButton {
+        display: block;
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1001;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+    }
+
+    .navbar2 {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbarLeft2 {
+        margin-bottom: 10px;
+    }
+
+    .logoutContainer2 {
+        position: static;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .navigation2 {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .navItem2 {
+        width: auto;
+        padding: 10px 15px;
+    }
+
+    .navigation {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.accountProfileContainer {
+    display: flex;
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    color: white;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.mainContent {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: #5a6e4b;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.profileDetailsCard,
+.dietDetailsCard,
+.profileFields,
+.fieldRow,
+.field,
+.editActions,
+.dietRestrictionsOptions {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+    .mainContent {
+        padding: 15px;
+        max-width: none;
+        width: 100%;
+        margin: 0;
+        overflow-x: hidden;
+    }
+
+    .editButton,
+    .cancelButton,
+    .deleteAccountButton {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .fieldInput {
+        max-width: 100%;
+    }
+}
