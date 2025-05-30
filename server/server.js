@@ -47,6 +47,10 @@ app.get("/api/restaurants", async (req, res) => {
         photoUrl: place.photos?.[0]
           ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_PLACES_API_KEY}`
           : null,
+
+        // Geometry Coordinates for Maps
+        lat: place.geometry.location.lat,
+        lang: place.geometry.location.lng
       }));
 
       res.json({ restaurants });
