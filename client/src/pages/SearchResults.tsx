@@ -2,111 +2,26 @@ import React, { useState, useEffect, useRef } from "react";
 import "./SearchResults.css";
 import SearchBar from "../components/SearchBar";
 import SearchIcon from "../assets/SearchIcon.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import MapPanel from "../components/MapPanel";
+import axios from "axios";
 
 interface SearchResult {
   id: string;
   image: string;
   title: string;
   bulletPoints: string[];
+  address?: string;
+  rating?: number;
+  priceLevel?: number;
+  isOpen?: boolean;
 }
 
 const SearchResults: React.FC = () => {
   const navigate = useNavigate();
-
-  const initialResults: SearchResult[] = [
-    {
-      id: "nobu",
-      image: "https://via.placeholder.com/100",
-      title: "Nobu: Japanese Fusion",
-      bulletPoints: [
-        "Black Cod with Miso",
-        "Yellowtail Sashimi with Jalapeño",
-        "Rock Shrimp Tempura",
-      ],
-    },
-    {
-      id: "french-laundry",
-      image: "https://via.placeholder.com/100",
-      title: "The French Laundry: Fine Dining",
-      bulletPoints: [
-        "Oysters and Pearls",
-        "Butter-Poached Lobster",
-        "Seasonal Tasting Menu",
-      ],
-    },
-    {
-      id: "shake-shack",
-      image: "https://via.placeholder.com/100",
-      title: "Shake Shack: Gourmet Fast Food",
-      bulletPoints: ["ShackBurger", "Cheese Fries", "Chocolate Shake"],
-    },
-    {
-      id: "le-bernardin",
-      image: "https://via.placeholder.com/100",
-      title: "Le Bernardin: Seafood",
-      bulletPoints: [
-        "Lacquered Lobster Tail",
-        "Barely Cooked Scallop",
-        "Poached Halibut",
-      ],
-    },
-    {
-      id: "momofuku",
-      image: "https://via.placeholder.com/100",
-      title: "Momofuku: Asian Fusion",
-      bulletPoints: [
-        "Pork Belly Buns",
-        "Spicy Cold Noodles",
-        "Fried Chicken Feast",
-      ],
-    },
-    {
-      id: "alinea",
-      image: "https://via.placeholder.com/100",
-      title: "Alinea: Molecular Gastronomy",
-      bulletPoints: [
-        "Edible Balloon",
-        "Black Truffle Explosion",
-        "Tabletop Dessert",
-      ],
-    },
-    {
-      id: "in-n-out",
-      image: "https://via.placeholder.com/100",
-      title: "In-N-Out Burger: Fast Food Classic",
-      bulletPoints: ["Double-Double", "Animal Style Fries", "Neapolitan Shake"],
-    },
-    {
-      id: "eleven-madison",
-      image: "https://via.placeholder.com/100",
-      title: "Eleven Madison Park: Fine Dining",
-      bulletPoints: [
-        "Honey Lavender Duck",
-        "Milk & Honey",
-        "Plant-Based Tasting Menu",
-      ],
-    },
-    {
-      id: "osteria",
-      image: "https://via.placeholder.com/100",
-      title: "Osteria Francescana: Italian",
-      bulletPoints: [
-        "Five Ages of Parmigiano Reggiano",
-        "The Crunchy Part of Lasagna",
-        "Oops! I Dropped the Lemon Tart",
-      ],
-    },
-    {
-      id: "noma",
-      image: "https://via.placeholder.com/100",
-      title: "Noma: Nordic Cuisine",
-      bulletPoints: ["Moss and Cep", "Mahogany Clam", "Vegetable Season Menu"],
-    },
-  ];
-
-  const [results, setResults] = useState<SearchResult[]>(initialResults);
+  const location = useLocation();
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [leftWidth, setLeftWidth] = useState<number>(50);
   const [rightWidth, setRightWidth] = useState<number>(50);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -116,6 +31,14 @@ const SearchResults: React.FC = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const query = urlParams.get("query");
+    if (query) {
+      handleSearch(query);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -196,39 +119,74 @@ const SearchResults: React.FC = () => {
     };
   }, [isDragging, isWideScreen]);
 
-  const handleSearch = (searchQuery: string) => {
-    console.log("Searching for:", searchQuery);
-
+  const handleSearch = async (searchQuery: string) => {
     if (searchQuery.trim() === "") {
-      setResults(initialResults);
-      if (document.querySelector(".search-results")) {
-        document.querySelector(".search-results")!.scrollTop = 0;
-      }
+      setResults([]);
       return;
     }
 
-    const filteredResults = initialResults.filter(
-      (item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.bulletPoints.some((point) =>
-          point.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-    );
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/restaurants`,
+        {
+          params: {
+            food: searchQuery,
+            location: "Irvine, CA",
+          },
+        }
+      );
 
-    setResults(filteredResults);
+      console.log("Full API response:", response.data);
+      console.log("Restaurants array:", response.data.restaurants);
 
-    if (document.querySelector(".search-results")) {
-      document.querySelector(".search-results")!.scrollTop = 0;
-    }
+      if (
+        !response.data.restaurants ||
+        !Array.isArray(response.data.restaurants)
+      ) {
+        console.error("No restaurants array found in response");
+        setResults([]);
+        return;
+      }
 
-    if (window.innerWidth <= 768) {
-      (document.activeElement as HTMLElement)?.blur();
+      const apiResults = response.data.restaurants.map(
+        (restaurant: any, index: number) => {
+          console.log("Processing restaurant:", restaurant);
+
+          return {
+            id: `restaurant-${index}`,
+            image: restaurant.photoUrl || "https://via.placeholder.com/100",
+            title: restaurant.name,
+            bulletPoints: [
+              restaurant.address,
+              `Rating: ${restaurant.rating || "N/A"}`,
+              `Price Level: ${"$".repeat(restaurant.priceLevel || 1)}`,
+              restaurant.isOpen !== undefined
+                ? restaurant.isOpen
+                  ? "Open Now"
+                  : "Closed"
+                : "Hours Unknown",
+            ].filter((point) => point && point.trim() !== ""),
+            address: restaurant.address,
+            rating: restaurant.rating,
+            priceLevel: restaurant.priceLevel,
+            isOpen: restaurant.isOpen,
+          };
+        }
+      );
+
+      console.log("Mapped results:", apiResults);
+      setResults(apiResults);
+    } catch (error) {
+      console.error("Error fetching restaurants:", error);
+      setResults([]);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleResultClick = (resultId: string) => {
-    // Navigate to the menu options page with the result ID
-    navigate(`/menu-options/${resultId}`);
+  const handleResultClick = (resultId: string, restaurantName: string) => {
+    navigate(`/menu-options/${encodeURIComponent(restaurantName)}`);
   };
 
   return (
@@ -237,7 +195,7 @@ const SearchResults: React.FC = () => {
         <div className="search-container">
           <SearchBar
             placeholder={
-              window.innerWidth <= 480 ? "Search..." : "Filter results..."
+              window.innerWidth <= 480 ? "Search..." : "Search for food..."
             }
             onSearch={handleSearch}
             buttonText={window.innerWidth <= 480 ? "" : "Search"}
@@ -251,13 +209,15 @@ const SearchResults: React.FC = () => {
           className="search-results"
           style={{ width: isWideScreen ? `${leftWidth}%` : "100%" }}
         >
-          {results.length > 0 ? (
+          {loading ? (
+            <div className="loading">Searching for restaurants...</div>
+          ) : results.length > 0 ? (
             <>
               {results.map((item, index) => (
                 <div
                   className="result-item"
                   key={index}
-                  onClick={() => handleResultClick(item.id)}
+                  onClick={() => handleResultClick(item.id, item.title)}
                   style={{ cursor: "pointer" }}
                 >
                   <img
@@ -279,7 +239,7 @@ const SearchResults: React.FC = () => {
             </>
           ) : (
             <div className="no-results">
-              No results found. Try a different search term.
+              Search for restaurants by food type (e.g., "pizza", "sushi")
             </div>
           )}
         </div>
@@ -288,7 +248,7 @@ const SearchResults: React.FC = () => {
 
         {isWideScreen && (
           <div className="right-section" style={{ width: `${rightWidth}%` }}>
-            <MapPanel/>
+            <MapPanel />
           </div>
         )}
       </div>

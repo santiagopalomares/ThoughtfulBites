@@ -60,7 +60,7 @@ export default function SignUp() {
 
   async function addUserToDatabase() {
     try {
-      const response = await fetch("http://localhost:3001/api/signup", {
+      const response = await fetch("http://localhost:8080/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,6 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
-import axios from "axios";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
@@ -13,15 +11,6 @@ import { AuthProvider } from "./context/AuthContext";
 import "./App.css";
 
 function App() {
-  const fetchAPI = async () => {
-    const response = await axios.get("http://localhost:8080/api");
-    console.log(response.data.fruits);
-  };
-
-  useEffect(() => {
-    fetchAPI();
-  }, []);
-
   return (
     <AuthProvider>
       <Router>
