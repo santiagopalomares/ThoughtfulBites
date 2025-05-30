@@ -15,6 +15,9 @@ interface SearchResult {
   rating?: number;
   priceLevel?: number;
   isOpen?: boolean;
+
+  lat: number;
+  lang: number;
 }
 
 const SearchResults: React.FC = () => {
@@ -171,6 +174,9 @@ const SearchResults: React.FC = () => {
             rating: restaurant.rating,
             priceLevel: restaurant.priceLevel,
             isOpen: restaurant.isOpen,
+
+            lat: restaurant.lat,
+            lng: restaurant.lng,
           };
         }
       );
@@ -248,7 +254,16 @@ const SearchResults: React.FC = () => {
 
         {isWideScreen && (
           <div className="right-section" style={{ width: `${rightWidth}%` }}>
-            <MapPanel />
+            <MapPanel 
+              restaurants={results}
+              defaultCenter={
+                results.length
+                ? { lat: results[0].lat, lng: results[0].lang }
+                // Default
+                : { lat: 33.68, lng: -117.78 }
+              }
+
+            />
           </div>
         )}
       </div>
