@@ -25,6 +25,11 @@ const openai = new OpenAI({
   apiKey: process.env.OPEN_AI_API_KEY,
 });
 
+app.get("/api", (req, res) => {
+  res.json({ example: ["data1", "data2", "data3"] });
+});
+
+// Handles signup
 app.post("/api/signup", async (req, res) => {
   const { email, password, userDietTypes, userDietDetails } = req.body;
   try {
@@ -69,10 +74,40 @@ app.post("/api/signup", async (req, res) => {
   }
 });
 
-app.get("/api", (req, res) => {
-  res.json({ example: ["data1", "data2", "data3"] });
+// Handles login
+app.post("/api/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    // Check if user exists
+    const [users] = await pool.query("SELECT * FROM users WHERE email = ?", [
+      email,
+    ]);
+
+    if (users.length === 0) {
+      return res.status(400).json({ message: "Email not found." });
+    }
+
+    // Checks if entered password matches
+    const existingUser = users[0];
+    const isPasswordMatch = await bcrypt.compare(
+      password,
+      existingUser.password_hash
+    );
+
+    if (isPasswordMatch) {
+      res.status(201).json({
+        message: `User: ${email} logged in successfully!`,
+        userId: existingUser.user_id,
+      });
+    } else {
+      res.status(400).json({ message: "Password does not match" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: `${error}` });
+  }
 });
 
+// Handles searching for restaurants
 app.get("/api/restaurants", async (req, res) => {
   const { food, location } = req.query;
 
@@ -112,6 +147,7 @@ app.get("/api/restaurants", async (req, res) => {
   }
 });
 
+// Handles menu items grabbing for restaurant
 app.get("/api/menu/:restaurantName", async (req, res) => {
   const { restaurantName } = req.params;
 

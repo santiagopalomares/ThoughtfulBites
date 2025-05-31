@@ -76,7 +76,7 @@ export default function SignUp() {
       const result = await response.json();
       if (!response.ok) {
         setErrorMessage(`${result.message}`);
-        return;
+        return result.message;
       }
       return null;
     } catch (error) {
