@@ -13,11 +13,44 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  function onSubmit(e: FormEvent) {
+  async function searchUserFromDatabase() {
+    try {
+      const response = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setErrorMessage(`${result.message}`);
+        return result.message;
+      }
+
+      return null;
+    } catch (error) {
+      setErrorMessage("Cannot connect to server");
+    }
+  }
+
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    // TODO: Set Error Message if user not found.
-    login();
-    navigate("/");
+
+    const error = await searchUserFromDatabase();
+
+    if (error) {
+      setErrorMessage(`ERROR: ${error}`);
+      return;
+    } else {
+      login();
+      navigate("/");
+    }
   }
 
   const togglePasswordVisibility = () => {

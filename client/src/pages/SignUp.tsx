@@ -13,7 +13,7 @@ type FormData = {
   password: string;
   confirmPassword: string;
   userDietTypes: string[];
-  userDietDetails: string[];
+  userDietDetails: string[]; // This is for allergens and other, if user does not select this, it will be empty
 };
 
 const INITIAL_DATA: FormData = {
@@ -58,9 +58,36 @@ export default function SignUp() {
     return data.confirmPassword === data.password;
   }
 
-  function onSubmit(e: FormEvent) {
+  async function addUserToDatabase() {
+    try {
+      const response = await fetch("http://localhost:8080/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+          userDietTypes: data.userDietTypes,
+          userDietDetails: data.userDietDetails,
+        }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        setErrorMessage(`${result.message}`);
+        return result.message;
+      }
+      return null;
+    } catch (error) {
+      setErrorMessage("Cannot connect to server");
+    }
+  }
+
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (isFirstStep) {
+      // Checks for matching passwords for first page
       if (!checkPasswordMatch()) {
         setErrorMessage("ERROR: Passwords do not match!");
         return;
@@ -69,11 +96,20 @@ export default function SignUp() {
         return next();
       }
     } else if (!isLastStep) {
+      // Proceeds through all the pages
       setErrorMessage("");
       return next();
     } else {
+      // Adds account to database after user clicks Finish
       setErrorMessage("");
-      alert(`SUCCESS: Account created for ${data.email}`); // TODO: Add User to database
+      const error = await addUserToDatabase();
+
+      if (error) {
+        setErrorMessage(`ERROR: ${error}`);
+        return;
+      }
+
+      alert(`SUCCESS: Account created for ${data.email}`);
       navigate("/login");
     }
   }
