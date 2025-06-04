@@ -1,5 +1,5 @@
-import { CSSProperties } from "react";
-import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import { CSSProperties, useState } from "react";
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from "@react-google-maps/api";
 
 // Same container style you already had:
 const containerStyle: CSSProperties = {
@@ -24,6 +24,8 @@ export default function MapPanel({
   zoom = 12,
 }: MapPanelProps) {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  // State to track which restaurant (if any) is “selected” for the InfoWindow
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: apiKey,
@@ -31,12 +33,15 @@ export default function MapPanel({
   });
 
   if (loadError) return <div>Error loading maps</div>;
-  if (!isLoaded) return <div>Loading map…</div>;
+  if (!isLoaded) return <div>Loading map…</div>;  
 
   console.log(
     "Loaded Maps API key:", 
     import.meta.env.VITE_GOOGLE_MAPS_API_KEY
   );
+
+  // Find the full restaurant object for the selected ID (if any)
+  const selectedRestaurant = restaurants.find((r) => r.id === selectedId) || null;
 
   return (
     <GoogleMap
@@ -44,11 +49,10 @@ export default function MapPanel({
       center={defaultCenter}
       zoom={zoom}
       onLoad={(map) => {
-        // If you want to auto‐zoom to show all markers, you can fit bounds here:
         if (restaurants.length > 1) {
           const bounds = new window.google.maps.LatLngBounds();
           restaurants.forEach(({ lat, lng }) => {
-            bounds.extend({ lat, lng: lng });
+            bounds.extend({ lat, lng });
           });
           map.fitBounds(bounds);
         }
@@ -59,8 +63,27 @@ export default function MapPanel({
           key={r.id}
           position={{ lat: r.lat, lng: r.lng }}
           title={r.title}
+          onClick={() => {
+            setSelectedId(r.id);
+          }}
         />
       ))}
+
+      {selectedRestaurant && (
+        <InfoWindow
+          position={{
+            lat: selectedRestaurant.lat,
+            lng: selectedRestaurant.lng,
+          }}
+          onCloseClick={() => {
+            setSelectedId(null);
+          }}
+        >
+          <div>
+            <strong>{selectedRestaurant.title}</strong>
+          </div>
+        </InfoWindow>
+      )}
     </GoogleMap>
   );
 }
