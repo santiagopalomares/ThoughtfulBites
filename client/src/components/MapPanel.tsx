@@ -1,7 +1,11 @@
 import { CSSProperties, useState } from "react";
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
 
-// Same container style you already had:
 const containerStyle: CSSProperties = {
   width: "100%",
   height: "100%",
@@ -11,6 +15,7 @@ export interface MapPanelProps {
   restaurants: Array<{
     id: string;
     title: string;
+    address?: string;
     lat: number;
     lng: number;
   }>;
@@ -24,8 +29,8 @@ export default function MapPanel({
   zoom = 12,
 }: MapPanelProps) {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-  // State to track which restaurant (if any) is “selected” for the InfoWindow
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>(null);
+
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: apiKey,
@@ -33,15 +38,10 @@ export default function MapPanel({
   });
 
   if (loadError) return <div>Error loading maps</div>;
-  if (!isLoaded) return <div>Loading map…</div>;  
+  if (!isLoaded) return <div>Loading map…</div>;
 
-  console.log(
-    "Loaded Maps API key:", 
-    import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-  );
-
-  // Find the full restaurant object for the selected ID (if any)
-  const selectedRestaurant = restaurants.find((r) => r.id === selectedId) || null;
+  const selectedRestaurant =
+    restaurants.find((r) => r.id === selectedRestaurantId) || null;
 
   return (
     <GoogleMap
@@ -58,17 +58,19 @@ export default function MapPanel({
         }
       }}
     >
+
       {restaurants.map((r) => (
         <Marker
           key={r.id}
           position={{ lat: r.lat, lng: r.lng }}
           title={r.title}
           onClick={() => {
-            setSelectedId(r.id);
+            setSelectedRestaurantId(r.id);
           }}
         />
       ))}
 
+      {/* If a restaurant is selected, open an info window */}
       {selectedRestaurant && (
         <InfoWindow
           position={{
@@ -76,11 +78,40 @@ export default function MapPanel({
             lng: selectedRestaurant.lng,
           }}
           onCloseClick={() => {
-            setSelectedId(null);
+            setSelectedRestaurantId(null);
           }}
         >
-          <div>
-            <strong>{selectedRestaurant.title}</strong>
+          <div style={{ maxWidth: "220px" }}>
+            <h3 style={{ margin: "0 0 4px 0" }}>
+              {selectedRestaurant.title}
+            </h3>
+
+            {selectedRestaurant.address && (
+              <div style={{ marginBottom: "6px", fontSize: "0.9em" }}>
+                {selectedRestaurant.address}
+              </div>
+            )}
+
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                selectedRestaurant.address
+                  ? selectedRestaurant.address
+                  : selectedRestaurant.title
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-block",
+                padding: "6px 10px",
+                background: "#4285F4",
+                color: "white",
+                textDecoration: "none",
+                borderRadius: "4px",
+                fontSize: "0.9em",
+              }}
+            >
+              View on Google Maps
+            </a>
           </div>
         </InfoWindow>
       )}
