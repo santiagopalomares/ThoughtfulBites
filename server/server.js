@@ -50,7 +50,7 @@ app.get("/api/restaurants", async (req, res) => {
 
         // Geometry Coordinates for Maps
         lat: place.geometry.location.lat,
-        lang: place.geometry.location.lng
+        lng: place.geometry.location.lng
       }));
 
       res.json({ restaurants });

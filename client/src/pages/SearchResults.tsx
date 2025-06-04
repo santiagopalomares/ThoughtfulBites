@@ -17,7 +17,7 @@ interface SearchResult {
   isOpen?: boolean;
 
   lat: number;
-  lang: number;
+  lng: number;
 }
 
 const SearchResults: React.FC = () => {
@@ -258,7 +258,7 @@ const SearchResults: React.FC = () => {
               restaurants={results}
               defaultCenter={
                 results.length
-                ? { lat: results[0].lat, lng: results[0].lang }
+                ? { lat: results[0].lat, lng: results[0].lng }
                 // Default
                 : { lat: 33.68, lng: -117.78 }
               }
