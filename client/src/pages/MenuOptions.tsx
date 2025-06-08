@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./MenuOptions.css";
+import styles from "./MenuOptions.module.css";
 
 interface MenuItem {
   name: string;
@@ -77,25 +77,27 @@ const MenuOptions: React.FC = () => {
   };
 
   return (
-    <div className="menu-options-container">
-      <div className="menu-header">
-        <button className="back-button" onClick={handleBack}>
+    <div className={styles["menu-options-container"]}>
+      <div className={styles["menu-header"]}>
+        <button className={styles["back-button"]} onClick={handleBack}>
           &lt; Back to Results
         </button>
         <h1>{restaurant?.name || "Restaurant Menu"}</h1>
       </div>
 
       {loading ? (
-        <div className="loading">
-          <div className="loading-spinner"></div>
+        <div className={styles["loading"]}>
+          <div className={styles["loading-spinner"]}></div>
           <p>Loading menu options...</p>
         </div>
       ) : menuItems.length > 0 ? (
-        <div className="restaurant-content">
+        <div className={styles["restaurant-content"]}>
           {restaurant && (
-            <div className="restaurant-info">
-              <p className="restaurant-description">{restaurant.description}</p>
-              <div className="restaurant-details">
+            <div className={styles["restaurant-info"]}>
+              <p className={styles["restaurant-description"]}>
+                {restaurant.description}
+              </p>
+              <div className={styles["restaurant-details"]}>
                 <p>
                   <strong>Address:</strong> {restaurant.address}
                 </p>
@@ -119,12 +121,12 @@ const MenuOptions: React.FC = () => {
             </div>
           )}
 
-          <div className="category-tabs">
+          <div className={styles["category-tabs"]}>
             {categories.map((category) => (
               <button
                 key={category}
-                className={`category-tab ${
-                  activeCategory === category ? "active" : ""
+                className={`${styles["category-tab"]} ${
+                  activeCategory === category ? styles["active"] : ""
                 }`}
                 onClick={() => setActiveCategory(category)}
               >
@@ -133,17 +135,21 @@ const MenuOptions: React.FC = () => {
             ))}
           </div>
 
-          <div className="menu-items-grid">
+          <div className={styles["menu-items-grid"]}>
             {filteredItems.map((item, index) => (
-              <div key={index} className="menu-item-card">
-                <div className="menu-item-image">
+              <div key={index} className={styles["menu-item-card"]}>
+                <div className={styles["menu-item-image"]}>
                   <img src="https://via.placeholder.com/300" alt={item.name} />
                 </div>
-                <div className="menu-item-info">
+                <div className={styles["menu-item-info"]}>
                   <h3>{item.name}</h3>
-                  <p className="menu-item-description">{item.description}</p>
-                  <div className="menu-item-footer">
-                    <span className="menu-item-price">{item.price}</span>
+                  <p className={styles["menu-item-description"]}>
+                    {item.description}
+                  </p>
+                  <div className={styles["menu-item-footer"]}>
+                    <span className={styles["menu-item-price"]}>
+                      {item.price}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -151,10 +157,10 @@ const MenuOptions: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="not-found">
+        <div className={styles["not-found"]}>
           <h2>Menu not available</h2>
           <p>Sorry, we couldn't load the menu for this restaurant.</p>
-          <button className="back-button" onClick={handleBack}>
+          <button className={styles["back-button"]} onClick={handleBack}>
             Back to Search Results
           </button>
         </div>

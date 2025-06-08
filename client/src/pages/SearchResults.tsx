@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./SearchResults.css";
+import styles from "./SearchResults.module.css";
 import SearchBar from "../components/SearchBar";
 import SearchIcon from "../assets/SearchIcon.png";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -58,7 +58,7 @@ const SearchResults: React.FC = () => {
 
       if (containerRef.current) {
         const searchContainer = document.querySelector(
-          ".results-search-container"
+          `.${styles["results-search-container"]}`
         );
         if (searchContainer) {
           const searchHeight = searchContainer.clientHeight;
@@ -196,9 +196,9 @@ const SearchResults: React.FC = () => {
   };
 
   return (
-    <div className="search-results-page">
-      <div className="results-search-container">
-        <div className="search-container">
+    <div className={styles["search-results-page"]}>
+      <div className={styles["results-search-container"]}>
+        <div className={styles["search-container"]}>
           <SearchBar
             placeholder={
               window.innerWidth <= 480 ? "Search..." : "Search for food..."
@@ -210,18 +210,20 @@ const SearchResults: React.FC = () => {
         </div>
       </div>
 
-      <div className="content-container" ref={containerRef}>
+      <div className={styles["content-container"]} ref={containerRef}>
         <div
-          className="search-results"
+          className={styles["search-results"]}
           style={{ width: isWideScreen ? `${leftWidth}%` : "100%" }}
         >
           {loading ? (
-            <div className="loading">Searching for restaurants...</div>
+            <div className={styles["loading"]}>
+              Searching for restaurants...
+            </div>
           ) : results.length > 0 ? (
             <>
               {results.map((item, index) => (
                 <div
-                  className="result-item"
+                  className={styles["result-item"]}
                   key={index}
                   onClick={() => handleResultClick(item.id, item.title)}
                   style={{ cursor: "pointer" }}
@@ -229,11 +231,13 @@ const SearchResults: React.FC = () => {
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="result-image"
+                    className={styles["result-image"]}
                   />
-                  <div className="result-description">
-                    <div className="description-top">{item.title}</div>
-                    <ul className="description-bottom">
+                  <div className={styles["result-description"]}>
+                    <div className={styles["description-top"]}>
+                      {item.title}
+                    </div>
+                    <ul className={styles["description-bottom"]}>
                       {item.bulletPoints.map((point, idx) => (
                         <li key={idx}>{point}</li>
                       ))}
@@ -244,25 +248,29 @@ const SearchResults: React.FC = () => {
               <div style={{ height: "20px" }}></div>
             </>
           ) : (
-            <div className="no-results">
+            <div className={styles["no-results"]}>
               Search for restaurants by food type (e.g., "pizza", "sushi")
             </div>
           )}
         </div>
 
-        {isWideScreen && <div className="resizer" ref={resizerRef}></div>}
+        {isWideScreen && (
+          <div className={styles["resizer"]} ref={resizerRef}></div>
+        )}
 
         {isWideScreen && (
-          <div className="right-section" style={{ width: `${rightWidth}%` }}>
-            <MapPanel 
+          <div
+            className={styles["right-section"]}
+            style={{ width: `${rightWidth}%` }}
+          >
+            <MapPanel
               restaurants={results}
               defaultCenter={
                 results.length
-                ? { lat: results[0].lat, lng: results[0].lng }
-                // Default
-                : { lat: 33.68, lng: -117.78 }
+                  ? { lat: results[0].lat, lng: results[0].lng }
+                  : // Default
+                    { lat: 33.68, lng: -117.78 }
               }
-
             />
           </div>
         )}

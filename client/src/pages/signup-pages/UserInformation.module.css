@@ -41,6 +41,8 @@ input {
 .log-in {
   color: #212f24;
   font-weight: 700;
+  top: 50%;
+  transform: translateY(50%);
 }
 
 .password-container,
