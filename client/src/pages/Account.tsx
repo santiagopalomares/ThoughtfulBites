@@ -704,9 +704,6 @@ const Account: React.FC = () => {
                             <span className={styles["food-name"]}>
                               {item.name}
                             </span>
-                            <span className={styles["food-type"]}>
-                              ({item.type})
-                            </span>
                             {isEditingDietaryDetails && (
                               <button
                                 className={styles["remove-button"]}
