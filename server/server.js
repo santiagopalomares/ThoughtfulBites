@@ -139,7 +139,7 @@ app.get("/api/restaurants", async (req, res) => {
 
         // Geometry Coordinates for Maps
         lat: place.geometry.location.lat,
-        lng: place.geometry.location.lng
+        lng: place.geometry.location.lng,
       }));
 
       res.json({ restaurants });
@@ -183,6 +183,280 @@ app.get("/api/menu/:restaurantName", async (req, res) => {
   } catch (error) {
     console.error("Error generating menu:", error);
     res.status(500).json({ error: "Failed to generate menu" });
+  }
+});
+
+// Get user data by user ID
+app.get("/api/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Get user basic info
+    const [users] = await pool.query(
+      "SELECT user_id, email FROM users WHERE user_id = ?",
+      [userId]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const user = users[0];
+
+    // Get user's dietary restrictions
+    const [restrictions] = await pool.query(
+      "SELECT restriction_type, custom_items FROM dietary_restrictions WHERE user_id = ?",
+      [userId]
+    );
+
+    // Format dietary restrictions
+    const dietaryRestrictions = restrictions.map((restriction) => ({
+      type: restriction.restriction_type,
+      customItems: restriction.custom_items
+        ? restriction.custom_items.split(",")
+        : null,
+    }));
+
+    res.json({
+      userId: user.user_id,
+      email: user.email,
+      dietaryRestrictions: dietaryRestrictions,
+    });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Update user profile
+app.put("/api/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const { email, password } = req.body;
+
+  try {
+    // Check if user exists
+    const [existingUser] = await pool.query(
+      "SELECT * FROM users WHERE user_id = ?",
+      [userId]
+    );
+
+    if (existingUser.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update user data
+    let updateQuery = "UPDATE users SET email = ?";
+    let updateParams = [email];
+
+    // Only update password if provided
+    if (password && password !== "••••••••••••") {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateQuery += ", password_hash = ?";
+      updateParams.push(hashedPassword);
+    }
+
+    updateQuery += " WHERE user_id = ?";
+    updateParams.push(userId);
+
+    await pool.query(updateQuery, updateParams);
+
+    res.json({ message: "User updated successfully" });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Update dietary restrictions
+app.put("/api/user/:userId/dietary-restrictions", async (req, res) => {
+  const { userId } = req.params;
+  const { dietRestrictions } = req.body;
+
+  try {
+    // Check if user exists
+    const [existingUser] = await pool.query(
+      "SELECT * FROM users WHERE user_id = ?",
+      [userId]
+    );
+
+    if (existingUser.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Get existing custom_items for Allergens and Other before deleting
+    const [existingRestrictions] = await pool.query(
+      "SELECT restriction_type, custom_items FROM dietary_restrictions WHERE user_id = ? AND restriction_type IN ('Allergens', 'Other')",
+      [userId]
+    );
+
+    // Store existing custom items
+    const existingCustomItems = {};
+    existingRestrictions.forEach((restriction) => {
+      existingCustomItems[restriction.restriction_type] =
+        restriction.custom_items;
+    });
+
+    // Delete existing dietary restrictions
+    await pool.query("DELETE FROM dietary_restrictions WHERE user_id = ?", [
+      userId,
+    ]);
+
+    // Insert new dietary restrictions
+    const restrictionTypes = {
+      allergen: "Allergens",
+      dairyfree: "Dairy-Free",
+      glutenfree: "Gluten-Free",
+      pescatarian: "Pescatarian",
+      vegan: "Vegan",
+      vegetarian: "Vegetarian",
+      other: "Other",
+      none: "None",
+    };
+
+    for (const [key, checked] of Object.entries(dietRestrictions)) {
+      if (checked) {
+        const restrictionType = restrictionTypes[key];
+
+        // Preserve existing custom_items for Allergens and Other
+        let customItems = null;
+        if (
+          restrictionType === "Allergens" &&
+          existingCustomItems["Allergens"]
+        ) {
+          customItems = existingCustomItems["Allergens"];
+        } else if (
+          restrictionType === "Other" &&
+          existingCustomItems["Other"]
+        ) {
+          customItems = existingCustomItems["Other"];
+        }
+
+        await pool.query(
+          "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+          [userId, restrictionType, customItems]
+        );
+      }
+    }
+
+    res.json({ message: "Dietary restrictions updated successfully" });
+  } catch (error) {
+    console.error("Error updating dietary restrictions:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Puts editted diet details into the database
+app.put("/api/user/:userId/dietary-details", async (req, res) => {
+  const { userId } = req.params;
+  const { dietaryDetails } = req.body;
+
+  try {
+    // Check if user exists
+    const [existingUser] = await pool.query(
+      "SELECT * FROM users WHERE user_id = ?",
+      [userId]
+    );
+
+    if (existingUser.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Group dietary details by type
+    const allergenItems = dietaryDetails
+      .filter((item) => item.type === "allergen")
+      .map((item) => item.name);
+
+    const otherItems = dietaryDetails
+      .filter((item) => item.type === "other")
+      .map((item) => item.name);
+
+    // Update or insert Allergens restriction with custom items
+    if (allergenItems.length > 0) {
+      // Check if allergen restriction exists
+      const [existingAllergen] = await pool.query(
+        "SELECT * FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Allergens'",
+        [userId]
+      );
+
+      if (existingAllergen.length > 0) {
+        // Update existing
+        await pool.query(
+          "UPDATE dietary_restrictions SET custom_items = ? WHERE user_id = ? AND restriction_type = 'Allergens'",
+          [allergenItems.join(","), userId]
+        );
+      } else {
+        // Insert new
+        await pool.query(
+          "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+          [userId, "Allergens", allergenItems.join(",")]
+        );
+      }
+    } else {
+      // Remove allergen restriction if no items
+      await pool.query(
+        "DELETE FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Allergens'",
+        [userId]
+      );
+    }
+
+    // Update or insert Other restriction with custom items
+    if (otherItems.length > 0) {
+      // Check if other restriction exists
+      const [existingOther] = await pool.query(
+        "SELECT * FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Other'",
+        [userId]
+      );
+
+      if (existingOther.length > 0) {
+        // Update existing
+        await pool.query(
+          "UPDATE dietary_restrictions SET custom_items = ? WHERE user_id = ? AND restriction_type = 'Other'",
+          [otherItems.join(","), userId]
+        );
+      } else {
+        // Insert new
+        await pool.query(
+          "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+          [userId, "Other", otherItems.join(",")]
+        );
+      }
+    } else {
+      // Remove other restriction if no items
+      await pool.query(
+        "DELETE FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Other'",
+        [userId]
+      );
+    }
+
+    res.json({ message: "Dietary details updated successfully" });
+  } catch (error) {
+    console.error("Error updating dietary details:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Delete user account
+app.delete("/api/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Check if user exists
+    const [existingUser] = await pool.query(
+      "SELECT * FROM users WHERE user_id = ?",
+      [userId]
+    );
+
+    if (existingUser.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Delete user (CASCADE will automatically delete dietary_restrictions)
+    await pool.query("DELETE FROM users WHERE user_id = ?", [userId]);
+
+    res.json({ message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user account:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
