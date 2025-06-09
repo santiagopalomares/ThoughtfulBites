@@ -139,7 +139,7 @@ app.get("/api/restaurants", async (req, res) => {
 
         // Geometry Coordinates for Maps
         lat: place.geometry.location.lat,
-        lng: place.geometry.location.lng
+        lng: place.geometry.location.lng,
       }));
 
       res.json({ restaurants });
@@ -183,6 +183,87 @@ app.get("/api/menu/:restaurantName", async (req, res) => {
   } catch (error) {
     console.error("Error generating menu:", error);
     res.status(500).json({ error: "Failed to generate menu" });
+  }
+});
+
+// Get user data by user ID
+app.get("/api/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Get user basic info
+    const [users] = await pool.query(
+      "SELECT user_id, email FROM users WHERE user_id = ?",
+      [userId]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const user = users[0];
+
+    // Get user's dietary restrictions
+    const [restrictions] = await pool.query(
+      "SELECT restriction_type, custom_items FROM dietary_restrictions WHERE user_id = ?",
+      [userId]
+    );
+
+    // Format dietary restrictions
+    const dietaryRestrictions = restrictions.map((restriction) => ({
+      type: restriction.restriction_type,
+      customItems: restriction.custom_items
+        ? restriction.custom_items.split(",")
+        : null,
+    }));
+
+    res.json({
+      userId: user.user_id,
+      email: user.email,
+      dietaryRestrictions: dietaryRestrictions,
+    });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Update user profile
+app.put("/api/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const { email, password } = req.body;
+
+  try {
+    // Check if user exists
+    const [existingUser] = await pool.query(
+      "SELECT * FROM users WHERE user_id = ?",
+      [userId]
+    );
+
+    if (existingUser.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update user data
+    let updateQuery = "UPDATE users SET email = ?";
+    let updateParams = [email];
+
+    // Only update password if provided
+    if (password && password !== "••••••••••••") {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateQuery += ", password_hash = ?";
+      updateParams.push(hashedPassword);
+    }
+
+    updateQuery += " WHERE user_id = ?";
+    updateParams.push(userId);
+
+    await pool.query(updateQuery, updateParams);
+
+    res.json({ message: "User updated successfully" });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 

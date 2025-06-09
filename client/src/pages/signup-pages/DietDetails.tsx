@@ -1,8 +1,6 @@
 import { useState } from "react";
 import SearchBar from "../../components/SearchBar";
 import SearchIcon from "../../assets/SearchIcon.png";
-import XWhite from "../../assets/X-white.png";
-import XBlack from "../../assets/X-black.png";
 import styles from "./DietDetails.module.css";
 
 type DietDetailsData = {

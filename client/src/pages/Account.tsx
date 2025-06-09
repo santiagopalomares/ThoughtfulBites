@@ -1,351 +1,551 @@
-import React, { useState } from 'react';
-import styles from './Account.module.css';
+import React, { useState, useEffect } from "react";
+import styles from "./Account.module.css";
 import Logo from "../assets/Logo.png";
 import { Link } from "react-router-dom";
 
+type DietRestrictions = {
+  allergen: boolean;
+  dairyfree: boolean;
+  glutenfree: boolean;
+  pescatarian: boolean;
+  vegan: boolean;
+  vegetarian: boolean;
+  other: boolean;
+  none: boolean;
+};
+
+type UserData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+};
+
 const Account: React.FC = () => {
-    const [user, setUser] = useState({
-        firstName: 'John',
-        lastName: 'Smith',
-        email: 'example@gmail.com',
-        password: '••••••••••••'
+  const [userId] = useState<string>(localStorage.getItem("userId") || "");
+
+  const [user, setUser] = useState<UserData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "••••••••••••",
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>("");
+
+  const dietaryOptions = [
+    { id: "allergen" as keyof DietRestrictions, label: "Allergen" },
+    { id: "dairyfree" as keyof DietRestrictions, label: "Dairy-Free" },
+    { id: "glutenfree" as keyof DietRestrictions, label: "Gluten-Free" },
+    { id: "pescatarian" as keyof DietRestrictions, label: "Pescatarian" },
+    { id: "vegan" as keyof DietRestrictions, label: "Vegan" },
+    { id: "vegetarian" as keyof DietRestrictions, label: "Vegetarian" },
+    { id: "other" as keyof DietRestrictions, label: "Other" },
+    { id: "none" as keyof DietRestrictions, label: "None" },
+  ];
+
+  const [dietRestrictions, setDietRestrictions] = useState<DietRestrictions>(
+    dietaryOptions.reduce(
+      (acc, option) => ({ ...acc, [option.id]: false }),
+      {} as DietRestrictions
+    )
+  );
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingDietRestrictions, setIsEditingDietRestrictions] =
+    useState(false);
+  const [isEditingDietaryDetails, setIsEditingDietaryDetails] = useState(false);
+
+  const [formValues, setFormValues] = useState<UserData>({ ...user });
+  const [dietRestrictionsForm, setDietRestrictionsForm] =
+    useState<DietRestrictions>({
+      ...dietRestrictions,
     });
 
-    const dietaryOptions = [
-        { id: 'gluten', label: 'Gluten' },
-        { id: 'dairy', label: 'Dairy' },
-        { id: 'nuts', label: 'Nuts' },
-        { id: 'eggs', label: 'Eggs' },
-        { id: 'soy', label: 'Soy' },
-        { id: 'shellfish', label: 'Shellfish' },
-        { id: 'fish', label: 'Fish' },
-        { id: 'redMeat', label: 'Red Meat' },
-        { id: 'pork', label: 'Pork' },
-        { id: 'vegan', label: 'Vegan' },
-        { id: 'vegetarian', label: 'Vegetarian' }
-    ];
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [activePage, setActivePage] = useState("profile");
 
-    const [dietRestrictions, setDietRestrictions] = useState(
-        dietaryOptions.reduce((acc, option) => ({ ...acc, [option.id]: true }), {})
-    );
+  // Fetch user data from database
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!userId) {
+        setError("No user ID found. Please log in again.");
+        setLoading(false);
+        return;
+      }
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [isEditingDietRestrictions, setIsEditingDietRestrictions] = useState(false);
-    const [isEditingDietaryDetails, setIsEditingDietaryDetails] = useState(false);
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/user/${userId}`
+        );
 
-    const [formValues, setFormValues] = useState({...user});
-    const [dietRestrictionsForm, setDietRestrictionsForm] = useState({...dietRestrictions});
-
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-    const [activePage, setActivePage] = useState('profile');
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormValues({
-            ...formValues,
-            [name]: value
-        });
-    };
-
-    const handleEdit = () => {
-        if (isEditing) {
-            setUser({...formValues});
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
         }
-        setIsEditing(!isEditing);
-    };
 
-    const handleCancel = () => {
-        setFormValues({...user});
-        setIsEditing(false);
-    };
+        const userData = await response.json();
 
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, checked } = e.target;
-        setDietRestrictionsForm({
-            ...dietRestrictionsForm,
-            [name]: checked
+        const emailPrefix = userData.email.split("@")[0];
+        const nameParts = emailPrefix.split(".");
+        const firstName = nameParts[0] || "User";
+        const lastName = nameParts[1] || "";
+
+        const userInfo: UserData = {
+          firstName: firstName.charAt(0).toUpperCase() + firstName.slice(1),
+          lastName: lastName.charAt(0).toUpperCase() + lastName.slice(1),
+          email: userData.email,
+          password: "••••••••••••",
+        };
+
+        setUser(userInfo);
+        setFormValues(userInfo);
+
+        const restrictionMap: DietRestrictions = dietaryOptions.reduce(
+          (acc, option) => ({ ...acc, [option.id]: false }),
+          {} as DietRestrictions
+        );
+
+        userData.dietaryRestrictions.forEach((restriction: any) => {
+          switch (restriction.type) {
+            case "Gluten-Free":
+              restrictionMap.glutenfree = true;
+              break;
+            case "Dairy-Free":
+              restrictionMap.dairyfree = true;
+              break;
+            case "Vegan":
+              restrictionMap.vegan = true;
+              break;
+            case "Vegetarian":
+              restrictionMap.vegetarian = true;
+              break;
+            case "Pescatarian":
+              restrictionMap.pescatarian = true;
+              break;
+            case "Allergens":
+              restrictionMap.allergen = true;
+              break;
+          }
         });
+
+        setDietRestrictions(restrictionMap);
+        setDietRestrictionsForm(restrictionMap);
+      } catch (err) {
+        setError("Failed to load user data");
+        console.error("Error fetching user data:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const handleEditDietRestrictions = () => {
-        if (isEditingDietRestrictions) {
-            setDietRestrictions({...dietRestrictionsForm});
+    fetchUserData();
+  }, [userId]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+  };
+
+  const handleEdit = async () => {
+    if (isEditing) {
+      // Save changes to database
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/user/${userId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: formValues.email,
+              password:
+                formValues.password !== "••••••••••••"
+                  ? formValues.password
+                  : null,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to update user");
         }
-        setIsEditingDietRestrictions(!isEditingDietRestrictions);
-    };
 
-    const handleCancelDietRestrictions = () => {
-        setDietRestrictionsForm({...dietRestrictions});
-        setIsEditingDietRestrictions(false);
-    };
+        setUser({ ...formValues });
+        alert("Profile updated successfully!");
+      } catch (err) {
+        alert("Failed to update profile");
+        console.error("Error updating user:", err);
+      }
+    }
+    setIsEditing(!isEditing);
+  };
 
-    const handleEditDietaryDetails = () => {
-        setIsEditingDietaryDetails(!isEditingDietaryDetails);
-    };
+  const handleCancel = () => {
+    setFormValues({ ...user });
+    setIsEditing(false);
+  };
 
-    const handleDeleteAccount = () => {
-        setShowDeleteModal(true);
-    };
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setDietRestrictionsForm({
+      ...dietRestrictionsForm,
+      [name]: checked,
+    });
+  };
 
-    const confirmDeleteAccount = () => {
-        console.log('Account deletion confirmed');
-        setShowDeleteModal(false);
-    };
+  const handleEditDietRestrictions = () => {
+    if (isEditingDietRestrictions) {
+      setDietRestrictions({ ...dietRestrictionsForm });
+      // TODO: Add API call to update dietary restrictions in database
+    }
+    setIsEditingDietRestrictions(!isEditingDietRestrictions);
+  };
 
-    const cancelDeleteAccount = () => {
-        setShowDeleteModal(false);
-    };
+  const handleCancelDietRestrictions = () => {
+    setDietRestrictionsForm({ ...dietRestrictions });
+    setIsEditingDietRestrictions(false);
+  };
 
-    const handleProfileClick = () => {
-        setActivePage('profile');
-    };
+  const handleEditDietaryDetails = () => {
+    setIsEditingDietaryDetails(!isEditingDietaryDetails);
+  };
 
-    const handleDietRestrictionsClick = () => {
-        setActivePage('dietRestrictions');
-    };
+  const handleDeleteAccount = () => {
+    setShowDeleteModal(true);
+  };
 
-    const handleLogout = () => {
-        console.log('Log Out button clicked');
-    };
+  const confirmDeleteAccount = () => {
+    console.log("Account deletion confirmed");
+    setShowDeleteModal(false);
+    // TODO: Add API call to delete account
+  };
 
-    return (
-        <div className={styles["account-profile-container"]}>
-            <div className={styles.sidebar}>
-                <nav className={styles.navbar2}>
-                    <div className={styles["navbar-left2"]}>
-                        <Link to="/">
-                            <img src={Logo} alt="Logo" className={styles.logo2} />
-                        </Link>
-                        <span className={styles["site-name"]}>ThoughtfulBites</span>
-                    </div>
-                </nav>
+  const cancelDeleteAccount = () => {
+    setShowDeleteModal(false);
+  };
 
-                <nav className={styles.navigation}>
-                    <button
-                        className={`${styles["nav-item2"]} ${activePage === 'profile' ? styles.active : ''}`}
-                        onClick={handleProfileClick}
-                    >
-                        <div className={`${styles["nav-icon2"]} ${styles["profile-icon"]}`}></div>
-                        <span>Profile</span>
-                    </button>
-                    <button
-                        className={`${styles["nav-item2"]} ${activePage === 'dietRestrictions' ? styles.active : ''}`}
-                        onClick={handleDietRestrictionsClick}
-                    >
-                        <div className={`${styles["nav-icon2"]} ${styles["diet-icon"]}`}></div>
-                        <span>Diet Restrictions</span>
-                    </button>
-                </nav>
+  const handleProfileClick = () => {
+    setActivePage("profile");
+  };
 
-                <div className={styles["logout-container2"]}>
-                    <div className={styles["logout-icon2"]}></div>
-                    <button className={styles["logout-button2"]} onClick={handleLogout}>Log Out</button>
-                </div>
-            </div>
+  const handleDietRestrictionsClick = () => {
+    setActivePage("dietRestrictions");
+  };
 
-            <div className={styles["main-content"]}>
-                {activePage === 'profile' ? (
-                    <>
-                        <div className={styles["profile-header"]}>
-                            <div className={styles["profile-avatar"]}></div>
-                            <div className={styles["profile-info"]}>
-                                <h1>{user.firstName} {user.lastName}</h1>
-                                <p>{user.email}</p>
-                            </div>
-                        </div>
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    // Redirect to login page or home
+    console.log("Log Out button clicked");
+  };
 
-                        <div className={styles["profile-details-card"]}>
-                            <div className={styles["card-header"]}>
-                                <h2>My Profile</h2>
-                                <div className={styles["edit-actions"]}>
-                                    {isEditing && (
-                                        <button className={styles["cancel-button"]} onClick={handleCancel}>
-                                            Cancel
-                                        </button>
-                                    )}
-                                    <button
-                                        className={`${styles["edit-button"]} ${isEditing ? styles["save-button"] : ''}`}
-                                        onClick={handleEdit}
-                                    >
-                                        <span className={isEditing ? styles["save-icon"] : styles["edit-icon"]}></span>
-                                        {isEditing ? 'Save' : 'Edit'}
-                                    </button>
-                                </div>
-                            </div>
+  if (loading) {
+    return <div className={styles["loading"]}>Loading...</div>;
+  }
 
-                            <div className={styles["profile-fields"]}>
-                                <div className={styles["field-row"]}>
-                                    <div className={styles.field}>
-                                        <label>Firstname</label>
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                name="firstName"
-                                                value={formValues.firstName}
-                                                onChange={handleInputChange}
-                                                className={styles["field-input"]}
-                                            />
-                                        ) : (
-                                            <div className={styles["field-value"]}>{user.firstName}</div>
-                                        )}
-                                    </div>
-                                    <div className={styles.field}>
-                                        <label>Lastname</label>
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                name="lastName"
-                                                value={formValues.lastName}
-                                                onChange={handleInputChange}
-                                                className={styles["field-input"]}
-                                            />
-                                        ) : (
-                                            <div className={styles["field-value"]}>{user.lastName}</div>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className={styles["field-row"]}>
-                                    <div className={styles.field}>
-                                        <label>Email</label>
-                                        {isEditing ? (
-                                            <input
-                                                type="email"
-                                                name="email"
-                                                value={formValues.email}
-                                                onChange={handleInputChange}
-                                                className={styles["field-input"]}
-                                            />
-                                        ) : (
-                                            <div className={styles["field-value"]}>{user.email}</div>
-                                        )}
-                                    </div>
-                                    <div className={styles.field}>
-                                        <label>Password</label>
-                                        {isEditing ? (
-                                            <input
-                                                type="password"
-                                                name="password"
-                                                value={formValues.password}
-                                                onChange={handleInputChange}
-                                                className={styles["field-input"]}
-                                            />
-                                        ) : (
-                                            <div className={styles["field-value"]}>{user.password}</div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+  if (error) {
+    return <div className={styles["error"]}>Error: {error}</div>;
+  }
 
-                        <div className={styles["delete-account-container"]}>
-                            <button className={styles["delete-account-button"]} onClick={handleDeleteAccount}>
-                                Delete Account
-                            </button>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div className={styles["diet-header"]}>
-                            <h1>Diet Information</h1>
-                        </div>
+  return (
+    <div className={styles["account-profile-container"]}>
+      <div className={styles.sidebar}>
+        <nav className={styles.navbar2}>
+          <div className={styles["navbar-left2"]}>
+            <Link to="/">
+              <img src={Logo} alt="Logo" className={styles.logo2} />
+            </Link>
+            <span className={styles["site-name"]}>ThoughtfulBites</span>
+          </div>
+        </nav>
 
-                        <div className={styles["diet-details-card"]}>
-                            <div className={styles["card-header"]}>
-                                <h2>Diet Restrictions</h2>
-                                <div className={styles["edit-actions"]}>
-                                    {isEditingDietRestrictions && (
-                                        <button className={styles["cancel-button"]} onClick={handleCancelDietRestrictions}>
-                                            Cancel
-                                        </button>
-                                    )}
-                                    <button
-                                        className={`${styles["edit-button"]} ${isEditingDietRestrictions ? styles["save-button"] : ''}`}
-                                        onClick={handleEditDietRestrictions}
-                                    >
-                                        <span className={isEditingDietRestrictions ? styles["save-icon"] : styles["edit-icon"]}></span>
-                                        {isEditingDietRestrictions ? 'Save' : 'Edit'}
-                                    </button>
-                                </div>
-                            </div>
+        <nav className={styles.navigation}>
+          <button
+            className={`${styles["nav-item2"]} ${
+              activePage === "profile" ? styles.active : ""
+            }`}
+            onClick={handleProfileClick}
+          >
+            <div
+              className={`${styles["nav-icon2"]} ${styles["profile-icon"]}`}
+            ></div>
+            <span>Profile</span>
+          </button>
+          <button
+            className={`${styles["nav-item2"]} ${
+              activePage === "dietRestrictions" ? styles.active : ""
+            }`}
+            onClick={handleDietRestrictionsClick}
+          >
+            <div
+              className={`${styles["nav-icon2"]} ${styles["diet-icon"]}`}
+            ></div>
+            <span>Diet Restrictions</span>
+          </button>
+        </nav>
 
-                            <div className={styles["diet-restrictions-options"]}>
-                                {dietaryOptions.map(option => (
-                                    <div key={option.id} className={styles["checkbox-item"]}>
-                                        <input
-                                            type="checkbox"
-                                            id={option.id}
-                                            name={option.id}
-                                            checked={dietRestrictionsForm[option.id]}
-                                            onChange={handleCheckboxChange}
-                                            disabled={!isEditingDietRestrictions}
-                                        />
-                                        <label htmlFor={option.id}>{option.label}</label>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className={styles["diet-details-card"]}>
-                            <div className={styles["card-header"]}>
-                                <h2>Dietary Details</h2>
-                                <div className={styles["edit-actions"]}>
-                                    {isEditingDietaryDetails && (
-                                        <button className={styles["cancel-button"]} onClick={() => setIsEditingDietaryDetails(false)}>
-                                            Cancel
-                                        </button>
-                                    )}
-                                    <button
-                                        className={`${styles["edit-button"]} ${isEditingDietaryDetails ? styles["save-button"] : ''}`}
-                                        onClick={handleEditDietaryDetails}
-                                    >
-                                        <span className={isEditingDietaryDetails ? styles["save-icon"] : styles["edit-icon"]}></span>
-                                        {isEditingDietaryDetails ? 'Save' : 'Edit'}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className={styles["food-search-section"]}>
-                                {isEditingDietaryDetails && (
-                                    <div className={styles["search-container"]}>
-                                        <div className={styles["search-input-container"]}>
-                                            <input
-                                                type="text"
-                                                className={styles["search-input"]}
-                                                placeholder="Search for foods..."
-                                            />
-                                            <span className={styles["search-icon"]}></span>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className={styles["selected-foods"]}>
-                                    <h3>Selected Foods</h3>
-                                </div>
-                            </div>
-                        </div>
-                    </>
-                )}
-            </div>
-
-            {showDeleteModal && (
-                <div className={styles["modal-overlay"]}>
-                    <div className={styles["delete-confirmation-modal"]}>
-                        <h2>WARNING</h2>
-                        <p>Are you sure you want to delete your account? Your data will be lost and this action cannot be undone.</p>
-                        <div className={styles["modal-actions"]}>
-                            <button className={styles["cancel-button"]} onClick={cancelDeleteAccount}>
-                                Cancel
-                            </button>
-                            <button className={styles["confirm-delete-button"]} onClick={confirmDeleteAccount}>
-                                Delete Account
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+        <div className={styles["logout-container2"]}>
+          <div className={styles["logout-icon2"]}></div>
+          <button className={styles["logout-button2"]} onClick={handleLogout}>
+            Log Out
+          </button>
         </div>
-    );
+      </div>
+
+      <div className={styles["main-content"]}>
+        {activePage === "profile" ? (
+          <>
+            <div className={styles["profile-header"]}>
+              <div className={styles["profile-avatar"]}></div>
+              <div className={styles["profile-info"]}>
+                <h1>
+                  {user.firstName} {user.lastName}
+                </h1>
+                <p>{user.email}</p>
+              </div>
+            </div>
+
+            <div className={styles["profile-details-card"]}>
+              <div className={styles["card-header"]}>
+                <h2>My Profile</h2>
+                <div className={styles["edit-actions"]}>
+                  {isEditing && (
+                    <button
+                      className={styles["cancel-button"]}
+                      onClick={handleCancel}
+                    >
+                      Cancel
+                    </button>
+                  )}
+                  <button
+                    className={`${styles["edit-button"]} ${
+                      isEditing ? styles["save-button"] : ""
+                    }`}
+                    onClick={handleEdit}
+                  >
+                    <span
+                      className={
+                        isEditing ? styles["save-icon"] : styles["edit-icon"]
+                      }
+                    ></span>
+                    {isEditing ? "Save" : "Edit"}
+                  </button>
+                </div>
+              </div>
+
+              <div className={styles["profile-fields"]}>
+                <div className={styles["field-row"]}>
+                  <div className={styles.field}>
+                    <label>Firstname</label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="firstName"
+                        value={formValues.firstName}
+                        onChange={handleInputChange}
+                        className={styles["field-input"]}
+                      />
+                    ) : (
+                      <div className={styles["field-value"]}>
+                        {user.firstName}
+                      </div>
+                    )}
+                  </div>
+                  <div className={styles.field}>
+                    <label>Lastname</label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="lastName"
+                        value={formValues.lastName}
+                        onChange={handleInputChange}
+                        className={styles["field-input"]}
+                      />
+                    ) : (
+                      <div className={styles["field-value"]}>
+                        {user.lastName}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className={styles["field-row"]}>
+                  <div className={styles.field}>
+                    <label>Email</label>
+                    {isEditing ? (
+                      <input
+                        type="email"
+                        name="email"
+                        value={formValues.email}
+                        onChange={handleInputChange}
+                        className={styles["field-input"]}
+                      />
+                    ) : (
+                      <div className={styles["field-value"]}>{user.email}</div>
+                    )}
+                  </div>
+                  <div className={styles.field}>
+                    <label>Password</label>
+                    {isEditing ? (
+                      <input
+                        type="password"
+                        name="password"
+                        value={formValues.password}
+                        onChange={handleInputChange}
+                        className={styles["field-input"]}
+                        placeholder="Enter new password"
+                      />
+                    ) : (
+                      <div className={styles["field-value"]}>
+                        {user.password}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles["delete-account-container"]}>
+              <button
+                className={styles["delete-account-button"]}
+                onClick={handleDeleteAccount}
+              >
+                Delete Account
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={styles["diet-header"]}>
+              <h1>Diet Information</h1>
+            </div>
+
+            <div className={styles["diet-details-card"]}>
+              <div className={styles["card-header"]}>
+                <h2>Diet Restrictions</h2>
+                <div className={styles["edit-actions"]}>
+                  {isEditingDietRestrictions && (
+                    <button
+                      className={styles["cancel-button"]}
+                      onClick={handleCancelDietRestrictions}
+                    >
+                      Cancel
+                    </button>
+                  )}
+                  <button
+                    className={`${styles["edit-button"]} ${
+                      isEditingDietRestrictions ? styles["save-button"] : ""
+                    }`}
+                    onClick={handleEditDietRestrictions}
+                  >
+                    <span
+                      className={
+                        isEditingDietRestrictions
+                          ? styles["save-icon"]
+                          : styles["edit-icon"]
+                      }
+                    ></span>
+                    {isEditingDietRestrictions ? "Save" : "Edit"}
+                  </button>
+                </div>
+              </div>
+
+              <div className={styles["diet-restrictions-options"]}>
+                {dietaryOptions.map((option) => (
+                  <div key={option.id} className={styles["checkbox-item"]}>
+                    <input
+                      type="checkbox"
+                      id={option.id}
+                      name={option.id}
+                      checked={dietRestrictionsForm[option.id]}
+                      onChange={handleCheckboxChange}
+                      disabled={!isEditingDietRestrictions}
+                    />
+                    <label htmlFor={option.id}>{option.label}</label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles["diet-details-card"]}>
+              <div className={styles["card-header"]}>
+                <h2>Dietary Details</h2>
+                <div className={styles["edit-actions"]}>
+                  {isEditingDietaryDetails && (
+                    <button
+                      className={styles["cancel-button"]}
+                      onClick={() => setIsEditingDietaryDetails(false)}
+                    >
+                      Cancel
+                    </button>
+                  )}
+                  <button
+                    className={`${styles["edit-button"]} ${
+                      isEditingDietaryDetails ? styles["save-button"] : ""
+                    }`}
+                    onClick={handleEditDietaryDetails}
+                  >
+                    <span
+                      className={
+                        isEditingDietaryDetails
+                          ? styles["save-icon"]
+                          : styles["edit-icon"]
+                      }
+                    ></span>
+                    {isEditingDietaryDetails ? "Save" : "Edit"}
+                  </button>
+                </div>
+              </div>
+
+              <div className={styles["food-search-section"]}>
+                {isEditingDietaryDetails && (
+                  <div className={styles["search-container"]}>
+                    <div className={styles["search-input-container"]}>
+                      <input
+                        type="text"
+                        className={styles["search-input"]}
+                        placeholder="Search for foods..."
+                      />
+                      <span className={styles["search-icon"]}></span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {showDeleteModal && (
+        <div className={styles["modal-overlay"]}>
+          <div className={styles["delete-confirmation-modal"]}>
+            <h2>WARNING</h2>
+            <p>
+              Are you sure you want to delete your account? Your data will be
+              lost and this action cannot be undone.
+            </p>
+            <div className={styles["modal-actions"]}>
+              <button
+                className={styles["cancel-button"]}
+                onClick={cancelDeleteAccount}
+              >
+                Cancel
+              </button>
+              <button
+                className={styles["confirm-delete-button"]}
+                onClick={confirmDeleteAccount}
+              >
+                Delete Account
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Account;

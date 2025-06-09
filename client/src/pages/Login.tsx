@@ -30,24 +30,27 @@ export default function Login() {
 
       if (!response.ok) {
         setErrorMessage(`${result.message}`);
-        return result.message;
+        return { error: result.message };
       }
 
-      return null;
+      return { success: true, userId: result.userId };
     } catch (error) {
       setErrorMessage("Cannot connect to server");
+      return { error: "Cannot connect to server" };
     }
   }
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
 
-    const error = await searchUserFromDatabase();
+    const result = await searchUserFromDatabase();
 
-    if (error) {
-      setErrorMessage(`ERROR: ${error}`);
+    if (result.error) {
+      setErrorMessage(`ERROR: ${result.error}`);
       return;
     } else {
+      localStorage.setItem("userId", result.userId);
+
       login();
       navigate("/");
     }
