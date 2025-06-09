@@ -23,16 +23,30 @@ export default function ContactUs() {
     setData((prev) => ({ ...prev, ...fields }));
   }
 
-  function onSubmit(e: FormEvent): void {
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!name.trim() || !email.trim()) {
       setErrorMessage("Please provide both your name and email.");
       return;
     }
-
     setErrorMessage("");
-    alert(`SUCCESS: Message sent by ${data.name}`);
-    setData(INITIAL_DATA);
+
+    try {
+      const res = await fetch(
+        "https://1j86zqq3p1.execute-api.us-west-1.amazonaws.com/ContactFormHandler",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, message }),
+        }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      setData(INITIAL_DATA);
+      alert("Message sent — thank you!");
+    } catch (err: any) {
+      console.error(err);
+      setErrorMessage("Oops, something went wrong. Please try again.");
+    }
   }
 
   return (
