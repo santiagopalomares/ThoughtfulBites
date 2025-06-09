@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Account.module.css";
 import Logo from "../assets/Logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.tsx";
 
 type DietRestrictions = {
   allergen: boolean;
@@ -29,6 +30,8 @@ type DietaryDetail = {
 
 const Account: React.FC = () => {
   const [userId] = useState<string>(localStorage.getItem("userId") || "");
+  const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const [user, setUser] = useState<UserData>({
     firstName: "",
@@ -360,10 +363,30 @@ const Account: React.FC = () => {
     setShowDeleteModal(true);
   };
 
-  const confirmDeleteAccount = () => {
-    console.log("Account deletion confirmed");
-    setShowDeleteModal(false);
-    // TODO: Add API call to delete account
+  const confirmDeleteAccount = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/user/${userId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete account");
+      }
+
+      // Clear localStorage and logout
+      logout();
+      localStorage.removeItem("userId");
+
+      // Show success message
+      alert("Account deleted successfully!");
+
+      navigate("/");
+    } finally {
+      setShowDeleteModal(false);
+    }
   };
 
   const cancelDeleteAccount = () => {

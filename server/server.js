@@ -435,6 +435,31 @@ app.put("/api/user/:userId/dietary-details", async (req, res) => {
   }
 });
 
+// Delete user account
+app.delete("/api/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Check if user exists
+    const [existingUser] = await pool.query(
+      "SELECT * FROM users WHERE user_id = ?",
+      [userId]
+    );
+
+    if (existingUser.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Delete user (CASCADE will automatically delete dietary_restrictions)
+    await pool.query("DELETE FROM users WHERE user_id = ?", [userId]);
+
+    res.json({ message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user account:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 app.listen(8080, () => {
   console.log("Server started on port 8080");
 });
