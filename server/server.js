@@ -25,43 +25,42 @@ const openai = new OpenAI({
   apiKey: process.env.OPEN_AI_API_KEY,
 });
 
+const menuCache = new Map();
+
 app.get("/api", (req, res) => {
   res.json({ example: ["data1", "data2", "data3"] });
 });
 
-// Handles signup
 app.post("/api/signup", async (req, res) => {
   const { email, password, userDietTypes, userDietDetails } = req.body;
   try {
-    // Checks if user exists already, if not, then they will be added to the database
     const [existingUser] = await pool.query(
-      "SELECT * FROM users WHERE email = ?",
-      [email]
+        "SELECT * FROM users WHERE email = ?",
+        [email]
     );
 
     if (existingUser.length > 0) {
       return res
-        .status(400)
-        .json({ message: `Email: ${email} has already been registered` });
+          .status(400)
+          .json({ message: `Email: ${email} has already been registered` });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const [result] = await pool.query(
-      "INSERT INTO users (email, password_hash) VALUES (?, ?)",
-      [email, hashedPassword]
+        "INSERT INTO users (email, password_hash) VALUES (?, ?)",
+        [email, hashedPassword]
     );
 
-    // Adds the user's dietary restriction information
     for (const restrictionType of userDietTypes) {
       const custom_items =
-        restrictionType === "Allergens" || restrictionType === "Other"
-          ? userDietDetails.join(",")
-          : null;
+          restrictionType === "Allergens" || restrictionType === "Other"
+              ? userDietDetails.join(",")
+              : null;
 
       await pool.query(
-        "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
-        [result.insertId, restrictionType, custom_items]
+          "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+          [result.insertId, restrictionType, custom_items]
       );
     }
 
@@ -74,11 +73,9 @@ app.post("/api/signup", async (req, res) => {
   }
 });
 
-// Handles login
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    // Check if user exists
     const [users] = await pool.query("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
@@ -87,11 +84,10 @@ app.post("/api/login", async (req, res) => {
       return res.status(400).json({ message: "Email not found." });
     }
 
-    // Checks if entered password matches
     const existingUser = users[0];
     const isPasswordMatch = await bcrypt.compare(
-      password,
-      existingUser.password_hash
+        password,
+        existingUser.password_hash
     );
 
     if (isPasswordMatch) {
@@ -107,20 +103,19 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// Handles searching for restaurants
 app.get("/api/restaurants", async (req, res) => {
   const { food, location } = req.query;
 
   if (!food || !location) {
     return res
-      .status(400)
-      .json({ error: "Food type and location are required" });
+        .status(400)
+        .json({ error: "Food type and location are required" });
   }
 
   try {
     const query = `${food} restaurants near ${location}`;
     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
-      query
+        query
     )}&key=${process.env.GOOGLE_PLACES_API_KEY}`;
 
     const response = await fetch(url);
@@ -134,10 +129,8 @@ app.get("/api/restaurants", async (req, res) => {
         priceLevel: place.price_level,
         isOpen: place.opening_hours?.open_now,
         photoUrl: place.photos?.[0]
-          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_PLACES_API_KEY}`
-          : null,
-
-        // Geometry Coordinates for Maps
+            ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_PLACES_API_KEY}`
+            : null,
         lat: place.geometry.location.lat,
         lng: place.geometry.location.lng,
       }));
@@ -151,17 +144,22 @@ app.get("/api/restaurants", async (req, res) => {
   }
 });
 
-// Handles menu items grabbing for restaurant
 app.get("/api/menu/:restaurantName", async (req, res) => {
   const { restaurantName } = req.params;
 
+  if (menuCache.has(restaurantName)) {
+    console.log(`Returning cached menu for ${restaurantName}`);
+    return res.json(menuCache.get(restaurantName));
+  }
+
   try {
+    console.log(`Generating new menu for ${restaurantName}...`);
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "user",
-          content: `Generate a realistic menu for a restaurant called "${restaurantName}". Return exactly 8-12 menu items in this JSON format:
+          content: `Generate a realistic menu for a restaurant called "${restaurantName}". Return exactly 12-15 menu items in this JSON format:
        {
          "menu": [
            {
@@ -175,10 +173,14 @@ app.get("/api/menu/:restaurantName", async (req, res) => {
        Make the items realistic for this type of restaurant. Include a mix of categories.`,
         },
       ],
-      temperature: 0.7,
+      temperature: 0.3,
     });
 
     const menuData = JSON.parse(completion.choices[0].message.content);
+
+    menuCache.set(restaurantName, menuData);
+    console.log(`Generated and cached menu for ${restaurantName}`);
+
     res.json(menuData);
   } catch (error) {
     console.error("Error generating menu:", error);
@@ -186,15 +188,13 @@ app.get("/api/menu/:restaurantName", async (req, res) => {
   }
 });
 
-// Get user data by user ID
 app.get("/api/user/:userId", async (req, res) => {
   const { userId } = req.params;
 
   try {
-    // Get user basic info
     const [users] = await pool.query(
-      "SELECT user_id, email FROM users WHERE user_id = ?",
-      [userId]
+        "SELECT user_id, email FROM users WHERE user_id = ?",
+        [userId]
     );
 
     if (users.length === 0) {
@@ -203,18 +203,16 @@ app.get("/api/user/:userId", async (req, res) => {
 
     const user = users[0];
 
-    // Get user's dietary restrictions
     const [restrictions] = await pool.query(
-      "SELECT restriction_type, custom_items FROM dietary_restrictions WHERE user_id = ?",
-      [userId]
+        "SELECT restriction_type, custom_items FROM dietary_restrictions WHERE user_id = ?",
+        [userId]
     );
 
-    // Format dietary restrictions
     const dietaryRestrictions = restrictions.map((restriction) => ({
       type: restriction.restriction_type,
       customItems: restriction.custom_items
-        ? restriction.custom_items.split(",")
-        : null,
+          ? restriction.custom_items.split(",")
+          : null,
     }));
 
     res.json({
@@ -228,27 +226,23 @@ app.get("/api/user/:userId", async (req, res) => {
   }
 });
 
-// Update user profile
 app.put("/api/user/:userId", async (req, res) => {
   const { userId } = req.params;
   const { email, password } = req.body;
 
   try {
-    // Check if user exists
     const [existingUser] = await pool.query(
-      "SELECT * FROM users WHERE user_id = ?",
-      [userId]
+        "SELECT * FROM users WHERE user_id = ?",
+        [userId]
     );
 
     if (existingUser.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update user data
     let updateQuery = "UPDATE users SET email = ?";
     let updateParams = [email];
 
-    // Only update password if provided
     if (password && password !== "••••••••••••") {
       const hashedPassword = await bcrypt.hash(password, 10);
       updateQuery += ", password_hash = ?";
@@ -267,41 +261,35 @@ app.put("/api/user/:userId", async (req, res) => {
   }
 });
 
-// Update dietary restrictions
 app.put("/api/user/:userId/dietary-restrictions", async (req, res) => {
   const { userId } = req.params;
   const { dietRestrictions } = req.body;
 
   try {
-    // Check if user exists
     const [existingUser] = await pool.query(
-      "SELECT * FROM users WHERE user_id = ?",
-      [userId]
+        "SELECT * FROM users WHERE user_id = ?",
+        [userId]
     );
 
     if (existingUser.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Get existing custom_items for Allergens and Other before deleting
     const [existingRestrictions] = await pool.query(
-      "SELECT restriction_type, custom_items FROM dietary_restrictions WHERE user_id = ? AND restriction_type IN ('Allergens', 'Other')",
-      [userId]
+        "SELECT restriction_type, custom_items FROM dietary_restrictions WHERE user_id = ? AND restriction_type IN ('Allergens', 'Other')",
+        [userId]
     );
 
-    // Store existing custom items
     const existingCustomItems = {};
     existingRestrictions.forEach((restriction) => {
       existingCustomItems[restriction.restriction_type] =
-        restriction.custom_items;
+          restriction.custom_items;
     });
 
-    // Delete existing dietary restrictions
     await pool.query("DELETE FROM dietary_restrictions WHERE user_id = ?", [
       userId,
     ]);
 
-    // Insert new dietary restrictions
     const restrictionTypes = {
       allergen: "Allergens",
       dairyfree: "Dairy-Free",
@@ -317,23 +305,22 @@ app.put("/api/user/:userId/dietary-restrictions", async (req, res) => {
       if (checked) {
         const restrictionType = restrictionTypes[key];
 
-        // Preserve existing custom_items for Allergens and Other
         let customItems = null;
         if (
-          restrictionType === "Allergens" &&
-          existingCustomItems["Allergens"]
+            restrictionType === "Allergens" &&
+            existingCustomItems["Allergens"]
         ) {
           customItems = existingCustomItems["Allergens"];
         } else if (
-          restrictionType === "Other" &&
-          existingCustomItems["Other"]
+            restrictionType === "Other" &&
+            existingCustomItems["Other"]
         ) {
           customItems = existingCustomItems["Other"];
         }
 
         await pool.query(
-          "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
-          [userId, restrictionType, customItems]
+            "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+            [userId, restrictionType, customItems]
         );
       }
     }
@@ -345,86 +332,73 @@ app.put("/api/user/:userId/dietary-restrictions", async (req, res) => {
   }
 });
 
-// Puts editted diet details into the database
 app.put("/api/user/:userId/dietary-details", async (req, res) => {
   const { userId } = req.params;
   const { dietaryDetails } = req.body;
 
   try {
-    // Check if user exists
     const [existingUser] = await pool.query(
-      "SELECT * FROM users WHERE user_id = ?",
-      [userId]
+        "SELECT * FROM users WHERE user_id = ?",
+        [userId]
     );
 
     if (existingUser.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Group dietary details by type
     const allergenItems = dietaryDetails
-      .filter((item) => item.type === "allergen")
-      .map((item) => item.name);
+        .filter((item) => item.type === "allergen")
+        .map((item) => item.name);
 
     const otherItems = dietaryDetails
-      .filter((item) => item.type === "other")
-      .map((item) => item.name);
+        .filter((item) => item.type === "other")
+        .map((item) => item.name);
 
-    // Update or insert Allergens restriction with custom items
     if (allergenItems.length > 0) {
-      // Check if allergen restriction exists
       const [existingAllergen] = await pool.query(
-        "SELECT * FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Allergens'",
-        [userId]
+          "SELECT * FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Allergens'",
+          [userId]
       );
 
       if (existingAllergen.length > 0) {
-        // Update existing
         await pool.query(
-          "UPDATE dietary_restrictions SET custom_items = ? WHERE user_id = ? AND restriction_type = 'Allergens'",
-          [allergenItems.join(","), userId]
+            "UPDATE dietary_restrictions SET custom_items = ? WHERE user_id = ? AND restriction_type = 'Allergens'",
+            [allergenItems.join(","), userId]
         );
       } else {
-        // Insert new
         await pool.query(
-          "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
-          [userId, "Allergens", allergenItems.join(",")]
+            "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+            [userId, "Allergens", allergenItems.join(",")]
         );
       }
     } else {
-      // Remove allergen restriction if no items
       await pool.query(
-        "DELETE FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Allergens'",
-        [userId]
+          "DELETE FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Allergens'",
+          [userId]
       );
     }
 
-    // Update or insert Other restriction with custom items
     if (otherItems.length > 0) {
-      // Check if other restriction exists
       const [existingOther] = await pool.query(
-        "SELECT * FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Other'",
-        [userId]
+          "SELECT * FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Other'",
+          [userId]
       );
 
       if (existingOther.length > 0) {
-        // Update existing
         await pool.query(
-          "UPDATE dietary_restrictions SET custom_items = ? WHERE user_id = ? AND restriction_type = 'Other'",
-          [otherItems.join(","), userId]
+            "UPDATE dietary_restrictions SET custom_items = ? WHERE user_id = ? AND restriction_type = 'Other'",
+            [otherItems.join(","), userId]
         );
       } else {
-        // Insert new
         await pool.query(
-          "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
-          [userId, "Other", otherItems.join(",")]
+            "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+            [userId, "Other", otherItems.join(",")]
         );
       }
     } else {
-      // Remove other restriction if no items
       await pool.query(
-        "DELETE FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Other'",
-        [userId]
+          "DELETE FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Other'",
+          [userId]
       );
     }
 

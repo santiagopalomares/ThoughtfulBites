@@ -13,7 +13,7 @@ type FormData = {
   password: string;
   confirmPassword: string;
   userDietTypes: string[];
-  userDietDetails: string[]; // This is for allergens and other, if user does not select this, it will be empty
+  userDietDetails: string[];
 };
 
 const INITIAL_DATA: FormData = {
@@ -35,7 +35,6 @@ export default function SignUp() {
     });
   }
 
-  // DietDetails page only appears if Allergens or Other is selected
   const steps = useMemo(() => {
     const baseSteps = [
       <UserInformation {...data} updateFields={updateFields} />,
@@ -87,7 +86,6 @@ export default function SignUp() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (isFirstStep) {
-      // Checks for matching passwords for first page
       if (!checkPasswordMatch()) {
         setErrorMessage("ERROR: Passwords do not match!");
         return;
@@ -96,11 +94,9 @@ export default function SignUp() {
         return next();
       }
     } else if (!isLastStep) {
-      // Proceeds through all the pages
       setErrorMessage("");
       return next();
     } else {
-      // Adds account to database after user clicks Finish
       setErrorMessage("");
       const error = await addUserToDatabase();
 
