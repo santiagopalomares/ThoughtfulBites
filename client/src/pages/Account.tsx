@@ -21,6 +21,12 @@ type UserData = {
   password: string;
 };
 
+type DietaryDetail = {
+  id: string;
+  name: string;
+  type: "allergen" | "other";
+};
+
 const Account: React.FC = () => {
   const [userId] = useState<string>(localStorage.getItem("userId") || "");
 
@@ -51,6 +57,13 @@ const Account: React.FC = () => {
       {} as DietRestrictions
     )
   );
+
+  // New state for dietary details (custom items)
+  const [dietaryDetails, setDietaryDetails] = useState<DietaryDetail[]>([]);
+  const [dietaryDetailsForm, setDietaryDetailsForm] = useState<DietaryDetail[]>(
+    []
+  );
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingDietRestrictions, setIsEditingDietRestrictions] =
@@ -106,6 +119,9 @@ const Account: React.FC = () => {
           {} as DietRestrictions
         );
 
+        // Process dietary details (custom items)
+        const details: DietaryDetail[] = [];
+
         userData.dietaryRestrictions.forEach((restriction: any) => {
           switch (restriction.type) {
             case "Gluten-Free":
@@ -125,12 +141,37 @@ const Account: React.FC = () => {
               break;
             case "Allergens":
               restrictionMap.allergen = true;
+              // Add custom allergen items to dietary details
+              if (restriction.customItems) {
+                restriction.customItems.forEach((item: string) => {
+                  details.push({
+                    id: `allergen-${item}-${Date.now()}`,
+                    name: item.trim(),
+                    type: "allergen",
+                  });
+                });
+              }
+              break;
+            case "Other":
+              restrictionMap.other = true;
+              // Add custom other items to dietary details
+              if (restriction.customItems) {
+                restriction.customItems.forEach((item: string) => {
+                  details.push({
+                    id: `other-${item}-${Date.now()}`,
+                    name: item.trim(),
+                    type: "other",
+                  });
+                });
+              }
               break;
           }
         });
 
         setDietRestrictions(restrictionMap);
         setDietRestrictionsForm(restrictionMap);
+        setDietaryDetails(details);
+        setDietaryDetailsForm([...details]);
       } catch (err) {
         setError("Failed to load user data");
         console.error("Error fetching user data:", err);
@@ -198,10 +239,33 @@ const Account: React.FC = () => {
     });
   };
 
-  const handleEditDietRestrictions = () => {
+  const handleEditDietRestrictions = async () => {
     if (isEditingDietRestrictions) {
-      setDietRestrictions({ ...dietRestrictionsForm });
-      // TODO: Add API call to update dietary restrictions in database
+      // Save dietary restrictions to database
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/user/${userId}/dietary-restrictions`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              dietRestrictions: dietRestrictionsForm,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to update dietary restrictions");
+        }
+
+        setDietRestrictions({ ...dietRestrictionsForm });
+        alert("Dietary restrictions updated successfully!");
+      } catch (err) {
+        alert("Failed to update dietary restrictions");
+        console.error("Error updating dietary restrictions:", err);
+      }
     }
     setIsEditingDietRestrictions(!isEditingDietRestrictions);
   };
@@ -211,8 +275,85 @@ const Account: React.FC = () => {
     setIsEditingDietRestrictions(false);
   };
 
-  const handleEditDietaryDetails = () => {
+  const handleEditDietaryDetails = async () => {
+    if (isEditingDietaryDetails) {
+      // Save dietary details to database
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/user/${userId}/dietary-details`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              dietaryDetails: dietaryDetailsForm,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to update dietary details");
+        }
+
+        setDietaryDetails([...dietaryDetailsForm]);
+        alert("Dietary details updated successfully!");
+      } catch (err) {
+        alert("Failed to update dietary details");
+        console.error("Error updating dietary details:", err);
+      }
+    }
     setIsEditingDietaryDetails(!isEditingDietaryDetails);
+    setSearchTerm("");
+  };
+
+  const handleCancelDietaryDetails = () => {
+    setDietaryDetailsForm([...dietaryDetails]);
+    setIsEditingDietaryDetails(false);
+    setSearchTerm("");
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchTerm.trim()) {
+      addFoodItem();
+    }
+  };
+
+  const addFoodItem = () => {
+    if (!searchTerm.trim()) return;
+
+    // Determine type based on current dietary restrictions
+    let itemType: "allergen" | "other" = "other";
+    if (dietRestrictionsForm.allergen) {
+      itemType = "allergen";
+    }
+
+    const newItem: DietaryDetail = {
+      id: `${itemType}-${searchTerm.trim()}-${Date.now()}`,
+      name: searchTerm.trim(),
+      type: itemType,
+    };
+
+    // Check if item already exists
+    const exists = dietaryDetailsForm.some(
+      (item) => item.name.toLowerCase() === searchTerm.trim().toLowerCase()
+    );
+
+    if (!exists) {
+      setDietaryDetailsForm([...dietaryDetailsForm, newItem]);
+    }
+
+    setSearchTerm("");
+  };
+
+  const removeFoodItem = (itemId: string) => {
+    setDietaryDetailsForm(
+      dietaryDetailsForm.filter((item) => item.id !== itemId)
+    );
   };
 
   const handleDeleteAccount = () => {
@@ -477,7 +618,7 @@ const Account: React.FC = () => {
                   {isEditingDietaryDetails && (
                     <button
                       className={styles["cancel-button"]}
-                      onClick={() => setIsEditingDietaryDetails(false)}
+                      onClick={handleCancelDietaryDetails}
                     >
                       Cancel
                     </button>
@@ -508,11 +649,63 @@ const Account: React.FC = () => {
                         type="text"
                         className={styles["search-input"]}
                         placeholder="Search for foods..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        onKeyPress={handleSearchKeyPress}
                       />
                       <span className={styles["search-icon"]}></span>
+                      {searchTerm.trim() && (
+                        <button
+                          className={styles["add-button"]}
+                          onClick={addFoodItem}
+                        >
+                          Add
+                        </button>
+                      )}
                     </div>
                   </div>
                 )}
+
+                <div className={styles["dietary-details-list"]}>
+                  {(isEditingDietaryDetails
+                    ? dietaryDetailsForm
+                    : dietaryDetails
+                  ).length > 0 ? (
+                    <>
+                      <div className={styles["food-items-container"]}>
+                        {(isEditingDietaryDetails
+                          ? dietaryDetailsForm
+                          : dietaryDetails
+                        ).map((item) => (
+                          <div key={item.id} className={styles["food-item"]}>
+                            <span className={styles["food-name"]}>
+                              {item.name}
+                            </span>
+                            <span className={styles["food-type"]}>
+                              ({item.type})
+                            </span>
+                            {isEditingDietaryDetails && (
+                              <button
+                                className={styles["remove-button"]}
+                                onClick={() => removeFoodItem(item.id)}
+                                title="Remove item"
+                              >
+                                ×
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p className={styles["no-items-message"]}>
+                      {dietRestrictionsForm.allergen ||
+                      dietRestrictionsForm.other
+                        ? "No specific foods added yet. Use the search bar above to add foods."
+                        : "Enable 'Allergen' or 'Other' restrictions to add specific foods."}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </>
