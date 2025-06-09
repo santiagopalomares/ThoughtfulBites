@@ -6,8 +6,13 @@ const mysql = require("mysql2/promise");
 const bcrypt = require("bcrypt");
 
 const app = express();
+
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin:
+    process.env.NODE_ENV === "production"
+      ? [process.env.FRONTEND_URL || "https://your-frontend-domain.vercel.app"]
+      : ["http://localhost:5173"],
+  credentials: true,
 };
 
 const pool = mysql.createPool({
@@ -15,7 +20,10 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
+  port: process.env.DB_PORT || 3306,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
 app.use(cors(corsOptions));
@@ -27,6 +35,15 @@ const openai = new OpenAI({
 
 const menuCache = new Map();
 
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.json({
+    message: "Server is running",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development",
+  });
+});
+
 app.get("/api", (req, res) => {
   res.json({ example: ["data1", "data2", "data3"] });
 });
@@ -35,32 +52,32 @@ app.post("/api/signup", async (req, res) => {
   const { email, password, userDietTypes, userDietDetails } = req.body;
   try {
     const [existingUser] = await pool.query(
-        "SELECT * FROM users WHERE email = ?",
-        [email]
+      "SELECT * FROM users WHERE email = ?",
+      [email]
     );
 
     if (existingUser.length > 0) {
       return res
-          .status(400)
-          .json({ message: `Email: ${email} has already been registered` });
+        .status(400)
+        .json({ message: `Email: ${email} has already been registered` });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const [result] = await pool.query(
-        "INSERT INTO users (email, password_hash) VALUES (?, ?)",
-        [email, hashedPassword]
+      "INSERT INTO users (email, password_hash) VALUES (?, ?)",
+      [email, hashedPassword]
     );
 
     for (const restrictionType of userDietTypes) {
       const custom_items =
-          restrictionType === "Allergens" || restrictionType === "Other"
-              ? userDietDetails.join(",")
-              : null;
+        restrictionType === "Allergens" || restrictionType === "Other"
+          ? userDietDetails.join(",")
+          : null;
 
       await pool.query(
-          "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
-          [result.insertId, restrictionType, custom_items]
+        "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+        [result.insertId, restrictionType, custom_items]
       );
     }
 
@@ -86,8 +103,8 @@ app.post("/api/login", async (req, res) => {
 
     const existingUser = users[0];
     const isPasswordMatch = await bcrypt.compare(
-        password,
-        existingUser.password_hash
+      password,
+      existingUser.password_hash
     );
 
     if (isPasswordMatch) {
@@ -108,14 +125,14 @@ app.get("/api/restaurants", async (req, res) => {
 
   if (!food || !location) {
     return res
-        .status(400)
-        .json({ error: "Food type and location are required" });
+      .status(400)
+      .json({ error: "Food type and location are required" });
   }
 
   try {
     const query = `${food} restaurants near ${location}`;
     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
-        query
+      query
     )}&key=${process.env.GOOGLE_PLACES_API_KEY}`;
 
     const response = await fetch(url);
@@ -129,8 +146,8 @@ app.get("/api/restaurants", async (req, res) => {
         priceLevel: place.price_level,
         isOpen: place.opening_hours?.open_now,
         photoUrl: place.photos?.[0]
-            ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_PLACES_API_KEY}`
-            : null,
+          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_PLACES_API_KEY}`
+          : null,
         lat: place.geometry.location.lat,
         lng: place.geometry.location.lng,
       }));
@@ -193,8 +210,8 @@ app.get("/api/user/:userId", async (req, res) => {
 
   try {
     const [users] = await pool.query(
-        "SELECT user_id, email FROM users WHERE user_id = ?",
-        [userId]
+      "SELECT user_id, email FROM users WHERE user_id = ?",
+      [userId]
     );
 
     if (users.length === 0) {
@@ -204,15 +221,15 @@ app.get("/api/user/:userId", async (req, res) => {
     const user = users[0];
 
     const [restrictions] = await pool.query(
-        "SELECT restriction_type, custom_items FROM dietary_restrictions WHERE user_id = ?",
-        [userId]
+      "SELECT restriction_type, custom_items FROM dietary_restrictions WHERE user_id = ?",
+      [userId]
     );
 
     const dietaryRestrictions = restrictions.map((restriction) => ({
       type: restriction.restriction_type,
       customItems: restriction.custom_items
-          ? restriction.custom_items.split(",")
-          : null,
+        ? restriction.custom_items.split(",")
+        : null,
     }));
 
     res.json({
@@ -232,8 +249,8 @@ app.put("/api/user/:userId", async (req, res) => {
 
   try {
     const [existingUser] = await pool.query(
-        "SELECT * FROM users WHERE user_id = ?",
-        [userId]
+      "SELECT * FROM users WHERE user_id = ?",
+      [userId]
     );
 
     if (existingUser.length === 0) {
@@ -267,8 +284,8 @@ app.put("/api/user/:userId/dietary-restrictions", async (req, res) => {
 
   try {
     const [existingUser] = await pool.query(
-        "SELECT * FROM users WHERE user_id = ?",
-        [userId]
+      "SELECT * FROM users WHERE user_id = ?",
+      [userId]
     );
 
     if (existingUser.length === 0) {
@@ -276,14 +293,14 @@ app.put("/api/user/:userId/dietary-restrictions", async (req, res) => {
     }
 
     const [existingRestrictions] = await pool.query(
-        "SELECT restriction_type, custom_items FROM dietary_restrictions WHERE user_id = ? AND restriction_type IN ('Allergens', 'Other')",
-        [userId]
+      "SELECT restriction_type, custom_items FROM dietary_restrictions WHERE user_id = ? AND restriction_type IN ('Allergens', 'Other')",
+      [userId]
     );
 
     const existingCustomItems = {};
     existingRestrictions.forEach((restriction) => {
       existingCustomItems[restriction.restriction_type] =
-          restriction.custom_items;
+        restriction.custom_items;
     });
 
     await pool.query("DELETE FROM dietary_restrictions WHERE user_id = ?", [
@@ -307,20 +324,20 @@ app.put("/api/user/:userId/dietary-restrictions", async (req, res) => {
 
         let customItems = null;
         if (
-            restrictionType === "Allergens" &&
-            existingCustomItems["Allergens"]
+          restrictionType === "Allergens" &&
+          existingCustomItems["Allergens"]
         ) {
           customItems = existingCustomItems["Allergens"];
         } else if (
-            restrictionType === "Other" &&
-            existingCustomItems["Other"]
+          restrictionType === "Other" &&
+          existingCustomItems["Other"]
         ) {
           customItems = existingCustomItems["Other"];
         }
 
         await pool.query(
-            "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
-            [userId, restrictionType, customItems]
+          "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+          [userId, restrictionType, customItems]
         );
       }
     }
@@ -338,8 +355,8 @@ app.put("/api/user/:userId/dietary-details", async (req, res) => {
 
   try {
     const [existingUser] = await pool.query(
-        "SELECT * FROM users WHERE user_id = ?",
-        [userId]
+      "SELECT * FROM users WHERE user_id = ?",
+      [userId]
     );
 
     if (existingUser.length === 0) {
@@ -347,58 +364,58 @@ app.put("/api/user/:userId/dietary-details", async (req, res) => {
     }
 
     const allergenItems = dietaryDetails
-        .filter((item) => item.type === "allergen")
-        .map((item) => item.name);
+      .filter((item) => item.type === "allergen")
+      .map((item) => item.name);
 
     const otherItems = dietaryDetails
-        .filter((item) => item.type === "other")
-        .map((item) => item.name);
+      .filter((item) => item.type === "other")
+      .map((item) => item.name);
 
     if (allergenItems.length > 0) {
       const [existingAllergen] = await pool.query(
-          "SELECT * FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Allergens'",
-          [userId]
+        "SELECT * FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Allergens'",
+        [userId]
       );
 
       if (existingAllergen.length > 0) {
         await pool.query(
-            "UPDATE dietary_restrictions SET custom_items = ? WHERE user_id = ? AND restriction_type = 'Allergens'",
-            [allergenItems.join(","), userId]
+          "UPDATE dietary_restrictions SET custom_items = ? WHERE user_id = ? AND restriction_type = 'Allergens'",
+          [allergenItems.join(","), userId]
         );
       } else {
         await pool.query(
-            "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
-            [userId, "Allergens", allergenItems.join(",")]
+          "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+          [userId, "Allergens", allergenItems.join(",")]
         );
       }
     } else {
       await pool.query(
-          "DELETE FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Allergens'",
-          [userId]
+        "DELETE FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Allergens'",
+        [userId]
       );
     }
 
     if (otherItems.length > 0) {
       const [existingOther] = await pool.query(
-          "SELECT * FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Other'",
-          [userId]
+        "SELECT * FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Other'",
+        [userId]
       );
 
       if (existingOther.length > 0) {
         await pool.query(
-            "UPDATE dietary_restrictions SET custom_items = ? WHERE user_id = ? AND restriction_type = 'Other'",
-            [otherItems.join(","), userId]
+          "UPDATE dietary_restrictions SET custom_items = ? WHERE user_id = ? AND restriction_type = 'Other'",
+          [otherItems.join(","), userId]
         );
       } else {
         await pool.query(
-            "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
-            [userId, "Other", otherItems.join(",")]
+          "INSERT INTO dietary_restrictions (user_id, restriction_type, custom_items) VALUES (?, ?, ?)",
+          [userId, "Other", otherItems.join(",")]
         );
       }
     } else {
       await pool.query(
-          "DELETE FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Other'",
-          [userId]
+        "DELETE FROM dietary_restrictions WHERE user_id = ? AND restriction_type = 'Other'",
+        [userId]
       );
     }
 
@@ -434,6 +451,11 @@ app.delete("/api/user/:userId", async (req, res) => {
   }
 });
 
-app.listen(8080, () => {
-  console.log("Server started on port 8080");
-});
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 8080;
+  app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+  });
+}
+
+module.exports = app;
