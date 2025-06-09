@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function Landing() {
   const navigate = useNavigate();
-  const [isMobile, setIsMobile] = useState(false);
+  const [, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {

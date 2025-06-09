@@ -15,7 +15,7 @@ export function DietDetails({
   userDietDetails,
   updateFields,
 }: DietDetailsProps) {
-  const [lastSearched, setLastSearched] = useState<string>("");
+  const [, setLastSearched] = useState<string>("");
 
   const removeFood = (foodToRemove: string) => {
     const updatedDetails = userDietDetails.filter(

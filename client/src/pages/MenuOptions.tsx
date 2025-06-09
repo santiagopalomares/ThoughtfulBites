@@ -20,11 +20,11 @@ interface RestaurantInfo {
   website: string;
 }
 
-interface DietaryDetail {
-  id: string;
-  name: string;
-  type: "allergen" | "other";
-}
+// interface DietaryDetail {
+//   id: string;
+//   name: string;
+//   type: "allergen" | "other";
+// }
 
 const MenuOptions: React.FC = () => {
   const { restaurantId } = useParams<{ restaurantId: string }>();
@@ -51,7 +51,9 @@ const MenuOptions: React.FC = () => {
 
         setIsUserLoggedIn(true);
 
-        const response = await fetch(`http://localhost:8080/api/user/${userId}`);
+        const response = await fetch(
+          `http://localhost:8080/api/user/${userId}`
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
@@ -71,10 +73,27 @@ const MenuOptions: React.FC = () => {
                 allergies.push("dairy", "milk", "cheese", "cream", "butter");
                 break;
               case "Vegan":
-                allergies.push("meat", "dairy", "egg", "fish", "seafood", "milk", "cheese", "butter", "cream");
+                allergies.push(
+                  "meat",
+                  "dairy",
+                  "egg",
+                  "fish",
+                  "seafood",
+                  "milk",
+                  "cheese",
+                  "butter",
+                  "cream"
+                );
                 break;
               case "Vegetarian":
-                allergies.push("meat", "fish", "seafood", "chicken", "beef", "pork");
+                allergies.push(
+                  "meat",
+                  "fish",
+                  "seafood",
+                  "chicken",
+                  "beef",
+                  "pork"
+                );
                 break;
               case "Pescatarian":
                 allergies.push("meat", "chicken", "beef", "pork");
@@ -119,9 +138,9 @@ const MenuOptions: React.FC = () => {
 
       try {
         const response = await axios.get(
-            `http://localhost:8080/api/menu/${encodeURIComponent(
-                decodedRestaurantName
-            )}`
+          `http://localhost:8080/api/menu/${encodeURIComponent(
+            decodedRestaurantName
+          )}`
         );
         setMenuItems(response.data.menu);
         setActiveCategory("all");
@@ -148,12 +167,12 @@ const MenuOptions: React.FC = () => {
   useEffect(() => {
     if (menuItems.length > 0 && isUserLoggedIn && !userDataLoading) {
       if (userAllergies.length > 0) {
-        const filtered = menuItems.filter(item => {
+        const filtered = menuItems.filter((item) => {
           const description = item.description.toLowerCase();
           const name = item.name.toLowerCase();
           const itemText = `${name} ${description}`;
 
-          const hasAllergy = userAllergies.some(allergy => {
+          const hasAllergy = userAllergies.some((allergy) => {
             const allergyLower = allergy.toLowerCase();
             return itemText.includes(allergyLower);
           });
@@ -171,8 +190,12 @@ const MenuOptions: React.FC = () => {
   }, [menuItems, userAllergies, isUserLoggedIn, userDataLoading]);
 
   const categories = React.useMemo(() => {
-    const baseCategories = menuItems.length > 0
-        ? ["all", ...Array.from(new Set(menuItems.map((item) => item.category)))]
+    const baseCategories =
+      menuItems.length > 0
+        ? [
+            "all",
+            ...Array.from(new Set(menuItems.map((item) => item.category))),
+          ]
         : ["all"];
 
     if (isUserLoggedIn) {
@@ -212,129 +235,155 @@ const MenuOptions: React.FC = () => {
   }, [isUserLoggedIn, activeCategory]);
 
   return (
-      <div className={styles["menu-options-container"]}>
-        <div className={styles["menu-header"]}>
-          <button className={styles["back-button"]} onClick={handleBack}>
-            &lt; Back to Results
-          </button>
-          <h1>{restaurant?.name || "Restaurant Menu"}</h1>
+    <div className={styles["menu-options-container"]}>
+      <div className={styles["menu-header"]}>
+        <button className={styles["back-button"]} onClick={handleBack}>
+          &lt; Back to Results
+        </button>
+        <h1>{restaurant?.name || "Restaurant Menu"}</h1>
+      </div>
+
+      {loading ? (
+        <div className={styles["loading"]}>
+          <div className={styles["loading-spinner"]}></div>
+          <p>Loading menu options...</p>
         </div>
-
-        {loading ? (
-            <div className={styles["loading"]}>
-              <div className={styles["loading-spinner"]}></div>
-              <p>Loading menu options...</p>
-            </div>
-        ) : menuItems.length > 0 ? (
-            <div className={styles["restaurant-content"]}>
-              {restaurant && (
-                  <div className={styles["restaurant-info"]}>
-                    <p className={styles["restaurant-description"]}>
-                      {restaurant.description}
-                    </p>
-                    <div className={styles["restaurant-details"]}>
-                      <p>
-                        <strong>Address:</strong> {restaurant.address}
-                      </p>
-                      <p>
-                        <strong>Hours:</strong> {restaurant.hours}
-                      </p>
-                      <p>
-                        <strong>Phone:</strong> {restaurant.phone}
-                      </p>
-                      <p>
-                        <strong>Website:</strong>{" "}
-                        <a
-                            href={`https://${restaurant.website}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                          {restaurant.website}
-                        </a>
-                      </p>
-                    </div>
-                  </div>
-              )}
-
-              <div className={styles["category-tabs"]}>
-                {categories.map((category) => (
-                    <button
-                        key={category}
-                        className={`${styles["category-tab"]} ${
-                            activeCategory === category ? styles["active"] : ""
-                        }`}
-                        onClick={() => handleCategoryChange(category)}
-                    >
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
-                      {category === "Personalized" && isUserLoggedIn && userAllergies.length > 0 && !userDataLoading && (
-                          <span className={styles["allergy-count"]}>
-                    ({personalizedItems.length} safe items)
-                  </span>
-                      )}
-                    </button>
-                ))}
+      ) : menuItems.length > 0 ? (
+        <div className={styles["restaurant-content"]}>
+          {restaurant && (
+            <div className={styles["restaurant-info"]}>
+              <p className={styles["restaurant-description"]}>
+                {restaurant.description}
+              </p>
+              <div className={styles["restaurant-details"]}>
+                <p>
+                  <strong>Address:</strong> {restaurant.address}
+                </p>
+                <p>
+                  <strong>Hours:</strong> {restaurant.hours}
+                </p>
+                <p>
+                  <strong>Phone:</strong> {restaurant.phone}
+                </p>
+                <p>
+                  <strong>Website:</strong>{" "}
+                  <a
+                    href={`https://${restaurant.website}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {restaurant.website}
+                  </a>
+                </p>
               </div>
+            </div>
+          )}
 
-              {activeCategory === "Personalized" && isUserLoggedIn && userAllergies.length === 0 && !userDataLoading && (
-                  <div className={styles["no-allergies-message"]}>
-                    <p>No dietary restrictions found in your profile. <a href="/account">Update your profile</a> to see personalized recommendations.</p>
-                  </div>
-              )}
+          <div className={styles["category-tabs"]}>
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={`${styles["category-tab"]} ${
+                  activeCategory === category ? styles["active"] : ""
+                }`}
+                onClick={() => handleCategoryChange(category)}
+              >
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+                {category === "Personalized" &&
+                  isUserLoggedIn &&
+                  userAllergies.length > 0 &&
+                  !userDataLoading && (
+                    <span className={styles["allergy-count"]}>
+                      ({personalizedItems.length} safe items)
+                    </span>
+                  )}
+              </button>
+            ))}
+          </div>
 
-              {activeCategory === "Personalized" && isUserLoggedIn && userAllergies.length > 0 && !userDataLoading && (
-                  <div className={styles["allergy-info"]}>
-                    <p>Showing items safe for your dietary restrictions ({userAllergies.length} restrictions applied)</p>
-                  </div>
-              )}
+          {activeCategory === "Personalized" &&
+            isUserLoggedIn &&
+            userAllergies.length === 0 &&
+            !userDataLoading && (
+              <div className={styles["no-allergies-message"]}>
+                <p>
+                  No dietary restrictions found in your profile.{" "}
+                  <a href="/account">Update your profile</a> to see personalized
+                  recommendations.
+                </p>
+              </div>
+            )}
 
-              {activeCategory === "Personalized" && userDataLoading && (
-                  <div className={styles["loading-user-data"]}>
-                    <p>Loading your dietary preferences...</p>
-                  </div>
-              )}
+          {activeCategory === "Personalized" &&
+            isUserLoggedIn &&
+            userAllergies.length > 0 &&
+            !userDataLoading && (
+              <div className={styles["allergy-info"]}>
+                <p>
+                  Showing items safe for your dietary restrictions (
+                  {userAllergies.length} restrictions applied)
+                </p>
+              </div>
+            )}
 
-              <div className={styles["menu-items-grid"]}>
-                {filteredItems.map((item, index) => (
-                    <div key={index} className={styles["menu-item-card"]}>
-                      <div className={styles["menu-item-image"]}>
-                        <img src="https://via.placeholder.com/300" alt={item.name} />
+          {activeCategory === "Personalized" && userDataLoading && (
+            <div className={styles["loading-user-data"]}>
+              <p>Loading your dietary preferences...</p>
+            </div>
+          )}
+
+          <div className={styles["menu-items-grid"]}>
+            {filteredItems.map((item, index) => (
+              <div key={index} className={styles["menu-item-card"]}>
+                <div className={styles["menu-item-image"]}>
+                  <img src="https://via.placeholder.com/300" alt={item.name} />
+                </div>
+                <div className={styles["menu-item-info"]}>
+                  <h3>{item.name}</h3>
+                  <p className={styles["menu-item-description"]}>
+                    {item.description}
+                  </p>
+                  {activeCategory === "Personalized" &&
+                    isUserLoggedIn &&
+                    userAllergies.length > 0 && (
+                      <div className={styles["allergy-safe-badge"]}>
+                        ✓ Safe for your dietary restrictions
                       </div>
-                      <div className={styles["menu-item-info"]}>
-                        <h3>{item.name}</h3>
-                        <p className={styles["menu-item-description"]}>
-                          {item.description}
-                        </p>
-                        {activeCategory === "Personalized" && isUserLoggedIn && userAllergies.length > 0 && (
-                            <div className={styles["allergy-safe-badge"]}>
-                              ✓ Safe for your dietary restrictions
-                            </div>
-                        )}
-                        <div className={styles["menu-item-footer"]}>
+                    )}
+                  <div className={styles["menu-item-footer"]}>
                     <span className={styles["menu-item-price"]}>
                       {item.price}
                     </span>
-                        </div>
-                      </div>
-                    </div>
-                ))}
-              </div>
-
-              {filteredItems.length === 0 && activeCategory === "Personalized" && isUserLoggedIn && userAllergies.length > 0 && !userDataLoading && (
-                  <div className={styles["no-items-message"]}>
-                    <p>No menu items found that match your dietary restrictions. Please contact the restaurant for more information about ingredient modifications.</p>
                   </div>
-              )}
-            </div>
-        ) : (
-            <div className={styles["not-found"]}>
-              <h2>Menu not available</h2>
-              <p>Sorry, we couldn't load the menu for this restaurant.</p>
-              <button className={styles["back-button"]} onClick={handleBack}>
-                Back to Search Results
-              </button>
-            </div>
-        )}
-      </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {filteredItems.length === 0 &&
+            activeCategory === "Personalized" &&
+            isUserLoggedIn &&
+            userAllergies.length > 0 &&
+            !userDataLoading && (
+              <div className={styles["no-items-message"]}>
+                <p>
+                  No menu items found that match your dietary restrictions.
+                  Please contact the restaurant for more information about
+                  ingredient modifications.
+                </p>
+              </div>
+            )}
+        </div>
+      ) : (
+        <div className={styles["not-found"]}>
+          <h2>Menu not available</h2>
+          <p>Sorry, we couldn't load the menu for this restaurant.</p>
+          <button className={styles["back-button"]} onClick={handleBack}>
+            Back to Search Results
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 

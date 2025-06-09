@@ -1,7 +1,6 @@
 import styles from "./AboutUs.module.css";
 import React, { useEffect, useState } from "react";
 import sillyguy from "../assets/sillyguy.png";
-import happyCustomers from "../assets/PeopleEating.png";
 import { Link } from "react-router-dom";
 
 interface TeamMember {
@@ -12,7 +11,7 @@ interface TeamMember {
 }
 
 export default function AboutUs(): React.ReactElement {
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {
     const checkMobile = (): void => {

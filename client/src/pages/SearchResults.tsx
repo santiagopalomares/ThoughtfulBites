@@ -191,7 +191,7 @@ const SearchResults: React.FC = () => {
     }
   };
 
-  const handleResultClick = (resultId: string, restaurantName: string) => {
+  const handleResultClick = (_resultId: string, restaurantName: string) => {
     navigate(`/menu-options/${encodeURIComponent(restaurantName)}`);
   };
 
