@@ -405,9 +405,11 @@ const Account: React.FC = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("userId");
+    // localStorage.removeItem("userId");
     // Redirect to login page or home
-    console.log("Log Out button clicked");
+    logout();
+    alert("Logged out successfully!");
+    navigate("/");
   };
 
   if (loading) {
