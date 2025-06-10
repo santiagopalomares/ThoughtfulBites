@@ -15,9 +15,14 @@ interface SearchResult {
   rating?: number;
   priceLevel?: number;
   isOpen?: boolean;
-
   lat: number;
   lng: number;
+}
+
+interface CachedSearch {
+  query: string;
+  results: SearchResult[];
+  timestamp: number;
 }
 
 const SearchResults: React.FC = () => {
@@ -25,6 +30,16 @@ const SearchResults: React.FC = () => {
   const location = useLocation();
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isOffline, setIsOffline] = useState<boolean>(!navigator.onLine);
+  const [lastSuccessfulSearch, setLastSuccessfulSearch] =
+    useState<CachedSearch | null>(null);
+
+  // Debug logging
+  useEffect(() => {
+    console.log("lastSuccessfulSearch updated:", lastSuccessfulSearch);
+    console.log("isOffline:", isOffline);
+    console.log("current results length:", results.length);
+  }, [lastSuccessfulSearch, isOffline, results]);
   const [leftWidth, setLeftWidth] = useState<number>(50);
   const [rightWidth, setRightWidth] = useState<number>(50);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -35,10 +50,62 @@ const SearchResults: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<HTMLDivElement>(null);
 
+  // Monitor online/offline status and handle cached results
+  useEffect(() => {
+    const handleOnline = () => {
+      console.log("Going online");
+      setIsOffline(false);
+    };
+
+    const handleOffline = () => {
+      console.log("Going offline");
+      console.log(
+        "lastSuccessfulSearch when going offline:",
+        lastSuccessfulSearch
+      );
+      setIsOffline(true);
+
+      // When going offline, show last successful search if available
+      if (lastSuccessfulSearch && lastSuccessfulSearch.results.length > 0) {
+        console.log("Setting cached results when going offline");
+        setResults(lastSuccessfulSearch.results);
+      } else {
+        console.log("No cached results to show when going offline");
+      }
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [lastSuccessfulSearch]);
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const query = urlParams.get("query");
+
     if (query) {
+      // First check if we have cached results in sessionStorage for this query
+      const cachedData = sessionStorage.getItem(`search_${query}`);
+      if (cachedData) {
+        try {
+          const parsed = JSON.parse(cachedData);
+          const isExpired = Date.now() - parsed.timestamp > 10 * 60 * 1000; // 10 minutes
+          if (!isExpired) {
+            console.log("Loading cached results from sessionStorage");
+            setResults(parsed.results);
+            setLastSuccessfulSearch(parsed);
+            return; // Don't make API call if we have fresh cached data
+          }
+        } catch (e) {
+          console.error("Error parsing cached data:", e);
+        }
+      }
+
+      // Only make API call if no valid cache
       handleSearch(query);
     }
   }, [location.search]);
@@ -128,6 +195,29 @@ const SearchResults: React.FC = () => {
       return;
     }
 
+    // Check if we're offline
+    if (isOffline) {
+      if (
+        lastSuccessfulSearch &&
+        lastSuccessfulSearch.query.toLowerCase() === searchQuery.toLowerCase()
+      ) {
+        console.log("Using cached results due to offline status");
+        setResults(lastSuccessfulSearch.results);
+        return;
+      } else if (lastSuccessfulSearch) {
+        // Show the last successful search even if query doesn't match exactly
+        console.log(
+          "Showing last successful search results due to offline status"
+        );
+        setResults(lastSuccessfulSearch.results);
+        return;
+      } else {
+        console.log("Offline with no cached results");
+        setResults([]);
+        return;
+      }
+    }
+
     setLoading(true);
     try {
       const response = await axios.get(
@@ -137,6 +227,7 @@ const SearchResults: React.FC = () => {
             food: searchQuery,
             location: "Irvine, CA",
           },
+          timeout: 10000, // 10 second timeout
         }
       );
 
@@ -174,7 +265,6 @@ const SearchResults: React.FC = () => {
             rating: restaurant.rating,
             priceLevel: restaurant.priceLevel,
             isOpen: restaurant.isOpen,
-
             lat: restaurant.lat,
             lng: restaurant.lng,
           };
@@ -183,16 +273,73 @@ const SearchResults: React.FC = () => {
 
       console.log("Mapped results:", apiResults);
       setResults(apiResults);
+
+      // Cache the successful search
+      const cacheData = {
+        query: searchQuery,
+        results: apiResults,
+        timestamp: Date.now(),
+      };
+      console.log("Caching search data:", cacheData);
+      setLastSuccessfulSearch(cacheData);
+
+      // Also save to sessionStorage for navigation persistence
+      sessionStorage.setItem(
+        `search_${searchQuery}`,
+        JSON.stringify(cacheData)
+      );
     } catch (error) {
       console.error("Error fetching restaurants:", error);
-      setResults([]);
+      console.log("lastSuccessfulSearch during error:", lastSuccessfulSearch);
+
+      // If there's a network error, try to use cached results
+      if (lastSuccessfulSearch && lastSuccessfulSearch.results.length > 0) {
+        console.log("Using cached results due to network error");
+        setResults(lastSuccessfulSearch.results);
+      } else {
+        console.log("No cached results available");
+        setResults([]);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const handleResultClick = (_resultId: string, restaurantName: string) => {
+    // Save current search state before navigating
+    const currentQuery = new URLSearchParams(location.search).get("query");
+    if (currentQuery && results.length > 0) {
+      const cacheData = {
+        query: currentQuery,
+        results: results,
+        timestamp: Date.now(),
+      };
+      sessionStorage.setItem(
+        `search_${currentQuery}`,
+        JSON.stringify(cacheData)
+      );
+      console.log("Saved current search state before navigation");
+    }
+
     navigate(`/menu-options/${encodeURIComponent(restaurantName)}`);
+  };
+
+  const getStatusMessage = () => {
+    if (isOffline) {
+      if (lastSuccessfulSearch && results.length > 0) {
+        const isSameQuery =
+          lastSuccessfulSearch.query.toLowerCase() ===
+          new URLSearchParams(location.search).get("query")?.toLowerCase();
+
+        if (isSameQuery) {
+          return "You're offline. Showing cached results for your search.";
+        } else {
+          return `You're offline. Showing cached results for "${lastSuccessfulSearch.query}".`;
+        }
+      }
+      return "You're offline. Connect to the internet to search for restaurants.";
+    }
+    return null;
   };
 
   return (
@@ -207,6 +354,22 @@ const SearchResults: React.FC = () => {
             buttonText={window.innerWidth <= 480 ? "" : "Search"}
             searchIconSrc={SearchIcon}
           />
+          {getStatusMessage() && (
+            <div
+              className={styles["status-message"]}
+              style={{
+                padding: "8px 16px",
+                marginTop: "8px",
+                backgroundColor: isOffline ? "#fff3cd" : "#d1ecf1",
+                border: `1px solid ${isOffline ? "#ffeaa7" : "#bee5eb"}`,
+                borderRadius: "4px",
+                color: isOffline ? "#856404" : "#0c5460",
+                fontSize: "14px",
+              }}
+            >
+              {getStatusMessage()}
+            </div>
+          )}
         </div>
       </div>
 
@@ -249,7 +412,9 @@ const SearchResults: React.FC = () => {
             </>
           ) : (
             <div className={styles["no-results"]}>
-              Search for restaurants by food type (e.g., "pizza", "sushi")
+              {isOffline
+                ? "No cached results available. Connect to the internet to search."
+                : 'Search for restaurants by food type (e.g., "pizza", "sushi")'}
             </div>
           )}
         </div>
@@ -268,8 +433,7 @@ const SearchResults: React.FC = () => {
               defaultCenter={
                 results.length
                   ? { lat: results[0].lat, lng: results[0].lng }
-                  : // Default
-                    { lat: 33.68, lng: -117.78 }
+                  : { lat: 33.68, lng: -117.78 }
               }
             />
           </div>
