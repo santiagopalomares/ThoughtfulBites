@@ -59,18 +59,21 @@ export default function SignUp() {
 
   async function addUserToDatabase() {
     try {
-      const response = await fetch("http://localhost:8080/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-          userDietTypes: data.userDietTypes,
-          userDietDetails: data.userDietDetails,
-        }),
-      });
+      const response = await fetch(
+        "https://thoughtful-bites-server.vercel.app/api/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+            userDietTypes: data.userDietTypes,
+            userDietDetails: data.userDietDetails,
+          }),
+        }
+      );
 
       const result = await response.json();
       if (!response.ok) {

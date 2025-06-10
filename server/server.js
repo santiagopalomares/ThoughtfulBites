@@ -10,8 +10,11 @@ const app = express();
 const corsOptions = {
   origin:
     process.env.NODE_ENV === "production"
-      ? [process.env.FRONTEND_URL || "https://your-frontend-domain.vercel.app"]
-      : ["http://localhost:5173"],
+      ? [
+          process.env.FRONTEND_URL ||
+            "https://thoughtful-bites-client.vercel.app",
+        ]
+      : ["https://thoughtful-bites-server.vercel.app"],
   credentials: true,
 };
 

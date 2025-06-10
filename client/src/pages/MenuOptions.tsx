@@ -52,7 +52,7 @@ const MenuOptions: React.FC = () => {
         setIsUserLoggedIn(true);
 
         const response = await fetch(
-          `http://localhost:8080/api/user/${userId}`
+          `https://thoughtful-bites-server.vercel.app/api/user/${userId}`
         );
 
         if (!response.ok) {
@@ -138,7 +138,7 @@ const MenuOptions: React.FC = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/menu/${encodeURIComponent(
+          `https://thoughtful-bites-server.vercel.app/api/menu/${encodeURIComponent(
             decodedRestaurantName
           )}`
         );

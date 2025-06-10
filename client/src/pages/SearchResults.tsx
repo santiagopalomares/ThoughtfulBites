@@ -131,7 +131,7 @@ const SearchResults: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/restaurants`,
+        `https://thoughtful-bites-server.vercel.app/api/restaurants`,
         {
           params: {
             food: searchQuery,

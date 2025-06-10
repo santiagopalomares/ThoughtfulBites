@@ -93,7 +93,7 @@ const Account: React.FC = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:8080/api/user/${userId}`
+          `https://thoughtful-bites-server.vercel.app/api/user/${userId}`
         );
 
         if (!response.ok) {
@@ -199,7 +199,7 @@ const Account: React.FC = () => {
       // Save changes to database
       try {
         const response = await fetch(
-          `http://localhost:8080/api/user/${userId}`,
+          `https://thoughtful-bites-server.vercel.app/api/user/${userId}`,
           {
             method: "PUT",
             headers: {
@@ -247,7 +247,7 @@ const Account: React.FC = () => {
       // Save dietary restrictions to database
       try {
         const response = await fetch(
-          `http://localhost:8080/api/user/${userId}/dietary-restrictions`,
+          `https://thoughtful-bites-server.vercel.app/api/user/${userId}/dietary-restrictions`,
           {
             method: "PUT",
             headers: {
@@ -283,7 +283,7 @@ const Account: React.FC = () => {
       // Save dietary details to database
       try {
         const response = await fetch(
-          `http://localhost:8080/api/user/${userId}/dietary-details`,
+          `https://thoughtful-bites-server.vercel.app/api/user/${userId}/dietary-details`,
           {
             method: "PUT",
             headers: {
@@ -365,12 +365,15 @@ const Account: React.FC = () => {
 
   const confirmDeleteAccount = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/user/${userId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `https://thoughtful-bites-server.vercel.app/api/user/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to delete account");
